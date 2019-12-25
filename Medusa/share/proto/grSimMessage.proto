@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package grSimMessage;
+
+message grSimInfo{
+	required uint32 id = 1;
+	optional bool isInfrared = 2;
+}

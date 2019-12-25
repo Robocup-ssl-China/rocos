@@ -1,0 +1,20 @@
+$#include "staticparams.h"
+$#include <singleton.h>
+$#include "KickStatus.h"
+
+class CKickStatus {
+	CKickStatus();
+	void setKick(int num, double power);
+	void setChipKick(int num, double power);
+	void setBothKick(int num, double kick, double chip);
+	void setAllKick(int num, double kick, double chip, double pass);
+	bool needKick(int num) const;
+	double getKickPower(int num) const;
+	double getChipKickDist(int num) const;
+	double getPassDist(int num) const;
+	int getKiker() const;
+	void clearAll();
+	void resetKick2ForceClose(bool forceClose = false, int forceCloseCycle = 0);
+	void updateForceClose(int currentCycle);
+	bool isForceClosed();
+};

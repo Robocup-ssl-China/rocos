@@ -1,0 +1,96 @@
+syntax = "proto2";
+
+package ZSS.Protocol;
+
+message Point{
+	required float x = 1;
+	required float y = 2;
+}
+message Rectangle{
+	required Point point1 = 1;
+	required Point point2 = 2;
+}
+message Debug_Robot{
+	required Point pos = 1;
+	required float dir = 2;
+}
+message Debug_Line {
+	required Point start = 1;
+	required Point end = 2;
+	required bool FORWARD = 3;
+	required bool BACK = 4;
+}
+message Debug_Arc {
+	required Rectangle rectangle = 1;
+	required float start = 2;
+	required float end = 3;
+	required bool FILL = 4;
+}
+message Debug_Polygon {
+	repeated Point vertex = 1;
+	required bool FILL = 2;
+}
+message Debug_Text {
+	required Point pos = 1;
+	required string text = 2;
+}
+message Debug_Curve_ {
+	required float num = 1;
+	required float maxLimit = 2;
+	required float minLimit = 3;
+}
+message Debug_Curve {
+	required Point start = 1;
+	required Point p1 = 2;
+	required Point p2 = 3;
+	required Point end = 4;
+}
+message Debug_Points {
+	repeated Point point = 1;
+}
+message Debug_Msg {
+	enum Debug_Type {
+		ARC 	= 0;
+		LINE 	= 1;		
+		TEXT 	= 2;
+		ROBOT 	= 3;
+		CURVE 	= 4;
+		POLYGON = 5;
+		Points   = 6;
+	}
+	required Debug_Type type = 1;
+	enum Color {
+		WHITE = 	0;
+		RED = 		1;
+		ORANGE = 	2;
+		YELLOW = 	3;
+		GREEN = 	4;
+		CYAN = 		5;
+		BLUE = 		6;
+		PURPLE = 	7;
+		GRAY = 		8;
+		BLACK = 	9;
+		USE_RGB =10;
+	}
+	required Color color = 2;
+	// one of the follow >>> need to be tested with TYPE <oneof> 
+	optional Debug_Arc arc = 	3;
+	optional Debug_Line line = 	4;
+	optional Debug_Text text = 	5;
+	optional Debug_Robot robot = 	6;
+	optional Debug_Curve_ curve = 	7;
+	optional Debug_Polygon polygon = 8;
+	optional Debug_Points points = 9;
+	optional int32 RGB_value =10; 
+}
+message Debug_Msgs{
+	repeated Debug_Msg msgs= 1;
+}
+
+message Debug_Score{
+    required int32 color = 1;
+    repeated Point p = 2;
+}
+message Debug_Scores{
+	repeated Debug_Score scores = 1;
+}

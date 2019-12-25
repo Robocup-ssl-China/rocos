@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "messages_robocup_ssl_wrapper.proto";
+import "ssl_referee.proto";
+
+message LabelerMetadata {
+  uint32 num_cameras = 1;
+  repeated uint64 message_offsets = 2;
+}
+
+message LabelerFrame {
+  uint64 timestamp = 1;
+  oneof frame {
+    SSL_WrapperPacket vision_frame = 2;
+    Referee referee_frame = 3;
+  }
+}
+
+message LabelerFrameGroup {
+  repeated LabelerFrame frames = 1;
+}

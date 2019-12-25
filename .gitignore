@@ -1,0 +1,141 @@
+*.pdb
+
+# C++ objects and libs
+
+Athena/*.slo
+Athena/*.lo
+Athena/*.o
+Athena/*.a
+Athena/*.la
+Athena/*.lai
+Athena/*.so
+Athena/*.dll
+Athena/*.dylib
+
+# Qt-es
+
+Athena/object_script.*.Release
+Athena/object_script.*.Debug
+Athena/*_plugin_import.cpp
+Athena//.qmake.cache
+Athena//.qmake.stash
+Athena/*.pro.user
+Athena/*.pro.user.*
+Athena/*.qbs.user
+Athena/*.qbs.user.*
+Athena/*.moc
+Athena/moc_*.cpp
+Athena/moc_*.h
+Athena/qrc_*.cpp
+Athena/ui_*.h
+Athena/Makefile*
+Athena/*build*
+
+# Qt unit tests
+Athena/target_wrapper.*
+
+
+# QtCreator
+
+Athena/*.autosave
+
+# QtCtreator Qml
+Athena/*.qmlproject.user
+Athena/*.qmlproject.user.*
+
+# QtCtreator CMake
+Athena/CMakeLists.txt.user*
+
+# Protobuf
+Athena/*.pb.*
+
+
+# C++ objects and libs
+
+Medusa/*.slo
+Medusa/*.lo
+Medusa/*.o
+Medusa/*.a
+Medusa/*.la
+Medusa/*.lai
+Medusa/*.so
+Medusa/*.dll
+Medusa/*.dylib
+
+# Qt-es
+
+Medusa/object_script.*.Release
+Medusa/object_script.*.Debug
+Medusa/*_plugin_import.cpp
+Medusa//.qmake.cache
+Medusa//.qmake.stash
+Medusa/*.pro.user
+Medusa/*.pro.user.*
+Medusa/*.qbs.user
+Medusa/*.qbs.user.*
+Medusa/*.moc
+Medusa/moc_*.cpp
+Medusa/moc_*.h
+Medusa/qrc_*.cpp
+Medusa/ui_*.h
+Medusa/Makefile*
+Medusa/*build*
+
+# Qt unit tests
+Medusa/target_wrapper.*
+
+
+# QtCreator
+
+Medusa/*.autosave
+
+# QtCtreator Qml
+Medusa/*.qmlproject.user
+Medusa/*.qmlproject.user.*
+
+# QtCtreator CMake
+Medusa/CMakeLists.txt.user*
+
+# Protobuf
+Medusa/*.pb.*
+Medusa/*_pb2.py
+Medusa/src/LuaModule/lua_zeus.cpp
+Medusa/share/proto/cpp/
+
+
+
+
+ZBin/Qt*
+ZBin/*.dll
+ZBin/*.exe
+ZBin/*.ini
+ZBin/*.txt
+ZBin/*.label*
+
+ZBin/3rdParty/*
+ZBin/LOG/*.log
+ZBin/Athena.exp
+ZBin/Athena.lib
+ZBin/Athena
+ZBin/Medusa
+ZBin/MedusaD
+ZBin/grsim
+ZBin/Crazy
+ZBin/Client
+ZBin/Crazy2018
+ZBin/ballSpeedLog.txt
+ZBin/core
+# python
+ZBin/__pycache__
+ZBin/*.py[cod]
+ZBin/*$py.class
+
+build*/
+
+grSim/
+Crazy/
+Client/
+Autoref/
+
+zeus_deps_check
+git_stats

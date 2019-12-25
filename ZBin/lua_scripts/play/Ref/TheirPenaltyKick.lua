@@ -1,0 +1,1 @@
+gCurrentPlay = gOppoConfig.PenaltyDef

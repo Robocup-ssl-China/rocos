@@ -1,0 +1,75 @@
+$#include <iostream>
+$#include <iomanip>
+$#include <cmath>
+$#include <geometry.h>
+
+class CVector{
+	CVector();
+	~CVector();
+	CVector(double, double);
+	CVector(const CVector&);
+	double mod() const;
+	double mod2() const;
+	double dir() const;
+	double x() const;
+	double y() const;
+	double value(double) const;
+	CVector operator +(const CVector&) const;
+	CVector operator -(const CVector&) const;
+	CVector operator *(double) const;
+	CVector operator /(double) const;
+	CVector operator - () const;
+	CVector rotate(double) const;
+};
+
+class CGeoPoint{
+	CGeoPoint();
+	~CGeoPoint();
+	CGeoPoint(double x, double y);
+	CGeoPoint(const CGeoPoint& p);
+	bool operator==(const CGeoPoint& rhs);
+	double x() const;
+	double y() const;
+	double dist(const CGeoPoint& p) const;
+	double dist2(const CGeoPoint& p) const;
+	CGeoPoint operator+(const CVector& v) const;
+	CGeoPoint operator*(const double& a) const;
+	CVector operator-(const CGeoPoint& p) const;
+};
+class CGeoLine{
+	CGeoLine();
+	CGeoLine(const CGeoPoint& p1, const CGeoPoint& p2);
+	CGeoLine(const CGeoPoint& p, double angle);
+	void calABC();
+	CGeoPoint projection(const CGeoPoint& p) const;
+	CGeoPoint point1() const ;
+	CGeoPoint point2() const ;
+	bool operator==(const CGeoLine& rhs) ;
+	const double& a() const ;
+	const double& b()const  ;
+	const double& c()const ;
+
+
+};
+class CGeoSegment:public CGeoLine{
+	CGeoSegment() ;
+	CGeoSegment(const CGeoPoint& p1, const CGeoPoint& p2) ;
+	bool IsPointOnLineOnSegment(const CGeoPoint& p) const;
+	const CGeoPoint& start() const;
+	const CGeoPoint& end() const;
+};
+class CGeoLineLineIntersection{
+	CGeoLineLineIntersection(const CGeoLine& line_1, const CGeoLine& line_2);
+	bool Intersectant() const;
+	const CGeoPoint& IntersectPoint() const;
+
+};
+class CGeoRectangle {
+	CGeoRectangle( const CGeoPoint& leftTop, const CGeoPoint& rightDown);
+};
+class CGeoLineRectangleIntersection{
+	CGeoLineRectangleIntersection(const CGeoLine& line, const CGeoRectangle& rect);
+	bool intersectant();
+	const CGeoPoint& point1();
+	const CGeoPoint& point2();
+};

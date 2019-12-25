@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+
+enum TeamColor {
+  TeamYELLOW = 0;
+  TeamBLUE = 1;
+}
+
+message DribblingLabel {
+  bool is_dribbling = 1;
+  uint32 robot_id = 2;
+  TeamColor team = 3;
+}
+
+message BallPossessionLabel {
+  enum State {
+    NONE = 0;
+    YELLOW_POSSES = 1;
+    BLUE_POSSES = 2;
+  }
+
+  State state = 1;
+  uint32 robot_id = 2;
+}
+
+message PassingLabel {
+  uint64 start_frame = 1;
+  uint64 end_frame = 2;
+  bool successful = 3;
+  uint32 passer_id = 4;
+  TeamColor passer_team = 5;
+  uint32 receiver_id = 6;
+}
+
+message GoalShotLabel {
+  uint64 start_frame = 1;
+  uint64 end_frame = 2;
+  bool successful = 3;
+  uint32 shooter_id = 4;
+  TeamColor shooter_team = 5;
+}
+
+message Labels {
+  repeated DribblingLabel dribbling_labels = 1;
+  repeated BallPossessionLabel ball_possession_labels = 2;
+  repeated PassingLabel passing_labels = 3;
+  repeated GoalShotLabel goal_shot_labels = 4;
+}

@@ -1,0 +1,54 @@
+$#include <geometry.h>
+$#include "WorldDefine.h"
+
+class ObjectPoseT{
+	ObjectPoseT();
+	const CGeoPoint& Pos() const;
+	void SetPos(double x,double y);
+	void SetPos(const CGeoPoint& pos);
+	double X() const;
+	double Y() const;
+	void SetVel(double x,double y);
+	void SetVel(const CVector& vel);
+	const CVector& Vel() const;
+	double VelX() const;
+	double VelY() const;
+	void SetValid(bool v);
+	bool Valid() const;
+};
+
+class VisionObjectT{
+	const CGeoPoint& RawPos() const;
+	void SetRawPos(double x, double y);
+	void SetRawPos(const CGeoPoint& pos);
+};
+
+class MobileVisionT : public ObjectPoseT, public VisionObjectT{
+
+};
+
+struct PlayerPoseT : public ObjectPoseT{
+	PlayerPoseT();
+	double Dir() const;
+	void SetDir(double d);
+	double RotVel() const;
+	void SetRotVel(double d);
+};
+
+class PlayerTypeT{
+	void SetType(int t);
+	int Type() const;
+};
+
+class PlayerVisionT : public PlayerPoseT, public VisionObjectT, public PlayerTypeT{
+
+};
+
+struct PlayerCapabilityT{
+	double maxAccel;
+	double maxSpeed;
+	double maxAngularAccel;
+	double maxAngularSpeed;
+	double maxDec;
+	double maxAngularDec;
+};

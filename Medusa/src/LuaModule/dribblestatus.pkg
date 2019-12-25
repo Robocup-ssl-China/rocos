@@ -1,0 +1,30 @@
+$#include "staticparams.h"
+$#include <geometry.h>
+$#include <singleton.h>
+$#include <DribbleStatus.h>
+
+class CDribbleStatus {
+	CDribbleStatus();
+	bool dribbleOn(int number) const;
+	int ballController() const ;
+	bool ballControlled(int number) const;
+	bool dribbleStartPosValid(int number) const;
+	int lastBallController() const ;
+	bool lastBallController (int number) const;
+	void setLastBallController(int number);
+	const CGeoPoint& dribbleStartPos(int number) const ;
+	int dribbleStartCycle(int number) const ;
+	void setDribbleOn(int number, int cycle, const CGeoPoint& pos);
+	void setDribbleOff(int number);
+	void setDribbleStartPosLost(int number);
+	void setBallControlled(int number, const CGeoPoint& p);
+	void setBallLost(int number);
+	const CGeoPoint& ballControlStarPos() const;
+	bool needReleaseBall(int number) const ;
+	void setNeedNotReleaseBall(int number) ;
+	void setMayNeedReleaseBall(int number, const CGeoPoint& pos, bool dribbling);
+	void clearDribbleCommand();
+	void setDribbleCommand(int num, unsigned char power);
+	unsigned char getDribbleCommand(int num);
+	bool ballControlled();
+};

@@ -1,0 +1,30 @@
+$#include <geometry.h>
+$#include "staticparams.h"
+
+namespace Utils{
+	double Normalize(double angle);
+	CVector Polar2Vector(double m,double angle);
+	double VectorDot(const CVector& v1, const CVector& v2);
+	bool InBetween(const CGeoPoint& p,const CGeoPoint& p1,const CGeoPoint& p2);
+	bool InBetween(double v,double v1,double v2);
+	bool AngleBetween(double d, double d1, double d2, double buffer = PARAM::Math::PI/30); 
+	bool InBetween(const CVector& v, const CVector& v1, const CVector& v2, double buffer = PARAM::Math::PI/30);
+	inline double Deg2Rad(double angle);
+	inline double Rad2Deg(double angle);
+	CGeoPoint MakeInField(const CGeoPoint& p,const double buffer = 0);
+	bool IsInField(const CGeoPoint p, double buffer = 0); 
+	bool IsInFieldV2(const CGeoPoint p, double buffer = 0);
+	inline double FieldLeft();
+	inline double FieldRight();
+	inline double FieldTop();
+	inline double FieldBottom();
+	inline CGeoPoint LeftTop();
+	inline CGeoPoint RightBottom();
+	inline int Sign(double d);
+	CGeoPoint MakeOutOfOurPenaltyArea(const CGeoPoint& p,const double buffer);
+	CGeoPoint MakeOutOfCircleAndInField(const CGeoPoint& center,const double radius,const CGeoPoint& p,const double buffer);
+	bool InOurPenaltyArea(const CGeoPoint& p,const double buffer);
+	bool InTheirPenaltyArea(const CGeoPoint& p,const double buffer);
+	bool PlayerNumValid(int num);
+	bool canGo(const CVisionModule* pVision, const int num, const CGeoPoint& target, const int flag, const double avoidBuffer);
+}

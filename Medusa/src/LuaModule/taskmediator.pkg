@@ -1,0 +1,16 @@
+$#include <singleton.h>
+$#include <geometry.h>
+$#include "staticparams.h"
+$#include <skill/PlayerTask.h>
+$#include "utils.h"
+$#include "TaskMediator.h"
+
+class CTaskMediator{
+	CTaskMediator();
+	void setBallHandler(int num);
+	int ballHandler() const;
+    int goalie();
+	void setPlayerTask(const int num, CPlayerTask* pTask, const int priority);
+	CPlayerTask* getPlayerTask(const int num) const;
+	int getPlayerTaskPriority(const int num) const;
+}

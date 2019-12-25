@@ -1,0 +1,54 @@
+syntax = "proto2";
+
+package ZSS.Protocol;
+
+import "zss_debug.proto";
+
+message RecMessages {
+	repeated RecMessage recMsgs = 1;
+}
+
+message RecMessage {
+	required bool ctrlC                    = 1;
+	required SelectedArea selectedArea     = 2;
+	required MaintainVision maintainVision = 3;
+	repeated Debug_Msgs debugMsgs          = 4;
+}
+
+message SelectedArea {
+	required float maxX = 1;
+	required float maxY = 2;
+	required float minX = 3;
+	required float minY = 4;
+}
+
+message MaintainVision {
+	required int32 lastTouch         = 1;
+	required int32 lastTouchTeam     = 2;
+	repeated TeamRobotMsg processMsg = 3;
+	repeated TeamRobotMsg maintain   = 4;
+	required Balls4Rec balls         = 5;
+}
+
+message TeamRobotMsg {
+	required int32 size      = 1;
+	repeated Robot4Rec robot = 2;
+}
+
+message Robot4Rec {
+	optional int32 id     = 1;
+	required double posX  = 2;
+	required double posY  = 3;
+	required double angle = 4;
+}
+
+message Balls4Rec {
+	required int32 size    = 1;
+	repeated Ball4Rec ball = 2;
+}
+
+message Ball4Rec {
+	required double posX = 1;
+	required double posY = 2;
+	optional bool valid  = 3;
+}

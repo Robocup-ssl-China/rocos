@@ -1,0 +1,14 @@
+$#include "referee_commands.h"
+$#include "game_state.h"
+
+class GameState {
+	GameState();
+	bool gameOn() const;
+	bool gameOff() const;
+	bool gameOver() const;
+	bool restart() const;
+	bool ourRestart() const;
+	bool theirRestart() const;
+	bool canKickBall() const;
+	bool canEitherKickBall() const;
+};

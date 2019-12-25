@@ -1,0 +1,2 @@
+gLastTask = {}
+gRoleTask = {}

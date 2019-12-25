@@ -1,0 +1,42 @@
+$#include "staticparams.h"
+$#include <WorldDefine.h>
+$#include <PlayerCommand.h>
+$#include "BallPredictor.h"
+$#include "RobotPredictor.h"
+$#include <game_state.h>
+$#include <ServerInterface.h>
+$#include <OptionModule.h>
+$#include "utils.h"
+$#include <VisionModule.h>
+
+class CVisionModule{
+	CVisionModule();
+	~CVisionModule(void);
+	const int& getValidNum() const;
+	const int& getTheirValidNum() const;
+	const PlayerVisionT& allPlayer(int num) const;
+	const PlayerVisionT& ourPlayer(int num) const;
+	const PlayerVisionT& theirPlayer(int num) const;
+	const MobileVisionT& ball() const;
+	const PlayerVisionT& ourPlayer(int cycle, int num) const;
+	const PlayerVisionT& theirPlayer(int cycle, int num) const;
+	const MobileVisionT& ball(int cycle) const;
+	const ObjectPoseT& rawBall() const;
+        const CGeoPoint& getBallPlacementPosition() const;
+	const RobotRawVisionData& ourRawPlayer(int num) const;
+	const RobotRawVisionData& theirRawPlayer(int num) const;
+	void setPlayerCommand(int num, const CPlayerCommand* pCmd);
+	const GameState& gameState() const;
+	int playerLostTime(const int number) const;
+	const string& getCurrentRefereeMsg() const;
+	const string& getNextRefereeMsg() const;
+	const string& getLuaRefereeMsg() const;
+	int getCycle() const;
+	int getLastCycle() const;
+	int getSide() const;
+	int getOurGoal();
+	int getTheirGoal();
+	int getTimeRemain();
+	bool getBallVelStable();
+	bool ballVelValid();
+};

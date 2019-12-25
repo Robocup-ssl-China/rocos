@@ -1,0 +1,42 @@
+syntax = "proto2";
+
+message Vision_DetectionBall {
+  optional float  vel_x      =  1;
+  optional float  vel_y      =  2; 
+  optional uint32 area       =  3;
+  required float  x          =  4;
+  required float  y          =  5;
+  optional float  height     =  6;
+  optional uint32 ball_state =  7;
+  optional uint32 last_touch =  8;
+  required bool   valid      =  9;
+  required float  raw_x      =  10;
+  required float  raw_y      =  11;
+  optional float  chip_predict_x =12;
+  optional float  chip_predict_y =13;
+}
+
+message Vision_DetectionRobot {
+  required bool   valid    =  1;
+  optional uint32 robot_id      =  2;
+  required float  x             =  3;
+  required float  y             =  4;
+  optional float  orientation   =  5;
+  optional float  vel_x         =  6;
+  optional float  vel_y         =  7; 
+  optional float  rotate_vel    =  8;
+  optional float  accelerate_x  =  9;
+  optional float  accelerate_y  =  10;
+  required float  raw_x         =  11;
+  required float  raw_y         =  12;
+  optional float  raw_orientation = 13;
+  optional float  raw_vel_x     = 14;
+  optional float  raw_vel_y     = 15;
+  optional float  raw_rotate_vel = 16;
+}
+
+message Vision_DetectionFrame {
+  required Vision_DetectionBall  balls         = 1;
+  repeated Vision_DetectionRobot robots_yellow = 2;
+  repeated Vision_DetectionRobot robots_blue   = 3;
+}
