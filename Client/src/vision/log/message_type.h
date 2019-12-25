@@ -1,0 +1,13 @@
+#ifndef MESSAGE_TYPE_H
+#define MESSAGE_TYPE_H
+
+enum MessageType
+{
+    MESSAGE_BLANK = 0,
+    MESSAGE_UNKNOWN = 1,
+    MESSAGE_SSL_VISION_2010 = 2,
+    MESSAGE_SSL_REFBOX_2013 = 3,
+    MESSAGE_SSL_VISION_2014 = 4
+};
+
+#endif // MESSAGE_TYPE_H

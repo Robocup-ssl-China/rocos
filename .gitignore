@@ -134,8 +134,8 @@ build*/
 
 grSim/
 Crazy/
-Client/
 Autoref/
+Client/lib
 
 zeus_deps_check
 git_stats
