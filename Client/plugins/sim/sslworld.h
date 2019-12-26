@@ -30,7 +30,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "zss_cmd.pb.h"
 #include <string>
 #include <QMutex>
-#define ZSPLUGIN_DEBUG
 #include "zsplugin.hpp"
 #include "dllexport.h"
 #define WALL_COUNT 10
@@ -62,7 +61,6 @@ public:
     bool isGLEnabled;
     DLL_EXPORT static SSLWorld* instance();
     void step(dReal dt=-1);
-    SSL_WrapperPacket* generatePacket(int cam_id=0);
     void publishPacket(int cam_id = -1);
     void addFieldLinesArcs(SSL_GeometryFieldSize *field);
     Vector2f* allocVector(float x, float y);

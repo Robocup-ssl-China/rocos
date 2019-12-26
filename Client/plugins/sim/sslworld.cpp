@@ -33,6 +33,11 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "grSimMessage.pb.h"
 #include "setthreadname.h"
 #include "zss_cmd.pb.h"
+
+#ifdef SIM_TIME_DEBUG
+#include <QElapsedTimer>
+#endif
+
 #define ROBOT_GRAY 0.4
 #define WHEEL_COUNT 4
 
@@ -321,14 +326,16 @@ void SSLWorld::run(){
     SetThreadName("SimPlugin");
     std::cout << "SSLWorld plugin start!" << std::endl;
     std::thread rec([=]{recvActions();});
+    double time = this->cfg->DeltaTime();
     while(true){
         ode_mutex.lock();
-        this->step(this->cfg->DeltaTime());
+        this->step(time);
         ode_mutex.unlock();
         receive("sim_signal");
         ode_mutex.lock();
         sendVisionBuffer();
         ode_mutex.unlock();
+        std::this_thread::sleep_for(std::chrono::microseconds(500));
     }
 }
 
@@ -345,9 +352,13 @@ SSLWorld::~SSLWorld()
 
 void SSLWorld::step(dReal dt)
 {
+    #ifdef SIM_TIME_DEBUG
+    QElapsedTimer timer;
+    timer.start();
+    #endif
     if (customDT > 0)
         dt = customDT;
-    for (int kk=0;kk<5;kk++)
+    for (int kk=0;kk<3;kk++)
     {
         const dReal* ballvel = dBodyGetLinearVel(ball->body);
         dReal ballspeed = ballvel[0]*ballvel[0] + ballvel[1]*ballvel[1] + ballvel[2]*ballvel[2];
@@ -372,11 +383,15 @@ void SSLWorld::step(dReal dt)
         dBodyAddForce(ball->body,ballfx,ballfy,ballfz);
         if (dt==0) dt=last_dt;
         else last_dt = dt;
-
         selected = -1;
-        p->step(dt*0.2);
+        p->step(dt*1.0/3);
     }
-
+    #ifdef SIM_TIME_DEBUG
+    qDebug() << "sim step ball function : " << timer.nsecsElapsed()/1000000.0 << "milliseconds";
+    #endif
+    #ifdef SIM_TIME_DEBUG
+    timer.start();
+    #endif
 
     int best_k=-1;
     dReal best_dist = 1e8;
@@ -411,8 +426,10 @@ void SSLWorld::step(dReal dt)
         robots[k]->step();
         robots[k]->selected = false;
     }
-    dMatrix3 R;
     framenum ++;
+    #ifdef SIM_TIME_DEBUG
+    qDebug() << "sim step robot function : " << timer.nsecsElapsed()/1000000.0 << "milliseconds";
+    #endif
 }
 
 
@@ -425,6 +442,10 @@ void SSLWorld::recvActions()
     while (true)
     {
         receive("sim_packet",data);
+        #ifdef SIM_TIME_DEBUG
+        QElapsedTimer timer;
+        timer.start();
+        #endif
         packet.ParseFromArray(data.data(), data.size());
         int team=0;
         ode_mutex.lock();
@@ -525,6 +546,10 @@ void SSLWorld::recvActions()
 //                sendRobotStatus(robotsPacket, sender, team);
         }
         ode_mutex.unlock();
+        std::this_thread::sleep_for(std::chrono::microseconds(300));
+        #ifdef SIM_TIME_DEBUG
+        qDebug() << "sim callback function : " << timer.nsecsElapsed()/1000000.0 << "milliseconds";
+        #endif
     }
 }
 void SSLWorld::addRobotStatus(ZSS::Protocol::Robots_Status& robotsPacket, int robotID, int team, bool infrared, KickStatus kickStatus)
@@ -589,90 +614,9 @@ bool SSLWorld::visibleInCam(int id, double x, double y)
 }
 
 #define CONVUNIT(x) ((int)(1000*(x)))
-SSL_WrapperPacket* SSLWorld::generatePacket(int cam_id)
-{
-    SSL_WrapperPacket* packet = new SSL_WrapperPacket;
-    dReal x,y,z,dir;
-    ball->getBodyPosition(x,y,z);    
-    packet->mutable_detection()->set_camera_id(cam_id);
-    packet->mutable_detection()->set_frame_number(framenum);    
-    dReal t_elapsed = timer->elapsed()/1000.0;
-    packet->mutable_detection()->set_t_capture(t_elapsed);
-    packet->mutable_detection()->set_t_sent(t_elapsed);
-    dReal dev_x = cfg->noiseDeviation_x();
-    dReal dev_y = cfg->noiseDeviation_y();
-    dReal dev_a = cfg->noiseDeviation_angle();
-    if (sendGeomCount++ % cfg->sendGeometryEvery() == 0)
-    {
-        SSL_GeometryData* geom = packet->mutable_geometry();
-        SSL_GeometryFieldSize* field = geom->mutable_field();
-
-
-        // Field general info
-        field->set_field_length(CONVUNIT(cfg->Field_Length()));
-        field->set_field_width(CONVUNIT(cfg->Field_Width()));
-        field->set_boundary_width(CONVUNIT(cfg->Field_Margin()));
-        field->set_goal_width(CONVUNIT(cfg->Goal_Width()));
-        field->set_goal_depth(CONVUNIT(cfg->Goal_Depth()));
-
-        // Field lines and arcs
-        addFieldLinesArcs(field);
-
-    }
-    if (!cfg->noise()) { dev_x = 0;dev_y = 0;dev_a = 0;}
-    if (!cfg->vanishing() || (rand0_1() > cfg->ball_vanishing()))
-    {
-        if (visibleInCam(cam_id, x, y)) {
-            SSL_DetectionBall* vball = packet->mutable_detection()->add_balls();
-            vball->set_x(randn_notrig(x*1000.0f,dev_x));
-            vball->set_y(randn_notrig(y*1000.0f,dev_y));
-            vball->set_z(z*1000.0f);
-            vball->set_pixel_x(x*1000.0f);
-            vball->set_pixel_y(y*1000.0f);
-            vball->set_confidence(0.9 + rand0_1()*0.1);
-        }
-    }
-    for(int i = 0; i < cfg->Robots_Count(); i++){
-        if ((cfg->vanishing()==false) || (rand0_1() > cfg->blue_team_vanishing()))
-        {
-            if (!robots[i]->on) continue;
-            robots[i]->getXY(x,y);
-            dir = robots[i]->getDir();
-            if (visibleInCam(cam_id, x, y)) {
-                SSL_DetectionRobot* rob = packet->mutable_detection()->add_robots_blue();
-                rob->set_robot_id(i);
-                rob->set_pixel_x(x*1000.0f);
-                rob->set_pixel_y(y*1000.0f);
-                rob->set_confidence(1);
-                rob->set_x(randn_notrig(x*1000.0f,dev_x));
-                rob->set_y(randn_notrig(y*1000.0f,dev_y));
-                rob->set_orientation(normalizeAngle(randn_notrig(dir,dev_a))*M_PI/180.0f);
-            }
-        }
-    }
-    for(int i = cfg->Robots_Count(); i < cfg->Robots_Count()*2; i++){
-        if ((cfg->vanishing()==false) || (rand0_1() > cfg->yellow_team_vanishing()))
-        {
-            if (!robots[i]->on) continue;
-            robots[i]->getXY(x,y);
-            dir = robots[i]->getDir();
-            if (visibleInCam(cam_id, x, y)) {
-                SSL_DetectionRobot* rob = packet->mutable_detection()->add_robots_yellow();
-                rob->set_robot_id(i-cfg->Robots_Count());
-                rob->set_pixel_x(x*1000.0f);
-                rob->set_pixel_y(y*1000.0f);
-                rob->set_confidence(1);
-                rob->set_x(randn_notrig(x*1000.0f,dev_x));
-                rob->set_y(randn_notrig(y*1000.0f,dev_y));
-                rob->set_orientation(normalizeAngle(randn_notrig(dir,dev_a))*M_PI/180.0f);
-            }
-        }
-    }
-    return packet;
-}
 void SSLWorld::publishPacket(int cam_id){
     static SSL_WrapperPacket packet;
-    dReal x,y,z,dir;
+    dReal x,y,z,dir,k;
     ball->getBodyPosition(x,y,z);
     packet.mutable_detection()->set_camera_id(cam_id);
     packet.mutable_detection()->set_frame_number(framenum);
@@ -717,7 +661,10 @@ void SSLWorld::publishPacket(int cam_id){
         {
             if (!robots[i]->on) continue;
             robots[i]->getXY(x,y);
-            dir = robots[i]->getDir();
+            dir = robots[i]->getDir(k);
+            if (k < 0.9) {
+                robots[i]->resetRobot();
+            }
             if (visibleInCam(cam_id, x, y)) {
                 SSL_DetectionRobot* rob = packet.mutable_detection()->add_robots_blue();
                 rob->set_robot_id(i);
@@ -735,7 +682,10 @@ void SSLWorld::publishPacket(int cam_id){
         {
             if (!robots[i]->on) continue;
             robots[i]->getXY(x,y);
-            dir = robots[i]->getDir();
+            dir = robots[i]->getDir(k);
+            if (k < 0.9) {
+                robots[i]->resetRobot();
+            }
             if (visibleInCam(cam_id, x, y)) {
                 SSL_DetectionRobot* rob = packet.mutable_detection()->add_robots_yellow();
                 rob->set_robot_id(i-cfg->Robots_Count());
@@ -850,7 +800,14 @@ void SSLWorld::sendVisionBuffer()
 //        delete packet;
 //        if (sendQueue.isEmpty()) break;
 //    }
+    #ifdef SIM_TIME_DEBUG
+    QElapsedTimer timer;
+    timer.start();
+    #endif
     publishPacket(0);
+    #ifdef SIM_TIME_DEBUG
+    qDebug() << "sim send function : " << timer.nsecsElapsed()/1000000.0 << "milliseconds";
+    #endif
 }
 
 void RobotsFomation::setAll(dReal* xx,dReal *yy)

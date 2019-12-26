@@ -4,5 +4,6 @@
 
 2019.12.26
 
-* 运行一段时间后，会产生仿真掉帧，并且command运行不正确（启动RunMilitaryBoxing.lua即可复现）
+* ~~运行一段时间后，会产生仿真掉帧，并且command运行不正确（启动RunMilitaryBoxing.lua即可复现）~~ mark 2019.12.27
 * 开两队代码后，鼠标拖拽会导致Medusa crush
+* ~~sim会翻车导致车无法移动~~ mark 2019.12.27

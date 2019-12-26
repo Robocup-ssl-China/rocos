@@ -19,7 +19,7 @@ if (NOT UNIX AND NOT APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 endif()
 
-add_definitions(-DZSPLUGIN_DEBUG)
+#add_definitions(-DZSPLUGIN_DEBUG -DSIM_TIME_DEBUG)
 #include(ProcessorCount)
 #ProcessorCount(N)
 #if(NOT N EQUAL 0)

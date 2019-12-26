@@ -1,5 +1,5 @@
 *.pdb
-
+*.user
 # C++ objects and libs
 
 Athena/*.slo
