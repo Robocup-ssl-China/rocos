@@ -17,3 +17,14 @@
 * [编译](INSTALL.md)
 
 * [已知问题](ISSUE.md)
+
+
+
+主要贡献名单：
+
+| github                                 | 贡献模块     |
+| -------------------------------------- | ------------ |
+| [Wayne](https://github.com/zijinoier)  | VisionModule |
+| [Luckky](https://github.com/guodashun) | LogModule    |
+| [Mark](https://github.com/ZJUMark)     | GUI          |
+
