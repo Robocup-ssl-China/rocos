@@ -76,7 +76,7 @@ end
 
 function shoot()
 	return function (role)
-		return posToOurGoal(player.pos(role))
+		return posToTheirGoal(player.pos(role))
 	end
 end
 

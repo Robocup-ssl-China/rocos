@@ -73,19 +73,21 @@ function goCmuRush(p, d, a, f, r, v)
 	return {mexe, mpos}
 end
 
-
---immortal rush
-function noneZeroRush(p, d, a, f, r, v)
-	local idir
-	if d ~= nil then
-		idir = d
-	else
-		idir = dir.shoot()
-	end
-	local mexe, mpos = NoneZeroRush{pos = p, dir = idir, acc = a, flag = f, rec = r, vel = v}
-	return {mexe, mpos}
+function forcekick(p,d,chip,power)
+	local ikick = chip and kick.chip or kick.flat
+	local ipower = power and power or 8000
+	local idir = d and d or dir.shoot()
+	local mexe, mpos = GoCmuRush{pos = p, dir = idir, acc = a, flag = f,rec = r,vel = v}
+	return {mexe, mpos, ikick, idir, pre.low, kp.specified(ipower), cp.full, flag.forcekick}
 end
 
+function shoot(p,d,chip,power)
+	local ikick = chip and kick.chip or kick.flat
+	local ipower = power and power or 8000
+	local idir = d and d or dir.shoot()
+	local mexe, mpos = GoCmuRush{pos = p, dir = idir, acc = a, flag = f,rec = r,vel = v}
+	return {mexe, mpos, ikick, idir, pre.low, kp.specified(ipower), cp.full, flag.nothing}
+end
 ------------------------------------ 防守相关的skill ---------------------------------------
 -- TODO
 ----------------------------------------- 其他动作 --------------------------------------------

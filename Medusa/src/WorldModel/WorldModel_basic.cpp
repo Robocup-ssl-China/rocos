@@ -12,7 +12,22 @@
 // 默认参数初始化
 const int CWorldModel::myDefaultNum = 0;
 const int CWorldModel::enemyDefaultNum = 0;
-
+namespace{
+    const double beta = 1.0;
+    bool deltaMarginKickingMetric(int current_cycle, double gt, double delta, double mydir, int myNum)
+    {
+        // 计算当前的margin并做记录
+        double gl = Utils::Normalize(gt - delta);	// 目标方向向左偏置射门精度阈值
+        double gr = Utils::Normalize(gt + delta);	// 目标方向向右偏置射门精度阈值
+        double current_margin = max(Utils::Normalize(mydir - gl), Utils::Normalize(gr - mydir));
+        return (current_margin > 0 && current_margin < beta*2*delta);
+    }
+    ///> 关于控球
+    // 控球控制阈值
+    const bool Allow_Start_Dribble = true;
+    const double Allow_Start_Dribble_Dist = 6.0 * PARAM::Vehicle::V2::PLAYER_SIZE;
+    const double Allow_Start_Dribble_Angle = 5.0 * PARAM::Vehicle::V2::KICK_ANGLE;
+}
 // 自己到球的矢量
 const CVector CWorldModel::self2ball(int current_cycle,  int myNum) {
 	static int last_cycle[PARAM::Field::MAX_PLAYER] = {-1,-1,-1,-1,-1,-1};
@@ -51,4 +66,20 @@ void CWorldModel::SPlayFSMSwitchClearAll(bool clear_flag)
     BufferCounter::Instance()->clear();
     // TODO
     return ;
+}
+bool CWorldModel::IsBallKicked(int num){
+    return (RobotSensor::Instance()->IsKickerOn(num) != 0);
+}
+bool CWorldModel::IsInfraredOn(int num){
+    return (RobotSensor::Instance()->IsInfraredOn(num));
+}
+int CWorldModel::InfraredOnCount(int num){
+    return (RobotSensor::Instance()->fraredOn(num));
+}
+int CWorldModel::InfraredOffCount(int num){
+    return (RobotSensor::Instance()->fraredOff(num));
+}
+bool CWorldModel::KickDirArrived(int current_cycle, double kickdir, double kickdirprecision, int myNum){
+    const PlayerVisionT& me = this->_pVision->ourPlayer(myNum);
+    return ::deltaMarginKickingMetric(current_cycle,kickdir,kickdirprecision,me.Dir(),myNum);
 }

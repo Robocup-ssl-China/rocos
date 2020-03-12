@@ -7,7 +7,6 @@
 #include "simulator.h"
 #include "parammanager.h"
 #include "simmodule.h"
-#include "refereethread.h"
 #include "rec_recorder.h"
 #include "networkinterfaces.h"
 #include <QProcess>

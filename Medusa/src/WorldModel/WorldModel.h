@@ -38,6 +38,12 @@ public:
 	void registerOption(const COptionModule* pOption) { _pOption = pOption; }
 	const CVisionModule* vision() const { return _pVision; }
 	const COptionModule* option() const { return _pOption; }
+    bool	IsBallKicked(int);
+    bool    IsInfraredOn(int);
+    int     InfraredOnCount(int);
+    int     InfraredOffCount(int);
+    bool	KickDirArrived (int current_cycle, double kickdir, double kickdirprecision, int myNum = myDefaultNum);
+
 private:
 	const CVisionModule* _pVision;
 	const COptionModule* _pOption;

@@ -69,9 +69,9 @@ Page{
         TabButton {
             icon.source:"/source/camera.png";
         }
-//        TabButton {
-//            icon.source:"/source/referee.png";
-//        }
+        TabButton {
+            icon.source:"/source/referee.png";
+        }
 //        TabButton {
 //            icon.source:"/source/viewer.png";
 //        }
@@ -353,8 +353,8 @@ Page{
 //                }
 //            }
         }
-//        RefereeBox{
-//        }
+        RefereeBox{
+        }
 //        Viewer{}
         /*****************************************/
         /*                  UDP                  */

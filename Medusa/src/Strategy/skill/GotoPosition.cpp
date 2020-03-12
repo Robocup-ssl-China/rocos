@@ -253,7 +253,7 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     }
 
     if (dribble) {
-        dribblePower = DRIBBLE_NORAML;
+        dribblePower = DRIBBLE_HIGHEST;
     }
 //    GDebugEngine::Instance()->gui_debug_msg(self.Pos(), QString("%1").arg(localVel.mod()).toLatin1(),COLOR_BLUE);
     /// 生成并返回控制指令

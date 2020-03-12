@@ -7,4 +7,10 @@ class CWorldModel{
 	CWorldModel();
 	const CVisionModule* vision();
 	void SPlayFSMSwitchClearAll(bool clear_flag = false);
+
+	bool 	KickDirArrived(int, double, double, int );
+	bool	IsBallKicked(int);
+    bool    IsInfraredOn(int);
+    int     InfraredOnCount(int);
+    int     InfraredOffCount(int);
 }
