@@ -29,7 +29,6 @@ endif()
 set(libs)
 
 # define protobuf generater
-find_package(Protobuf REQUIRED)
 if (NOT UNIX AND NOT APPLE)
     set(PROTOBUF_INCLUDE_DIRS "C:/usr/local/protobuf/include")
     set(Protobuf_LIBRARIES "C:/usr/local/protobuf/lib/libprotobuf.lib")

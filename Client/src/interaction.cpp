@@ -255,7 +255,7 @@ void Interaction::kill() {
     ZRecRecorder::instance()->stop();
     QProcess killTask;
 #ifdef WIN32
-    RefereeThread::instance()->disconnectTCP();
+//    RefereeThread::instance()->disconnectTCP();
     QString athena = "taskkill -im Client.exe -f";
     QString medusa = "taskkill -im Medusa.exe -f";
     //QString grSim = "taskkill -im grSim.exe -f";
