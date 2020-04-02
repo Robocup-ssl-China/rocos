@@ -2,6 +2,23 @@ cmake_minimum_required(VERSION 3.9)
 
 project(Client LANGUAGES CXX)
 
+if (WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+
+    # muti-processors build for VS
+    include(ProcessorCount)
+    ProcessorCount(N)
+    if(NOT N EQUAL 0)
+        SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   /MP${N} ")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP${N} ")
+    endif()
+
+    ## if you have different Qt visions and CMake cannot link the right one
+    #set(CMAKE_PREFIX_PATH D:/App/Qt/5.14.1/msvc2015_64/lib/cmake)
+
+    set(thirdParty ${CMAKE_CURRENT_SOURCE_DIR}/../3rdParty)
+endif()
+
 set(VERSION "0.0.1")
 set(VENDOR "ZJUNlict")
 set(MAINTAINER "ZJUNlict <zjunlict.ssl@gmail.com>")
@@ -19,19 +36,12 @@ if (NOT UNIX AND NOT APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 endif()
 
-#add_definitions(-DZSPLUGIN_DEBUG -DSIM_TIME_DEBUG)
-#include(ProcessorCount)
-#ProcessorCount(N)
-#if(NOT N EQUAL 0)
-#    SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   /MP${N} ")
-#    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP${N} ")
-#endif()
 set(libs)
 
 # define protobuf generater
-if (NOT UNIX AND NOT APPLE)
-    set(PROTOBUF_INCLUDE_DIRS "C:/usr/local/protobuf/include")
-    set(Protobuf_LIBRARIES "C:/usr/local/protobuf/lib/libprotobuf.lib")
+if (WIN32)
+    set(PROTOBUF_INCLUDE_DIRS "${thirdParty}/protobuf/include")
+    set(Protobuf_LIBRARIES "${thirdParty}/protobuf/lib/libprotobuf.lib")
 else()
     find_package(Protobuf REQUIRED)
 endif()
@@ -67,21 +77,19 @@ ENDFOREACH()
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 list(APPEND libs ${Protobuf_LIBRARIES})
 
-## find Eigen Zlib
-if (NOT UNIX AND NOT APPLE)
-    set(EIGEN3_INCLUDE_DIR "C:/usr/local/Eigen")
-    set(ZLIB_INCLUDE_DIRS "C:/usr/local/zlib/include")
-    set(ZLIB_LIBRARIES "C:/usr/local/zlib/lib/zlib.lib")
+## find Zlib
+if (WIN32)
+    set(ZLIB_INCLUDE_DIRS "${thirdParty}/zlib/include")
+    set(ZLIB_LIBRARIES "${thirdParty}/zlib/lib/zlib.lib")
 else()
-    find_package(Eigen3 REQUIRED)
     find_package(ZLIB)
 endif()
-include_directories(${EIGEN3_INCLUDE_DIR})
+
 include_directories(${ZLIB_INCLUDE_DIRS})
 list(APPEND libs ${ZLIB_LIBRARIES})
 ## find Qt
 find_package(Qt5 COMPONENTS Core Quick SerialPort REQUIRED)
-list(APPEND libs Qt5::Core Qt5::Quick Qt5::SerialPort)
+list(APPEND libs Qt5::Core Qt5::Quick Qt5::SerialPort Qt5::WinMain)
 
 # project files
 ## protobuf files
