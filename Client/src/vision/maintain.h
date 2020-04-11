@@ -3,7 +3,6 @@
 #include "singleton.hpp"
 #include "vision_detection.pb.h"
 #include "kalmanfilter.h"
-#include "chipsolver.h"
 #include <messageformat.h>
 #include <QUdpSocket>
 #include <QtCore/QTextStream>
@@ -28,9 +27,7 @@ class CMaintain {
     QFile file;
     QTextStream out;
     ReceiveVisionMessage result;
-    BallRecord ballrecord;
     KalmanFilter ballKalmanFilter;
-    Chipsolver chipsolver;
 };
 typedef Singleton<CMaintain> Maintain;
 

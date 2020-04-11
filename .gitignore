@@ -2,52 +2,52 @@
 *.user
 # C++ objects and libs
 
-Athena/*.slo
-Athena/*.lo
-Athena/*.o
-Athena/*.a
-Athena/*.la
-Athena/*.lai
-Athena/*.so
-Athena/*.dll
-Athena/*.dylib
+Client/*.slo
+Client/*.lo
+Client/*.o
+Client/*.a
+Client/*.la
+Client/*.lai
+Client/*.so
+Client/*.dll
+Client/*.dylib
 
 # Qt-es
 
-Athena/object_script.*.Release
-Athena/object_script.*.Debug
-Athena/*_plugin_import.cpp
-Athena//.qmake.cache
-Athena//.qmake.stash
-Athena/*.pro.user
-Athena/*.pro.user.*
-Athena/*.qbs.user
-Athena/*.qbs.user.*
-Athena/*.moc
-Athena/moc_*.cpp
-Athena/moc_*.h
-Athena/qrc_*.cpp
-Athena/ui_*.h
-Athena/Makefile*
-Athena/*build*
+Client/object_script.*.Release
+Client/object_script.*.Debug
+Client/*_plugin_import.cpp
+Client//.qmake.cache
+Client//.qmake.stash
+Client/*.pro.user
+Client/*.pro.user.*
+Client/*.qbs.user
+Client/*.qbs.user.*
+Client/*.moc
+Client/moc_*.cpp
+Client/moc_*.h
+Client/qrc_*.cpp
+Client/ui_*.h
+Client/Makefile*
+Client/*build*
 
 # Qt unit tests
-Athena/target_wrapper.*
+Client/target_wrapper.*
 
 
 # QtCreator
 
-Athena/*.autosave
+Client/*.autosave
 
 # QtCtreator Qml
-Athena/*.qmlproject.user
-Athena/*.qmlproject.user.*
+Client/*.qmlproject.user
+Client/*.qmlproject.user.*
 
 # QtCtreator CMake
-Athena/CMakeLists.txt.user*
+Client/CMakeLists.txt.user*
 
 # Protobuf
-Athena/*.pb.*
+Client/*.pb.*
 
 
 # C++ objects and libs
@@ -114,9 +114,9 @@ ZBin/*.label*
 
 ZBin/3rdParty/*
 ZBin/LOG/*.log
-ZBin/Athena.exp
-ZBin/Athena.lib
-ZBin/Athena
+ZBin/Client.exp
+ZBin/Client.lib
+ZBin/Client
 ZBin/Medusa
 ZBin/MedusaD
 ZBin/grsim
@@ -139,3 +139,5 @@ Client/lib
 
 zeus_deps_check
 git_stats
+
+3rdParty

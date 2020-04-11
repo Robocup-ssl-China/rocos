@@ -5,6 +5,13 @@ find_package(OpenGL REQUIRED)
 list(APPEND PROJECT_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR})
 list(APPEND libs ${OPENGL_LIBRARIES})
 
+if (WIN32)
+    ## if you have different Qt visions and CMake cannot link the right one
+    #set(CMAKE_PREFIX_PATH D:/App/Qt/5.14.1/msvc2015_64/lib/cmake)
+
+    set(thirdParty ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdParty)
+endif()
+
 # Qt5
 find_package(Qt5 COMPONENTS Core Network Gui REQUIRED)
 list(APPEND PROJECT_INCLUDE_DIRS
@@ -12,12 +19,12 @@ list(APPEND PROJECT_INCLUDE_DIRS
     ${Qt5Network_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
 )
-list(APPEND libs Qt5::Core Qt5::Network Qt5::Gui)
+list(APPEND libs Qt5::Core Qt5::Network Qt5::Gui Qt5::WinMain)
 
 # ODE
-if (NOT UNIX AND NOT APPLE)
-set(ODE_INCLUDE_DIRS "C:/usr/local/ode/include")
-set(ODE_LIBRARIES "C:/usr/local/ode/lib/ode.lib")
+if (WIN32)
+    set(ODE_INCLUDE_DIRS "${thirdParty}/ODE/include")
+    set(ODE_LIBRARIES "${thirdParty}/ODE/lib/ode.lib")
 else()
 find_package(ODE REQUIRED)
 endif()
@@ -26,9 +33,9 @@ list(APPEND libs ${ODE_LIBRARIES})
 # add_definitions(-DdDOUBLE)
 
 # Protobuf
-if (NOT UNIX AND NOT APPLE)
-set(PROTOBUF_INCLUDE_DIRS "C:/usr/local/protobuf/include")
-set(Protobuf_LIBRARIES "C:/usr/local/protobuf/lib/libprotobuf.lib")
+if (WIN32)
+    set(PROTOBUF_INCLUDE_DIRS "${thirdParty}/protobuf/include")
+    set(Protobuf_LIBRARIES "${thirdParty}/protobuf/lib/libprotobuf.lib")
 else()
 find_package(Protobuf REQUIRED)
 endif()

@@ -7,7 +7,6 @@
 #include "dealball.h"
 #include "dealrobot.h"
 #include"ballrecords.h"
-#include"chipsolver.h"
 #include <fstream>
 #include <iostream>
 #define MAX_BALL_PER_FRAME 200
