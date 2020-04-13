@@ -89,8 +89,10 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 list(APPEND libs ${ZLIB_LIBRARIES})
 ## find Qt
 find_package(Qt5 COMPONENTS Core Quick SerialPort REQUIRED)
-list(APPEND libs Qt5::Core Qt5::Quick Qt5::SerialPort Qt5::WinMain)
-
+list(APPEND libs Qt5::Core Qt5::Quick Qt5::SerialPort)
+if (WIN32)
+    list(APPEND libs Qt5::WinMain)
+endif()
 # project files
 ## protobuf files
 set(PROTO_LIST

@@ -19,10 +19,11 @@ list(APPEND PROJECT_INCLUDE_DIRS
     ${Qt5Network_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
 )
-list(APPEND libs Qt5::Core Qt5::Network Qt5::Gui Qt5::WinMain)
+list(APPEND libs Qt5::Core Qt5::Network Qt5::Gui)
 
 # ODE
 if (WIN32)
+    list(APPEND libs Qt5::WinMain)
     set(ODE_INCLUDE_DIRS "${thirdParty}/ODE/include")
     set(ODE_LIBRARIES "${thirdParty}/ODE/lib/ode.lib")
 else()
