@@ -128,7 +128,7 @@ void ActionModuleSerialVersion::sendLegacy(const ZSS::Protocol::Robots_Command& 
     int count = 0;
     tx.fill(0x00);
     tx[0] = 0xff;
-    tx[21] = 0x07;
+    tx[21] = ((this->frequency&0x0f)<<4) | 0x07;
 
     for(int i=0;i<PARAM::ROBOTMAXID;i++){
         if(NJ_CMDS[i].valid){
