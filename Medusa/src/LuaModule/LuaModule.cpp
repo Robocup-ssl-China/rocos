@@ -129,7 +129,7 @@ bool CLuaModule::RunScript(const char *pFname)
 
 	if (0 != luaL_loadfile(m_pScriptContext, pFilename))
     {
-        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2-50);
+        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2+500);
         qDebug() << QString("Lua Error - Script Run\nScript Name:%1\nError Message:%2\n").arg(pFilename).arg(luaL_checkstring(m_pScriptContext, -1));
         GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-200),QString("Lua Error - Script Load").toLatin1());
         GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-400),QString("Name:%1").arg(pFilename).toLatin1());
@@ -143,7 +143,7 @@ bool CLuaModule::RunScript(const char *pFname)
     }
 	if (0 != lua_pcall(m_pScriptContext, 0, LUA_MULTRET, 0))
     {
-        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2-50);
+        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2+500);
         qDebug() << QString("Lua Error - Script Run\nScript Name:%1\nError Message:%2\n").arg(pFilename).arg(luaL_checkstring(m_pScriptContext, -1));
         GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-200),QString("Lua Error - Script Load").toLatin1());
         GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-400),QString("Name:%1").arg(pFilename).toLatin1());

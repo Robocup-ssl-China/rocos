@@ -142,13 +142,13 @@ function GetMatchPotential(num, role)
 	end
 	local playerPos = player.pos(num)
 	local vec = playerPos - targetPos
-	local t2 = vec:mod2() / 4.0
+	local t = vec:mod2() / 4.0 / 1000000.0
 	if DEBUG_MATCH then
 		debugEngine:gui_debug_line(targetPos,playerPos,4)
 		debugEngine:gui_debug_msg(playerPos+(targetPos-playerPos)/3,string.format("%.2f",t),3)
 	end
 
-	return t2
+	return t
 end
 
 function RemoveExistNum(num)

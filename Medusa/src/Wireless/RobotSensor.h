@@ -49,7 +49,7 @@ public:
     void Update(const CVisionModule* pVision){
         static const int MAX_FRARED = 999;
         static const double DEBUG_X = -PARAM::Field::PITCH_LENGTH / 12;
-        static const double DEBUG_TEXT_LENGTH = 200.0;
+        static const double DEBUG_TEXT_LENGTH = 500.0;
         static const double DEBUG_X_STEP = PARAM::Field::PITCH_LENGTH / 30;
         static const double DEBUG_Y = -PARAM::Field::PITCH_WIDTH * 4 / 10;
         static const double DEBUG_Y_STEP = PARAM::Field::PITCH_WIDTH / 45;

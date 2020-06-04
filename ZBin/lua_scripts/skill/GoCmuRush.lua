@@ -26,7 +26,7 @@ function GoCmuRush(task)
 		end
 
 		if type(task.pos) == "function" then
-			mpos = task.pos()
+			mpos = task.pos(runner)
 		else
 			mpos = task.pos
 		end
