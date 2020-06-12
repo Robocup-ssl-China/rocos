@@ -14,6 +14,6 @@ else
 	end
 end
 
-gCurrentPlay = "TestFreeKick"
+-- gCurrentPlay = "TestFreeKick"
 
 gOurIndirectTable.lastRefCycle = vision:getCycle()

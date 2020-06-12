@@ -298,7 +298,7 @@ function getOpponentScript(str, script, MaxRandom)
 		end
 		randNumLast=randNum
 
-	if (type(script[randNum]) == "string") then
+		if (type(script[randNum]) == "string") then
 			return script[randNum]
 		else
 			return str..script[randNum]

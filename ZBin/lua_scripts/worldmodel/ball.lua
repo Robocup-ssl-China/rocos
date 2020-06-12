@@ -327,7 +327,7 @@ gRefMsg = {
     -- 本次定位球的antiY参数
     antiY     = 1,
     -- 本次定位球是不是我方的球
-    isOurBall = false
+    -- isOurBall = false
 }
 
 -- 当有裁判盒信息切换时进行更新的信息
@@ -335,7 +335,7 @@ function updateRefMsg()
 	gRefMsg.ballX = posX()
 	gRefMsg.ballY = posY()
 	gRefMsg.antiY = antiY()
-	gRefMsg.isOurBall = world:IsOurBallByAutoReferee()
+	-- gRefMsg.isOurBall = world:IsOurBallByAutoReferee()
     gRefMsg.lastCycle = vision:getCycle()
 end
 function updateRef2PlacePos()
@@ -404,9 +404,9 @@ function refSyntYDir(p)
 end
 
 -- 是否我方开定位球
-function refIsOurBall(p)
-    return gRefMsg.isOurBall
-end
+-- function refIsOurBall(p)
+--     return gRefMsg.isOurBall
+-- end
 
 
 -- function firstPassPos()

@@ -232,7 +232,7 @@ function RunPlay(name)
 				end
 				
 				if roleNum ~= -1 then
-					if task[3] ~= nil and task[3](roleNum) ~= kick.none() then
+					if task[3] ~= nil then
 						local mkick = task[3](roleNum)
 						local mdir = task[4](roleNum)
 						local mpre = task[5](roleNum)
@@ -240,10 +240,13 @@ function RunPlay(name)
 						local mcp  = task[7](roleNum)
 						local mflag = task[8]
 						local isDirOk = world:KickDirArrived(vision:getCycle(), mdir, mpre, roleNum)
-						--print("is DIR ",isDirOk)
-						-- if rolename == "Breaker" then
-						-- 	print(player.dir("Breaker"), mdir, isDirOk, ball.toPlayerDist("Breaker"))
-						-- end
+
+						local needDribble = bit:_and(mflag, flag.dribbling)
+
+						if needDribble ~= 0 then
+							dribbleStatus:setDribbleCommand(roleNum,3)
+						end
+
 						if isDirOk or bit:_and(mflag, flag.force_kick) ~= 0 then
 							if mkick == kick.flat() then
 								kickStatus:setKick(roleNum, mkp)

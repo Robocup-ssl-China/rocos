@@ -77,7 +77,7 @@ if SelectRefPlay() then
 		if vision:getCurrentRefereeMsg() ~= "" then
 			gIsRefPlayExit = true
 		end
-		CPrintString("New Play: ".. gCurrentPlay)
+		print("New Play: ".. gCurrentPlay)
 	end
 else
 	if gNextPlay ~= "" then
