@@ -1,6 +1,9 @@
 gPlayTable.CreatePlay{
 firstState = "halt",
 switch = function()
+	if cond.isNormalStart() then
+      return "exit"
+    end
 	return "halt"
 end,
 ["halt"] = {

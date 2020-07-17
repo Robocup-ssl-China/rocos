@@ -93,7 +93,7 @@ function toOurGoalDir()
 end
 
 function toOurPenaltyDist()
-    local dist = DefendUtils.calcBalltoOurPenaty()
+    local dist = toOurGoalDist() - param.penaltyDepth
     return dist
 end
 

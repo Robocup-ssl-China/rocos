@@ -168,12 +168,14 @@ SOURCES += \
     src/Strategy/rolematch/munkresTacticPositionMatcher.cpp \
     src/Strategy/skill/BasicPlay.cpp \
     src/Strategy/skill/Factory.cpp \
+    src/Strategy/skill/Goalie.cpp \
     src/Strategy/skill/GotoPosition.cpp \
     src/Strategy/skill/OpenSpeed.cpp \
     src/Strategy/skill/PlayerTask.cpp \
     src/Strategy/skill/SmartGotoPosition.cpp \
     src/Strategy/skill/Speed.cpp \
     src/Strategy/skill/StopRobot.cpp \
+    src/Strategy/skill/Touch.cpp \
     src/Utils/BufferCounter.cpp \
     src/Utils/GDebugEngine.cpp \
     src/Utils/utils.cpp \
@@ -275,12 +277,14 @@ HEADERS += \
     src/Strategy/rolematch/munkresTacticPositionMatcher.h \
     src/Strategy/skill/BasicPlay.h \
     src/Strategy/skill/Factory.h \
+    src/Strategy/skill/Goalie.h \
     src/Strategy/skill/GotoPosition.h \
     src/Strategy/skill/OpenSpeed.h \
     src/Strategy/skill/PlayerTask.h \
     src/Strategy/skill/SmartGotoPosition.h \
     src/Strategy/skill/Speed.h \
     src/Strategy/skill/StopRobot.h \
+    src/Strategy/skill/Touch.h \
     src/Utils/BufferCounter.h \
     src/Utils/ClassFactory.h \
     src/Utils/DataQueue.hpp \

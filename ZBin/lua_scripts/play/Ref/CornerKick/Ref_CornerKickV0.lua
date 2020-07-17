@@ -1,4 +1,3 @@
-
 gPlayTable.CreatePlay{
 firstState = "halt",
 ["halt"] = {
@@ -9,7 +8,7 @@ firstState = "halt",
   ["Assister"] = task.stop(),
   match = "[LSA]"
 },
-name = "Ref_CornerKickV1",
+name = "Ref_CornerKickV0",
 applicable = {
   exp = "a",
   a   = true

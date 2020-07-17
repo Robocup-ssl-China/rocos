@@ -28,7 +28,8 @@ const int TEAM_BLUE = (1 << 8);
 const int TEAM_YELLOW = (1 << 9);
 
 #include "referee_commands.h"
-
+#include "GDebugEngine.h"
+#include "staticparams.h"
 class GameState {
 	static const int GAME_ON =  (1 << 0);
 	static const int GAME_OFF = (1 << 1);
@@ -65,7 +66,7 @@ public:
     int _next_command;
 	GameState() : color(BLUE),state(GAME_ON),isGameOver(false){ }
 
-	void init(int _color) { color = _color; }
+    void init(int _color) { color = _color == PARAM::YELLOW ? YELLOW : BLUE; }
 
 	int get() const{ return state; }
 	void set(int _state) { state = _state; }
@@ -73,6 +74,7 @@ public:
 	// This is the state machine transition function.  It takes the last
 	// ref_command as input 
     void transition(char ref_command, bool ball_kicked, int next_command = 0) {
+//        GDebugEngine::Instance()->gui_debug_msg()
         _next_command = next_command;
 		// CVisionModule::SetNewVision将根据裁判盒线程得到的裁判指令,以及球是否踢出的图像信息判断, 调用此函数, 进行比赛当前状态的设置.
 		if( ref_command == COMM_HALF_TIME || ref_command == COMM_OVER_TIME1 || ref_command == COMM_OVER_TIME2 ){
@@ -125,7 +127,7 @@ public:
 			case COMM_PENALTY_YELLOW: 
 				state = PENALTY | YELLOW | NOTREADY; return;
 			case COMM_DIRECT_BLUE: 
-				state = DIRECT | BLUE | READY; return;
+                state = DIRECT | BLUE | READY; return;
 			case COMM_DIRECT_YELLOW: 
 				state = DIRECT | YELLOW | READY; return;
 			case COMM_INDIRECT_BLUE: 
@@ -135,6 +137,7 @@ public:
 			default: break;
 			}
 		}
+//        std::cout << "mdbg : " << state << " " << color << " " << directKick() << " " << ourDirectKick() << " " << theirDirectKick() << std::endl;
 	}
 
 	bool gameOn() const{ return (state == GAME_ON); }

@@ -6,4 +6,4 @@
 -- 	gCurrentPlay = "Ref_StopV2"
 -- end
 
-gCurrentPlay = "Ref_StopV1"
+gCurrentPlay = "Ref_StopV2"

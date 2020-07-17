@@ -10,11 +10,11 @@ DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 
-gTestPlay = "TestDribbleAndKick"
+gTestPlay = "TestSkill"
 
 gRoleFixNum = {
-        ["Kicker"]   = {1},
-        ["Goalie"]   = {0},
+        ["Kicker"]   = {},
+        ["Goalie"]   = {},
         ["Tier"]     = {},
 }
 
@@ -31,6 +31,8 @@ gSkill = {
         "SimpleGoto",
         "RunMultiPos",
         "Stop",
+        "Goalie",
+        "Touch",
         "OpenSpeed",
         "Speed",
         "GotoMatchPos",
@@ -43,6 +45,7 @@ gRefPlayTable = {
         "Ref/Ref_HaltV1",
         "Ref/Ref_OurTimeoutV1",
         "Ref/GameStop/Ref_StopV1",
+        "Ref/GameStop/Ref_StopV2",
 -- BallPlacement
         -- "Ref/BallPlacement/Ref_BallPlace2Stop",
 -- Penalty
@@ -57,7 +60,9 @@ gRefPlayTable = {
         "Ref/MiddleDef/Ref_MiddleDefV1",
         "Ref/BackDef/Ref_BackDefV1",
 -- FreeKick
+        "Ref/CornerKick/Ref_CornerKickV0",
         "Ref/CornerKick/Ref_CornerKickV1",
+        "Ref/CornerKick/Ref_CornerKickV2",
         "Ref/CenterKick/Ref_CenterKickV1",
         "Ref/FrontKick/Ref_FrontKickV1",
         "Ref/MiddleKick/Ref_MiddleKickV1",
@@ -70,6 +75,7 @@ gBayesPlayTable = {
 
 gTestPlayTable = {
         "Test/TestRun",
+        "Test/TestSkill",
         "Test/TestDribbleAndKick",
         "Test/RunMilitaryBoxing",
 }

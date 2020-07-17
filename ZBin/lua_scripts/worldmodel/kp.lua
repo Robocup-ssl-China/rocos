@@ -7,7 +7,7 @@ function specified(p)
 end
 
 function full()
-	return 6500
+	return 8000
 end
 
 function touch()

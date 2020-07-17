@@ -7,6 +7,23 @@ module(..., package.seeall)
 -- TODO
 ------------------------------------ 跑位相关的skill ---------------------------------------
 --~ p为要走的点,d默认为射门朝向
+function goalie()
+	local mexe, mpos = Goalie()
+	return {mexe, mpos}
+end
+function touch()
+	local ipos = pos.ourGoal()
+	local mexe, mpos = Touch{pos = ipos}
+	return {mexe, mpos}
+end
+function touchKick(p,ifInter)
+	local ipos = p or pos.theirGoal()
+	local idir = function(runner)
+		return (ipos - player.pos(runner)):dir()
+	end
+	local mexe, mpos = Touch{pos = ipos, useInter = ifInter}
+	return {mexe, mpos, kick.flat, idir, pre.low, cp.full, cp.full, flag.nothing}
+end
 function goSpeciPos(p, d, f, a) -- 2014-03-26 增加a(加速度参数)
 	local idir
 	local iflag

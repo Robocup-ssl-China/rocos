@@ -25,6 +25,7 @@ end
 
 function SelectRefPlay()
 	local curRefMsg = vision:getLuaRefereeMsg()
+	debugEngine:gui_debug_msg(CGeoPoint:new_local(1000,1000),curRefMsg)
 	if curRefMsg == "" then
 		gLastRefMsg = curRefMsg
 		return false

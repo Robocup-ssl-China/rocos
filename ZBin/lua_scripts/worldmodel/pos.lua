@@ -66,14 +66,14 @@ function backBall(p)
 	end
 end
 
-function playerBest()
-	local robotNum = skillUtils:getOurBestPlayer()
-	if robotNum >0 and robotNum <= param.maxPlayer then
-		return player.pos(robotNum)
-	else
-		return ball.pos()
-	end
-end
+-- function playerBest()
+-- 	local robotNum = skillUtils:getOurBestPlayer()
+-- 	if robotNum >0 and robotNum <= param.maxPlayer then
+-- 		return player.pos(robotNum)
+-- 	else
+-- 		return ball.pos()
+-- 	end
+-- end
 
 function fakeDown(p)
 	local factor
@@ -90,127 +90,35 @@ function fakeDown(p)
 	end
 end
 
-function stopPoses()
-	local Rtarget1, Rtarget2, Rtarget3, Rtarget4, Rtarget5, Rtarget6, Rtarget7
-	local Rdir1, Rdir2, Rdir3, Rdir4, Rdir5, Rdir6, Rdir7
-	local RADIUS = param.penaltyRadius + param.playerRadius + param.goalWidth/2
-	local angleDiff = 3.5 * DefendUtils.calcBlockAngle(CGeoPoint:new_local(0, 0), CGeoPoint:new_local(0, RADIUS))
-	local outerLength = RADIUS + 50
+-- function multiBackPos(guardNum, index)
+-- 	return function()
+-- 		return guardpos:backPos(guardNum, index)
+-- 	end
+-- end
 
-	local RReferenceX = param.pitchLength/2 - param.penaltyDepth/2
-	local RLeftFixedPoint = CGeoPoint:new_local(param.pitchLength/2 - param.penaltyDepth, param.pitchWidth/2 - param.playerRadius*4)
-	local RRightFixedPoint = CGeoPoint:new_local(param.pitchLength/2 - param.penaltyDepth, -param.pitchWidth/2 + param.playerRadius*4)
+-- function leftBackPos()
+-- 	return defPos2015:getDefPos2015(vision):getLeftPos()
+-- end
 
-	local UpdateState = function()
-		local RballPos = DefendUtils.reversePoint(ball.pos())
-		local RgoalCenter = CGeoPoint:new_local(param.pitchLength/2,0)
-		local Rgoal2ball = RballPos - RgoalCenter
-		Rdir3 = Rgoal2ball:dir()
-		Rtarget3 = RgoalCenter + Utils.Polar2Vector(outerLength,Rdir3)
-		local Rpoint3 = DefendUtils.calcDefenderPoint(Rtarget3,Utils.Normalize(Rdir3+math.pi),POS_SIDE_MIDDLE)
-		if Rpoint3:x() >= RReferenceX and Rpoint3:y() > 0 then
-			Rdir3 = (RLeftFixedPoint - RgoalCenter):dir()
-		elseif Rpoint3:x() >= RReferenceX and Rpoint3:y() < 0 then
-			Rdir3 = (RRightFixedPoint - RgoalCenter):dir()
-		else
-			Rdir3 = Rgoal2ball:dir()
-		end
+-- function rightBackPos()
+-- 	return defPos2015:getDefPos2015(vision):getRightPos()
+-- end
 
-		Rdir1 = Utils.Normalize(Rdir3 - angleDiff * 2)
-		Rdir2 = Utils.Normalize(Rdir3 - angleDiff)
-		Rdir4 = Utils.Normalize(Rdir3 + angleDiff)
-		Rdir5 = Utils.Normalize(Rdir3 + angleDiff * 2)
-		Rdir6 = Utils.Normalize(Rdir3 - angleDiff * 3)
-		Rdir7 = Utils.Normalize(Rdir3 + angleDiff * 3)
-		Rtarget1 = RgoalCenter + Utils.Polar2Vector(outerLength, Rdir1)
-		Rtarget2 = RgoalCenter + Utils.Polar2Vector(outerLength, Rdir2)
-		Rtarget3 = RgoalCenter + Utils.Polar2Vector(outerLength, Rdir3)
-		Rtarget4 = RgoalCenter + Utils.Polar2Vector(outerLength, Rdir4)
-		Rtarget5 = RgoalCenter + Utils.Polar2Vector(outerLength, Rdir5)
-		Rtarget6 = RgoalCenter + Utils.Polar2Vector(outerLength, Rdir6)
-		Rtarget7 = RgoalCenter + Utils.Polar2Vector(outerLength, Rdir7)
-	end
+-- function defendMiddlePos()
+-- 	return defPos2015:getDefPos2015(vision):getMiddlePos()
+-- end
 
-	local STOP_POINT1 = function()
-		UpdateState()
-		local Rpoint1 = DefendUtils.calcDefenderPoint(Rtarget1, Utils.Normalize(Rdir1 + math.pi), POS_SIDE_MIDDLE)
-		return DefendUtils.reversePoint(Rpoint1)
-	end
-	local STOP_POINT2 = function()
-		UpdateState()
-		local Rpoint2 = DefendUtils.calcDefenderPoint(Rtarget2, Utils.Normalize(Rdir2 + math.pi), POS_SIDE_MIDDLE)
-		return DefendUtils.reversePoint(Rpoint2)
-	end
-	local STOP_POINT3 = function()
-		UpdateState()
-		local Rpoint3 = DefendUtils.calcDefenderPoint(Rtarget3, Utils.Normalize(Rdir3 + math.pi), POS_SIDE_MIDDLE)
-		return DefendUtils.reversePoint(Rpoint3)
-	end
-	local STOP_POINT4 = function()
-		UpdateState()
-		local Rpoint4 = DefendUtils.calcDefenderPoint(Rtarget4, Utils.Normalize(Rdir4 + math.pi), POS_SIDE_MIDDLE)
-		return DefendUtils.reversePoint(Rpoint4)
-	end
-	local STOP_POINT5 = function()
-		UpdateState()
-		local Rpoint5 = DefendUtils.calcDefenderPoint(Rtarget5, Utils.Normalize(Rdir5 + math.pi), POS_SIDE_MIDDLE)
-		return DefendUtils.reversePoint(Rpoint5)
-	end
-	local STOP_POINT6 = function()
-		UpdateState()
-		local Rpoint6 = DefendUtils.calcDefenderPoint(Rtarget6, Utils.Normalize(Rdir6 + math.pi), POS_SIDE_MIDDLE)
-		return DefendUtils.reversePoint(Rpoint6)
-	end
-	local STOP_POINT7 = function()
-		UpdateState()
-		local Rpoint7 = DefendUtils.calcDefenderPoint(Rtarget7, Utils.Normalize(Rdir7 + math.pi), POS_SIDE_MIDDLE)
-		return DefendUtils.reversePoint(Rpoint7)
-	end
+-- function singleBackPos()
+-- 	return defPos2015:getDefPos2015(vision):getSinglePos()
+-- end
 
-	return STOP_POINT1,STOP_POINT2,STOP_POINT3,STOP_POINT4,STOP_POINT5,STOP_POINT6,STOP_POINT7
-end
+-- function sideBackPos()
+-- 	return defPos2015:getDefPos2015(vision):getSidePos()
+-- end
 
-function defendFrontPos(p)
-	return function ()
-		return DefendUtils.getMiddleDefender(p)
-	end
-end
-
-function defaultDefPos(p)
-	return function ()
-		return DefendUtils.getDefaultPos(p)
-	end
-end
-
-function multiBackPos(guardNum, index)
-	return function()
-		return guardpos:backPos(guardNum, index)
-	end
-end
-
-function leftBackPos()
-	return defPos2015:getDefPos2015(vision):getLeftPos()
-end
-
-function rightBackPos()
-	return defPos2015:getDefPos2015(vision):getRightPos()
-end
-
-function defendMiddlePos()
-	return defPos2015:getDefPos2015(vision):getMiddlePos()
-end
-
-function singleBackPos()
-	return defPos2015:getDefPos2015(vision):getSinglePos()
-end
-
-function sideBackPos()
-	return defPos2015:getDefPos2015(vision):getSidePos()
-end
-
-function goaliePos()
-	return defPos2015:getDefPos2015(vision):getGoaliePos()
-end
+-- function goaliePos()
+-- 	return defPos2015:getDefPos2015(vision):getGoaliePos()
+-- end
 
 -- function getSupportPos(role)
 -- 	return function()
@@ -246,49 +154,10 @@ function advance()
 	end
 end
 
-function tandemPos2013()
-	return  tandemPos:getTandemPos()
-end
+-- function tandemPos2013()
+-- 	return  tandemPos:getTandemPos()
+-- end
 
-function defendHeadPos()
-	return DefendUtils.getCornerAreaPos()
-end
-
-
---p1是防守半径，p2,p3是防对方车的区域，p4为防开球的模式。1为老模式，2为防止直接射门
-function defendKickPos(p1,p2,p3,p4)
-	return function()
-		-- if p1==nil then
-			local radius = 65
-			local left = CGeoPoint:new_local(1000,-1000)
-			local right = CGeoPoint:new_local(-1000,1000)
-			local mode = 1
-			return DefendUtils.getIndirectDefender(radius,left,right,mode)
-		-- else
-		-- 	if type(p1) == "function" then
-		-- 		mp1 = p1()
-		-- 	else
-		-- 		mp1 = p1
-		-- 	end
-		-- 	if type(p2) == "function" then
-		-- 		mp2 = p2()
-		-- 	else
-		-- 		mp2 = p2
-		-- 	end
-		-- 	if type(p3) == "function" then
-		-- 		mp3 = p3()
-		-- 	else
-		-- 		mp3 = p3
-		-- 	end
-		-- 	if type(p4) == "function" then
-		-- 		mp4 = p4()
-		-- 	else
-		-- 		mp4 = p4
-		-- 	end
-		-- 	return DefendUtils.getIndirectDefender(mp1,mp2,mp3,mp4)
-		-- end
-	end
-end
 
 function oneKickDefPos(p1,p2,p3,p4,p5,p6)
 	return function()

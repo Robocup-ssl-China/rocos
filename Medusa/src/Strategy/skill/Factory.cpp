@@ -17,6 +17,9 @@
 #include "Speed.h"
 #include "OpenSpeed.h"
 
+// test
+#include "Goalie.h"
+#include "Touch.h"
 /************************************************************************/
 /*                      TaskFactoryV2									*/
 /* 请注意:																*/
@@ -43,6 +46,13 @@ CPlayerTask* CTaskFactoryV2::GotoPosition(const TaskT& task) {
 
 CPlayerTask* CTaskFactoryV2::SmartGotoPosition(const TaskT& task) {
     return MakeTask< CSmartGotoPositionV2 >(task);
+}
+CPlayerTask* CTaskFactoryV2::Goalie(const TaskT& task) {
+    return MakeTask< CGoalie >(task);
+}
+
+CPlayerTask* CTaskFactoryV2::Touch(const TaskT& task) {
+    return MakeTask< CTouch >(task);
 }
 
 CPlayerTask* CTaskFactoryV2::StopRobot(const TaskT& task) {

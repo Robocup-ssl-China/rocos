@@ -1,8 +1,14 @@
 local f = flag.dribbling
+local p = CGeoPoint:new_local(4500,0)
 gPlayTable.CreatePlay{
 
-firstState = "t1",
-
+firstState = "t",
+["t"] = {
+	switch = function()
+	end,
+	Leader = task.touchKick(p,false),
+	match = "[L]"
+},
 ["t1"] = {
 	switch = function()
 		if bufcnt(true,90) then

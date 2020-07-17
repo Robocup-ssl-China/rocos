@@ -16,6 +16,8 @@ public:
 	CPlayerTask* StopRobot(const TaskT& task);
 	CPlayerTask* Speed(const TaskT& task); // by zc
     CPlayerTask* OpenSpeed(const TaskT& task);
+    CPlayerTask* Goalie(const TaskT& task);
+    CPlayerTask* Touch(const TaskT& task);
 protected:
 	template < class CTaskType >
 	CPlayerTask* MakeTask( const TaskT& task );
@@ -41,7 +43,6 @@ namespace PlayerRole{
 
     extern CPlayerTask* makeItRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags = 0);
     extern CPlayerTask* makeItOpenRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags = 0);
-
 }
 
 #endif // _TASK_FACTORY_V2_H_

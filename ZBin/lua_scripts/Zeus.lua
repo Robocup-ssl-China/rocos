@@ -40,5 +40,6 @@ end
 
 for _, value in ipairs(gPlay) do
 	local filename = "./lua_scripts/play/"..value..".lua"
+	print("Init : ",filename)
 	dofile(filename)
 end

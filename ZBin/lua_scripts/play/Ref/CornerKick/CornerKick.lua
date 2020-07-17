@@ -12,3 +12,4 @@ if vision:getCycle() - gOurIndirectTable.lastRefCycle > 6 then
     end
     -- gCurrentPlay = "Ref_CornerKickMessi"
 end
+print("mcccc ",gCurrentPlay)

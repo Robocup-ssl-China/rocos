@@ -1,12 +1,12 @@
 --暂停脚本，我方暂停与敌方暂停都会调用，左右需要side调整
-local TargetPosG  = CGeoPoint:new_local(-300,-50)
-local TargetPos1  = CGeoPoint:new_local(-250, -50)
-local TargetPos2  = CGeoPoint:new_local(-200,-50)
-local TargetPos3  = CGeoPoint:new_local(-230, -16)
-local TargetPos4  = CGeoPoint:new_local(-270, 17)
-local TargetPos5  = CGeoPoint:new_local(-300, 50)
-local TargetPos6  = CGeoPoint:new_local(-250,50)
-local TargetPos7  = CGeoPoint:new_local(-200, 50)
+local TargetPosG  = CGeoPoint:new_local(-3000,-500)
+local TargetPos1  = CGeoPoint:new_local(-2500, -500)
+local TargetPos2  = CGeoPoint:new_local(-2000,-500)
+local TargetPos3  = CGeoPoint:new_local(-2300, -160)
+local TargetPos4  = CGeoPoint:new_local(-2700, 170)
+local TargetPos5  = CGeoPoint:new_local(-3000, 500)
+local TargetPos6  = CGeoPoint:new_local(-2500,500)
+local TargetPos7  = CGeoPoint:new_local(-2000, 500)
 gPlayTable.CreatePlay{
 
 firstState = "move",
@@ -25,14 +25,14 @@ firstState = "move",
 			return "turn"
 		end
 	end,
-	Leader   = task.goCmuRush(TargetPos1,0,150,flag.allow_dss),
-	Special  = task.goCmuRush(TargetPos2,0,150,flag.allow_dss),
-	Middle   = task.goCmuRush(TargetPos3,0,150,flag.allow_dss),
-	Defender = task.goCmuRush(TargetPos4,0,150,flag.allow_dss),
-	Assister = task.goCmuRush(TargetPos5,0,150,flag.allow_dss),
-	Breaker  = task.goCmuRush(TargetPos6,0,150,flag.allow_dss),
-	Center   = task.goCmuRush(TargetPos7,0,150,flag.allow_dss),
-	Goalie   = task.goCmuRush(TargetPosG,0,150,flag.allow_dss),
+	Leader   = task.goCmuRush(TargetPos1,0,_,flag.allow_dss),
+	Special  = task.goCmuRush(TargetPos2,0,_,flag.allow_dss),
+	Middle   = task.goCmuRush(TargetPos3,0,_,flag.allow_dss),
+	Defender = task.goCmuRush(TargetPos4,0,_,flag.allow_dss),
+	Assister = task.goCmuRush(TargetPos5,0,_,flag.allow_dss),
+	Breaker  = task.goCmuRush(TargetPos6,0,_,flag.allow_dss),
+	Center   = task.goCmuRush(TargetPos7,0,_,flag.allow_dss),
+	Goalie   = task.goCmuRush(TargetPosG,0,_,flag.allow_dss),
 	match = "[LSMDACB]"
 },
 
@@ -42,14 +42,14 @@ firstState = "move",
 			return "turn"
 		end
 	end,
-	Leader   = task.goCmuRush(TargetPos1,0,150,flag.allow_dss),
-	Special  = task.goCmuRush(TargetPos2,0,150,flag.allow_dss),
-	Middle   = task.goCmuRush(TargetPos3,0,150,flag.allow_dss),
-	Defender = task.goCmuRush(TargetPos4,0,150,flag.allow_dss),
-	Assister = task.goCmuRush(TargetPos5,0,150,flag.allow_dss),
-	Goalie   = task.goCmuRush(TargetPosG,0,150,flag.allow_dss),
-	Breaker  = task.goCmuRush(TargetPos6,0,150,flag.allow_dss),
-	Center   = task.goCmuRush(TargetPos7,0,150,flag.allow_dss),
+	Leader   = task.goCmuRush(TargetPos1,0,_,flag.allow_dss),
+	Special  = task.goCmuRush(TargetPos2,0,_,flag.allow_dss),
+	Middle   = task.goCmuRush(TargetPos3,0,_,flag.allow_dss),
+	Defender = task.goCmuRush(TargetPos4,0,_,flag.allow_dss),
+	Assister = task.goCmuRush(TargetPos5,0,_,flag.allow_dss),
+	Goalie   = task.goCmuRush(TargetPosG,0,_,flag.allow_dss),
+	Breaker  = task.goCmuRush(TargetPos6,0,_,flag.allow_dss),
+	Center   = task.goCmuRush(TargetPos7,0,_,flag.allow_dss),
 	match = "[LSMDACB]"
 },
 

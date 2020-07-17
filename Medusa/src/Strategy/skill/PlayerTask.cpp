@@ -9,7 +9,7 @@ void CPlayerTask::plan(const CVisionModule* pVision) ///<规划
 	if( subTask() ){
 		subTask()->plan(pVision);
 	}
-} 
+}
 CPlayerCommand* CPlayerTask::execute(const CVisionModule* pVision) ///<执行
 { 
 	if( subTask() ){

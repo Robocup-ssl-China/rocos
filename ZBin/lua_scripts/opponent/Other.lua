@@ -1,5 +1,5 @@
 gOppoConfig = {
-	CornerKick  = {1}, 
+	CornerKick  = {2},
 	FrontKick   = {1},
 	MiddleKick  = {1},
 	BackKick    = {1},

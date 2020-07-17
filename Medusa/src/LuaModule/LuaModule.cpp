@@ -129,7 +129,7 @@ bool CLuaModule::RunScript(const char *pFname)
 
 	if (0 != luaL_loadfile(m_pScriptContext, pFilename))
     {
-        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2+500);
+        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2);
         qDebug() << QString("Lua Error - Script Run\nScript Name:%1\nError Message:%2\n").arg(pFilename).arg(luaL_checkstring(m_pScriptContext, -1));
         GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-200),QString("Lua Error - Script Load").toLatin1());
         GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-400),QString("Name:%1").arg(pFilename).toLatin1());
@@ -282,6 +282,33 @@ extern "C" int Skill_GoCmuRush(lua_State *L)
 	return 0;
 }
 
+extern "C" int Skill_Goalie(lua_State *L)
+{
+    TaskT playerTask;
+    int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
+    playerTask.executor = runner;
+    CPlayerTask* pTask = TaskFactoryV2::Instance()->Goalie(playerTask);
+    TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+
+    return 0;
+}
+
+extern "C" int Skill_Touch(lua_State *L)
+{
+    TaskT playerTask;
+    int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
+    playerTask.executor = runner;
+    double x = LuaModule::Instance()->GetNumberArgument(2, 0);
+    double y = LuaModule::Instance()->GetNumberArgument(3, 0);
+    playerTask.player.pos = CGeoPoint(x,y);
+    bool useInter = LuaModule::Instance()->GetBoolArgument(4);
+    playerTask.player.is_specify_ctrl_method = useInter;
+    CPlayerTask* pTask = TaskFactoryV2::Instance()->Touch(playerTask);
+    TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+
+    return 0;
+}
+
 extern "C" int Skill_NoneZeroGoCmuRush(lua_State *L)
 {
 	TaskT playerTask;
@@ -413,7 +440,6 @@ extern "C" int FUNC_PrintString(lua_State* L) {
     fflush(stdout);
     return 0;
 }
-
 extern "C" int Skill_SpeedInRobot(lua_State* L){
 	int runner = LuaModule::Instance()->GetNumberArgument(1,NULL);
 	double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
@@ -439,6 +465,8 @@ luaDef GUIGlue[] =
     {"CSpeed",				Skill_Speed},
     {"COpenSpeed",			Skill_OpenSpeed},
     {"CGoCmuRush",			Skill_GoCmuRush},
+    {"CGoalie",             Skill_Goalie},
+    {"CTouch",              Skill_Touch},
     {"CNoneZeroGoCmuRush",	Skill_NoneZeroGoCmuRush},
     {"CSpeedInRobot",		Skill_SpeedInRobot},
 	{NULL, NULL}

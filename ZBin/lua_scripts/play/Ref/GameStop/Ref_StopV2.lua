@@ -35,7 +35,7 @@ firstState = "start",
   match    = "[ASL]"
 },
 
-name = "Ref_StopV1",
+name = "Ref_StopV2",
 applicable = {
   exp = "a",
   a = true
