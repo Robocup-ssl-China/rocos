@@ -18,7 +18,7 @@
 
 * [已知问题](ISSUE.md)
 
-* [Wiki](https://chinaopenssl-wiki.readthedocs.io/zh_CN/latest/index.html)
+* [Wiki](https://rocos.readthedocs.io/zh_CN/latest/index.html)
 
 主要贡献名单：
 
