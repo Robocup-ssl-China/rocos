@@ -2,5 +2,28 @@
     <qresource prefix="/">
         <file>src/qml/main.qml</file>
         <file>logo.ico</file>
+        <file>src/qml/ZText.qml</file>
+        <file>src/qml/ZSpinBox.qml</file>
+        <file>src/qml/ZGroupBox.qml</file>
+        <file>src/qml/ZButton.qml</file>
+        <file>src/qml/RightThumbstick.qml</file>
+        <file>src/qml/LeftThumbstick.qml</file>
+        <file>src/qml/JoystickViewer.qml</file>
+        <file>src/qml/DPad.qml</file>
+        <file>src/qml/ButtonImage.qml</file>
+        <file>gamepad/xboxControllerStart.png</file>
+        <file>gamepad/xboxControllerRightTrigger.png</file>
+        <file>gamepad/xboxControllerRightThumbstick.png</file>
+        <file>gamepad/xboxControllerRightShoulder.png</file>
+        <file>gamepad/xboxControllerLeftTrigger.png</file>
+        <file>gamepad/xboxControllerLeftThumbstick.png</file>
+        <file>gamepad/xboxControllerLeftShoulder.png</file>
+        <file>gamepad/xboxControllerDPad.png</file>
+        <file>gamepad/xboxControllerButtonY.png</file>
+        <file>gamepad/xboxControllerButtonX.png</file>
+        <file>gamepad/xboxControllerButtonGuide.png</file>
+        <file>gamepad/xboxControllerButtonB.png</file>
+        <file>gamepad/xboxControllerButtonA.png</file>
+        <file>gamepad/xboxControllerBack.png</file>
     </qresource>
 </RCC>

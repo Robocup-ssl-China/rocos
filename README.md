@@ -28,3 +28,12 @@
 | [Luckky](https://github.com/guodashun) | LogModule    |
 | [Mark](https://github.com/ZJUMark)     | GUI          |
 
+-----
+
+Linux使用发射机可能会遇到串口权限不足的问题
+
+```bash
+sudo usermod -a -G dialout $USER
+```
+
+执行上述语句后Log Out，再次进入可以获取权限
