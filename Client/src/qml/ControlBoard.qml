@@ -251,20 +251,20 @@ Page{
                         rowSpacing: 0;
                         columns:2;
                         property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
-                        SpinBox{
-                            id:medusaFrq1;
-                            width:parent.itemWidth;
-                            from:0;to:15;
-                            wrap:true;
-                            value:8
-                        }
-                        SpinBox{
-                            id:medusaFrq2;
-                            width:parent.itemWidth;
-                            from:0;to:15;
-                            wrap:true;
-                            value:6
-                        }
+//                        SpinBox{
+//                            id:medusaFrq1;
+//                            width:parent.itemWidth;
+//                            from:0;to:15;
+//                            wrap:true;
+//                            value:8
+//                        }
+//                        SpinBox{
+//                            id:medusaFrq2;
+//                            width:parent.itemWidth;
+//                            from:0;to:15;
+//                            wrap:true;
+//                            value:6
+//                        }
                         ZButton{
                             icon.source:control.medusaConnect ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#2976ca";
@@ -274,7 +274,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
-                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
+//                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
                                 }
                                 interaction.controlMedusa(control.medusaConnect)
                             }
@@ -288,7 +288,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
-                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
+//                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
                                 }
                                 interaction.controlMedusa2(control.medusaConnect2)
                             }

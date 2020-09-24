@@ -117,8 +117,8 @@ void ActionModuleSerialVersion::sendLegacy(const ZSS::Protocol::Robots_Command& 
             NJ_CMDS[id].valid = true;
             NJ_CMDS[id].id = id;
             NJ_CMDS[id].vx = command.velocity_x()/10.0;
-            NJ_CMDS[id].vy = command.velocity_y()/10.0;
-            NJ_CMDS[id].vr = command.velocity_r()*40;
+            NJ_CMDS[id].vy = -command.velocity_y()/10.0;
+            NJ_CMDS[id].vr = -command.velocity_r()*40;
             NJ_CMDS[id].dribble = command.dribbler_spin();
             NJ_CMDS[id].power = command.power()/10.0;
             NJ_CMDS[id].kick_mode = command.kick();

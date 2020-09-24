@@ -145,6 +145,7 @@ void CVisionModule::receiveVisionMsg() {
                     index = i;//修车号时把index换成i
                     auto& robot = ourRobot ? detectionFrame.robots_blue(i) : detectionFrame.robots_yellow(i);
                     if (!robot.valid()) continue;
+                    index = robot.robot_id();
                     visionTemp.player[color][index].pos.x = robot.x();
                     visionTemp.player[color][index].pos.y = robot.y();
                     visionTemp.player[color][index].rawPos.x = robot.raw_x();
