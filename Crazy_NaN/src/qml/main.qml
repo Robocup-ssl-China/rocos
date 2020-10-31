@@ -142,7 +142,7 @@ ApplicationWindow{
                         anchors.horizontalCenter: parent.horizontalCenter;
                         columnSpacing: 10;
                         rowSpacing: 5;
-                        property int robotID : 1;//Robot
+                        property int robotID : 0;//Robot
                         property int velX : 0;//Vx
                         property int velY : 0;//Vy
                         property int velR : 0;//Vr
