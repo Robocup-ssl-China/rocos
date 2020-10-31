@@ -169,7 +169,7 @@ ApplicationWindow{
 
                         ZText{ text:qsTr("Robot") + translator.emptyString }
                         //最多12辆车
-                        SpinBox{ minimumValue:1; maximumValue:12; value:parent.robotID; width:parent.itemWidth
+                        SpinBox{ minimumValue:0; maximumValue:15; value:parent.robotID; width:parent.itemWidth
                             onEditingFinished:{parent.robotID = value}}
                         ZText{ text:"Stop" }
                         //有用吗？
