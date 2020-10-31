@@ -3,6 +3,8 @@
 #include "parammanager.h"
 #include <QtSerialPort/QSerialPortInfo>
 #include "crc.h"
+#include <thread>
+#include <chrono>
 #include <QtDebug>
 namespace ZSS {
 namespace{
@@ -134,9 +136,12 @@ void ActionModuleSerialVersion::sendLegacy(const ZSS::Protocol::Robots_Command& 
         if(NJ_CMDS[i].valid){
             if(count == 3){
                 serial.write(this->tx.data(),TRANSMIT_PACKET_SIZE);
+                serial.flush();
+                std::this_thread::sleep_for(std::chrono::milliseconds(4));
+                qDebug() << tx.toHex();
                 tx.fill(0x00);
                 tx[0] = 0xff;
-                tx[21] = 0x07;
+                tx[21] = ((this->frequency&0x0f)<<4) | 0x07;
                 count = 0;
             }
             encodeLegacy(NJ_CMDS[i],this->tx,count++);
