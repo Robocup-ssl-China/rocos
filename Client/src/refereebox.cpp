@@ -8,7 +8,7 @@
 void multicastCommand(int state);
 
 RefereeBox::RefereeBox(QObject *parent) : QObject(parent),currentCommand(GameState::HALTED),nextCommand(GameState::HALTED){
-    ZSS::ZParamManager::instance()->loadParam(port,"AlertPorts/RefereePort",10003);
+    ZSS::ZParamManager::instance()->loadParam(port,"AlertPorts/ZSS_RefereePort",39991);
     sendSocket.setSocketOption(QAbstractSocket::MulticastTtlOption, 1);
     commandCounter = 1;
 }

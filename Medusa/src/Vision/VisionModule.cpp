@@ -142,7 +142,6 @@ void CVisionModule::receiveVisionMsg() {
                 int robot_size = (color == PARAM::BLUE) ? detectionFrame.robots_blue_size() : detectionFrame.robots_yellow_size();
                 for (int i = 0; i < PARAM::ROBOTNUM; i++) {
                     if(i >= robot_size) break;
-                    index = i;//修车号时把index换成i
                     auto& robot = ourRobot ? detectionFrame.robots_blue(i) : detectionFrame.robots_yellow(i);
                     if (!robot.valid()) continue;
                     index = robot.robot_id();

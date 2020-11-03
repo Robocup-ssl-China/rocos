@@ -117,7 +117,7 @@ void CRefereeBoxInterface::receivingLoop() {
             //change ssl_vision_xy to zjunlict_vision_xy
                 refereeMutex.lock();
                 _ballPlacementX = VECTOR * ssl_referee.designated_position().x();
-                _ballPlacementY = VECTOR * -ssl_referee.designated_position().y();
+                _ballPlacementY = VECTOR * ssl_referee.designated_position().y();
                 CGeoPoint point(_ballPlacementX,_ballPlacementY);
                 refereeMutex.unlock();
                 GDebugEngine::Instance()->gui_debug_x(point,COLOR_WHITE);
