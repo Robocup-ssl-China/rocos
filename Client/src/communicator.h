@@ -32,7 +32,6 @@ class Communicator : public QObject {
     QStringList networkInterfaceReadableNames;
     RobotCommands commandBuffer[PARAM::TEAMS];
     int networkInterfaceIndex;
-    QMutex robotInfoMutex;
     bool isSimulation;
 };
 typedef Singleton<Communicator> ZCommunicator;

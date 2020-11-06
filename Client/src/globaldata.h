@@ -41,6 +41,7 @@ class CGlobalData {
     int cameraID[PARAM::CAMERA];//show the mapping of cameras  id
     double robotPossible[2][PARAM::ROBOTMAXID];
     RobotInformation robotInformation[PARAM::TEAMS][PARAM::ROBOTMAXID];
+    QMutex robotInfoMutex;
     DataQueue<RobotCommands> robotCommand[PARAM::TEAMS];
     int commandMissingFrame[PARAM::TEAMS];//team command VALID  --> commandMissingFrame<20
     CameraFix cameraFixMatrix[PARAM::CAMERA];

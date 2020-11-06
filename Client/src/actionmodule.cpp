@@ -207,13 +207,13 @@ void ActionModule::readData() {
             for (int color = PARAM::BLUE; color < PARAM::TEAMS; color++) {
                 for (int j = 0; j < PARAM::ROBOTNUM; j++ ) {
                     if (count[color][j]++ > 1000) {
-                        robotInfoMutex.lock();
+                        GlobalData::instance()->robotInfoMutex.lock();
                         GlobalData::instance()->robotInformation[color][j].infrared = false;
                         GlobalData::instance()->robotInformation[color][j].flat = false;
                         GlobalData::instance()->robotInformation[color][j].chip = false;
                         count[color][j] = 0;
 //                        qDebug() << "FUCK" << color << j;
-                        robotInfoMutex.unlock();
+                        GlobalData::instance()->robotInfoMutex.unlock();
                         emit receiveRobotInfo(color, j);
                     }
                 }
@@ -252,14 +252,14 @@ void ActionModule::readData() {
                 wheelVel[2] = 1 + (short)~(data[10] << 8) + data[11];
                 wheelVel[3] = (quint16)(data[12] << 8) + data[13];
 
-                robotInfoMutex.lock();
+                GlobalData::instance()->robotInfoMutex.lock();
                 count[color][id] = 0;
                 GlobalData::instance()->robotInformation[color][id].infrared = infrared;
                 GlobalData::instance()->robotInformation[color][id].flat = flat;
                 GlobalData::instance()->robotInformation[color][id].chip = chip;
                 GlobalData::instance()->robotInformation[color][id].battery = std::min(std::max((battery - LOW_BATTERY) / (FULL_BATTERY - LOW_BATTERY), 0.0), 1.0);
                 GlobalData::instance()->robotInformation[color][id].capacitance = std::min(std::max((capacitance - LOW_CAPACITANCE) / (FULL_CAPACITANCE - LOW_CAPACITANCE), 0.0), 1.0);
-                robotInfoMutex.unlock();
+                GlobalData::instance()->robotInfoMutex.unlock();
                 emit receiveRobotInfo(color, id);
             }
             qDebug() << rx.toHex();

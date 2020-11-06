@@ -242,6 +242,7 @@ bool Interaction::controlCrazy(bool control) {
 bool Interaction::changeMedusaSettings(bool color, bool side) {
     ZSS::ZParamManager::instance()->changeParam("ZAlert/IsYellow", color);
     ZSS::ZParamManager::instance()->changeParam("ZAlert/IsRight", side);
+    ZSS::NActionModule::instance()->setMedusaSettings(color,side);
     return true;
 }
 void Interaction::medusaPrint() {

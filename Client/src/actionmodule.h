@@ -27,7 +27,6 @@ class ActionModule : public QObject {
     QByteArray rx;
     QUdpSocket sendSocket;
     QUdpSocket receiveSocket;
-    QMutex robotInfoMutex;
   signals:
     void receiveRobotInfo(int, int);
 };
@@ -40,6 +39,7 @@ public:
     ActionModuleSerialVersion(QObject *parent = 0);
     ~ActionModuleSerialVersion();
     bool init();
+    void setMedusaSettings(bool,bool);
     void sendLegacy(const ZSS::Protocol::Robots_Command&);
     QStringList& updatePortsList();
     int getFrequency(){ return frequency;}
@@ -59,6 +59,8 @@ private:
     int frequency;
     QByteArray tx;
     QByteArray rx;
+    int _color;
+    int _side;
 };
 typedef Singleton<ActionModuleSerialVersion> NActionModule;
 }

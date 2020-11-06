@@ -1,6 +1,7 @@
 #include "actionmodule.h"
 #include "actionmodule.h"
 #include "parammanager.h"
+#include "globaldata.h"
 #include <QtSerialPort/QSerialPortInfo>
 #include "crc.h"
 #include <thread>
@@ -50,6 +51,10 @@ QStringList& ActionModuleSerialVersion::updatePortsList(){
     if(this->ports.size() > 0)
         serial.setPortName(this->ports[this->ports.size() - 1]);
     return this->ports;
+}
+void ActionModuleSerialVersion::setMedusaSettings(bool color,bool side){
+    _color = color ? 1 : 0;// 1 for Yellow , 0 for Blue
+    _side = side ? 1 : 0;// 1 for right , 0 for left
 }
 bool ActionModuleSerialVersion::init(){
     if (serial.isOpen()) {
@@ -183,18 +188,25 @@ void ActionModuleSerialVersion::readData(){
     int capacitance = 0;
     if(data[0] == (char)0xff){
         if(data[1] == (char)0x02){
-            id       = (quint8)data[2];
+            id       = (quint8)data[2] - 1;//old protocal
             infrared = (quint8)data[3] & 0x40;
             flat     = (quint8)data[3] & 0x20;
             chip     = (quint8)data[3] & 0x10;
+            GlobalData::instance()->robotInfoMutex.lock();
+            GlobalData::instance()->robotInformation[_color][id].infrared = infrared;
+            GlobalData::instance()->robotInformation[_color][id].flat = flat;
+            GlobalData::instance()->robotInformation[_color][id].chip = chip;
+            GlobalData::instance()->robotInfoMutex.unlock();
+            emit receiveRobotInfo(_color, id);
+            qDebug() << id << ' ' << infrared << ' ' << flat << ' ' << chip << ' ' << battery << ' ' << capacitance;
         }
-        else if(data[1] == (char)0x01){
-            id          = (quint8)data[2];
-            battery     = (quint8)data[3];
-            capacitance = (quint8)data[4];
-        }
+//        else if(data[1] == (char)0x01){
+//            id          = (quint8)data[2];
+//            battery     = (quint8)data[3];
+//            capacitance = (quint8)data[4];
+//        }
     }
-    qDebug() << id << ' ' << infrared << ' ' << flat << ' ' << chip << ' ' << battery << ' ' << capacitance;
+
 }
 namespace{
 void encodeLegacy(const NJ_Command& command,QByteArray& tx,int num){
@@ -263,8 +275,8 @@ void encodeLegacy(const NJ_Command& command,QByteArray& tx,int num){
 
 
     // shoot power
-    TXBuff[6*i + 8] = (quint8)power;
-
+    quint8 p = std::max(10.0, std::min((double)power, 127.0));
+    TXBuff[6*i + 8] = p;
 
 }
 quint8 kickStandardization(quint8 id,bool mode,quint8 power){
