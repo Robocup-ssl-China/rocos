@@ -138,25 +138,26 @@ void CVisionModule::receiveVisionMsg() {
             }
             int index = 0;
             for (int color = 0; color < PARAM::TEAMS; color++) {
-                bool ourRobot = (color == PARAM::BLUE) == (_pOption->MyColor() == PARAM::BLUE);
+                bool ourRobot = (color == _pOption->MyColor());
                 int robot_size = (color == PARAM::BLUE) ? detectionFrame.robots_blue_size() : detectionFrame.robots_yellow_size();
                 for (int i = 0; i < PARAM::ROBOTNUM; i++) {
                     if(i >= robot_size) break;
-                    auto& robot = ourRobot ? detectionFrame.robots_blue(i) : detectionFrame.robots_yellow(i);
+                    auto& robot = (color==PARAM::BLUE) ? detectionFrame.robots_blue(i) : detectionFrame.robots_yellow(i);
+                    int ourOrTheir = ourRobot ? 0 : 1;
                     if (!robot.valid()) continue;
                     index = robot.robot_id();
-                    visionTemp.player[color][index].pos.x = robot.x();
-                    visionTemp.player[color][index].pos.y = robot.y();
-                    visionTemp.player[color][index].rawPos.x = robot.raw_x();
-                    visionTemp.player[color][index].rawPos.y = robot.raw_y();
-                    visionTemp.player[color][index].pos.valid = robot.valid();
-                    visionTemp.player[color][index].dir = robot.orientation();
-                    visionTemp.player[color][index].rawdir = robot.raw_orientation();
-                    visionTemp.player[color][index].vel.setVector(robot.vel_x(), robot.vel_y());
-                    visionTemp.player[color][index].raw_vel.setVector(robot.raw_vel_x(), robot.raw_vel_y());
-                    visionTemp.player[color][index].dirvel = robot.rotate_vel();
-                    visionTemp.player[color][index].raw_dirVel = robot.raw_rotate_vel();
-                    visionTemp.player[color][index].accelerate.setVector(robot.accelerate_x(), robot.accelerate_y());
+                    visionTemp.player[ourOrTheir][index].pos.x = robot.x();
+                    visionTemp.player[ourOrTheir][index].pos.y = robot.y();
+                    visionTemp.player[ourOrTheir][index].rawPos.x = robot.raw_x();
+                    visionTemp.player[ourOrTheir][index].rawPos.y = robot.raw_y();
+                    visionTemp.player[ourOrTheir][index].pos.valid = robot.valid();
+                    visionTemp.player[ourOrTheir][index].dir = robot.orientation();
+                    visionTemp.player[ourOrTheir][index].rawdir = robot.raw_orientation();
+                    visionTemp.player[ourOrTheir][index].vel.setVector(robot.vel_x(), robot.vel_y());
+                    visionTemp.player[ourOrTheir][index].raw_vel.setVector(robot.raw_vel_x(), robot.raw_vel_y());
+                    visionTemp.player[ourOrTheir][index].dirvel = robot.rotate_vel();
+                    visionTemp.player[ourOrTheir][index].raw_dirVel = robot.raw_rotate_vel();
+                    visionTemp.player[ourOrTheir][index].accelerate.setVector(robot.accelerate_x(), robot.accelerate_y());
                 }
             }
 //            decisionMutex.lock();		// 决策加锁
