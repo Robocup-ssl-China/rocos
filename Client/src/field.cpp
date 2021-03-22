@@ -528,7 +528,7 @@ void Field::init() {
     zpm->loadParam(param_penaltyLength, "field/penaltyLength", 2000);
     zpm->loadParam(param_centerCircleRadius, "field/centerCircleRadius",  500);
     zpm->loadParam(param_penalty_radius, "field/penalty_radius", 800);
-    zpm->loadParam(param_penalty_area_l, "penalty_area_l", 350);
+    zpm->loadParam(param_penalty_area_l, "field/penalty_area_l", 350);
     zpm->loadParam(if_ellipse_penalty, "field/if_ellipse_penalty", false);
     ::area = QRect(0, 0, this->property("width").toReal(), this->property("height").toReal());
 //    ::size = QSize(this->property("width").toReal()/2.0, this->property("height").toReal()/2.0);

@@ -131,7 +131,7 @@ namespace ZSS {
         const int YELLOW_STATUS_PORT = 30012;
     }
     namespace Athena {
-        const int CONTROL_SEND[PARAM::TEAMS] = {50001, 50002};
+        const int CONTROL_SEND[PARAM::TEAMS] = {50011, 50012};
         const int CONTROL_BACK_RECEIVE[PARAM::TEAMS] = {60001, 60002};
         const int VISION_SEND[PARAM::TEAMS] = {23333, 23334};
         const int SEND_TO_PYTHON = 41001;

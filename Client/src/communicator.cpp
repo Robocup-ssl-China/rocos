@@ -94,7 +94,6 @@ void Communicator::receiveCommand(int t) {
 }
 
 void Communicator::sendCommand(int team, int id) {
-    qDebug() << "\n!!!!!!!!!!!!!!!!!!!!!!!!\n";
     GlobalData::instance()->robotInfoMutex.lock();
     bool infrared = GlobalData::instance()->robotInformation[team][id].infrared;
     bool flat = GlobalData::instance()->robotInformation[team][id].flat;
@@ -106,7 +105,6 @@ void Communicator::sendCommand(int team, int id) {
     robot_status.set_infrared(infrared);
     robot_status.set_flat_kick(flat);
     robot_status.set_chip_kick(chip);
-    qDebug() << "send robot status : " << id << infrared << flat <<chip;
     int size = robot_status.ByteSize();
     QByteArray datagram(size, 0);
     robot_status.SerializeToArray(datagram.data(), size);
