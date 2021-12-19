@@ -37,3 +37,6 @@ sudo usermod -a -G dialout $USER
 ```
 
 执行上述语句后Log Out，再次进入可以获取权限
+
+---
+TEMPCHANGE
