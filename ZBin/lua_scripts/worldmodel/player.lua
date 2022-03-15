@@ -62,6 +62,13 @@ function valid(role)
 	return instance(role):Valid()
 end
 
+function myvalid(role)
+	if num(role) ~= -1 then
+		return true
+	end
+	return false
+end
+
 function toBallDist(role)
 	return pos(role):dist(ball.pos())
 end
