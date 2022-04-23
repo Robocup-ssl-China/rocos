@@ -63,9 +63,18 @@ void CGoalie::plan(const CVisionModule* pVision){
     // SAVE
     auto ball_vel = pVision->ball().Vel().mod();
     auto ball_vel_dir = pVision->ball().Vel().dir();
-    CGeoSegment ball_line(ball,ball + Utils::Polar2Vector(99999,ball_vel_dir));
+    double distance = ball_vel * ball_vel / 1600;
+    CGeoSegment ball_line(ball,ball + Utils::Polar2Vector(distance,ball_vel_dir));
+//    GDebugEngine::Instance()->gui_debug_line(ball, ball + Utils::Polar2Vector(99999,ball_vel_dir));
     CGeoLineLineIntersection danger_intersection(ball_line,GOAL_LINE);
-    bool danger_to_our_goal = danger_intersection.Intersectant() && ball_line.IsPointOnLineOnSegment(danger_intersection.IntersectPoint()) && GOAL_LINE.IsPointOnLineOnSegment(danger_intersection.IntersectPoint()) && (ball_vel_dir - (danger_intersection.IntersectPoint() - ball).dir()) < PARAM::Math::PI/18;
+    bool danger_to_our_goal = danger_intersection.Intersectant() &&
+            ball_line.IsPointOnLineOnSegment(danger_intersection.IntersectPoint()) &&
+            GOAL_LINE.IsPointOnLineOnSegment(danger_intersection.IntersectPoint()) &&
+            (ball_vel_dir - (danger_intersection.IntersectPoint() - ball).dir()) < PARAM::Math::PI/18 &&
+            ball.dist(OUR_GOAL) < PARAM::Field::PITCH_LENGTH/4.;
+//    GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(0, 0), QString("%1").arg(ball_line.IsPointOnLineOnSegment(danger_intersection.IntersectPoint())).toLatin1());
+//    GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(0, 100), QString("%1").arg(GOAL_LINE.IsPointOnLineOnSegment(danger_intersection.IntersectPoint())).toLatin1());
+//    GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(0, 200), QString("%1").arg((ball_vel_dir - (danger_intersection.IntersectPoint() - ball).dir()) < PARAM::Math::PI/18).toLatin1());
 
     TaskT newTask(task());
 
