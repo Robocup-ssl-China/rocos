@@ -275,7 +275,7 @@ void encodeLegacy(const NJ_Command& command,QByteArray& tx,int num){
 
 
     // shoot power
-    quint8 p = std::max(10.0, std::min((double)power, 127.0));
+    quint8 p = power > 0.01 ? std::max(10.0, std::min((double)power, 127.0)) : 0;
     TXBuff[6*i + 8] = p;
 
 }
