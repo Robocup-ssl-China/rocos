@@ -24,7 +24,7 @@ function RunRefScript(name)
 end
 
 function SelectRefPlay()
-	local curRefMsg = vision:getLuaRefereeMsg()
+	local curRefMsg = vision:getCurrentRefereeMsg()
 	debugEngine:gui_debug_msg(CGeoPoint:new_local(1000,1000),curRefMsg)
 	if curRefMsg == "" then
 		gLastRefMsg = curRefMsg
