@@ -341,17 +341,17 @@ Page{
                     }
                 }
             }
-//            ZSS.Display{
-//                type:1;
-//                width:parent.width - 2*parent.padding;
-//                height:300;
-//                onWidthChanged: {
-//                    resetSize(width,height);
-//                }
-//                onHeightChanged: {
-//                    resetSize(width,height);
-//                }
-//            }
+            ZSS.Display{
+                type:1;
+                width:parent.width - 2*parent.padding;
+                height:300;
+                onWidthChanged: {
+                    resetSize(width,height);
+                }
+                onHeightChanged: {
+                    resetSize(width,height);
+                }
+            }
         }
         RefereeBox{
         }
