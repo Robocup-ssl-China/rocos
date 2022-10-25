@@ -6,7 +6,7 @@
 ## 更新
 * latest
   * 统一编译方式，去除脚本，更名Medusa->Core
-* **v0.0.1** (2022.10.25)
+* [**v0.0.1**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.1) (2022.10.25)
   * 稳定版本
     * Client使用cmake构建的客户端，内嵌sim模块（修改自开源grSim）
     * Medusa策略核心代码
