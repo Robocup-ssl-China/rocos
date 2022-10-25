@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 3.12)
+project(rocos LANGUAGES CXX)
+
+set(VERSION "0.0.2")
+set(VENDOR "ZJUNlict")
+set(MAINTAINER "ZJUNlict <zjunlict.ssl@gmail.com>")
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -pthread")
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+include(${PROJECT_SOURCE_DIR}/cmake/Utils.cmake)
+standard_config()
+standard_paths(${PROJECT_SOURCE_DIR} ZBin lib)
+
+set(libs)
+
+find_package(Protobuf REQUIRED)
+function(get_pb_file H CPP)
+	list(APPEND PH ${ARGN})
+	list(APPEND PC ${ARGN})
+	list(TRANSFORM PH PREPEND ${CMAKE_BINARY_DIR}/proto/)
+	list(TRANSFORM PH APPEND .pb.h)
+	list(TRANSFORM PC PREPEND ${CMAKE_BINARY_DIR}/proto/)
+	list(TRANSFORM PC APPEND .pb.cc)
+	set(${H} ${PH} PARENT_SCOPE)
+	set(${CPP} ${PC} PARENT_SCOPE)
+endfunction()
+set(PROTO_META_BASE_DIR ${CMAKE_BINARY_DIR}/proto)
+set(PROTO_FILE_DIR ${CMAKE_SOURCE_DIR}/share/proto)
+file(MAKE_DIRECTORY ${PROTO_META_BASE_DIR})
+list(APPEND PROTO_FLAGS -I${PROTO_FILE_DIR})
+file(GLOB PROTO_FILES "${PROTO_FILE_DIR}/*.proto")
+
+FOREACH(FIL ${PROTO_FILES})
+	GET_FILENAME_COMPONENT(ABS_FIL ${FIL} ABSOLUTE)
+	GET_FILENAME_COMPONENT(FIL_WE ${ABS_FIL} NAME_WE)
+	EXECUTE_PROCESS(
+		COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} ${PROTO_FLAGS} --cpp_out=${PROTO_META_BASE_DIR} ${FIL}
+		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	)
+ENDFOREACH()
+
+add_subdirectory(Client)
+add_subdirectory(Core)
+add_subdirectory(Controller)

@@ -124,7 +124,8 @@ ZBin/Crazy
 ZBin/Client
 ZBin/Crazy2018
 ZBin/ballSpeedLog.txt
-ZBin/core
+ZBin/Core
+ZBin/Controller
 # python
 ZBin/__pycache__
 ZBin/*.py[cod]

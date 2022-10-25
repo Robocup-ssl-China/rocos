@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 3.9)
-
-project(Client LANGUAGES CXX)
-
+set(TARGET_NAME Client)
+# Client
 if (WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
@@ -19,22 +17,11 @@ if (WIN32)
     set(thirdParty ${CMAKE_CURRENT_SOURCE_DIR}/../3rdParty)
 endif()
 
-set(VERSION "0.0.1")
-set(VENDOR "ZJUNlict")
-set(MAINTAINER "ZJUNlict <zjunlict.ssl@gmail.com>")
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread")
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
-include(${PROJECT_SOURCE_DIR}/cmake/Utils.cmake)
-standard_config()
-standard_paths(${PROJECT_SOURCE_DIR} ../ZBin lib)
 if (NOT UNIX AND NOT APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 endif()
+
+add_subdirectory(plugins)
 
 set(libs)
 
@@ -45,35 +32,6 @@ if (WIN32)
 else()
     find_package(Protobuf REQUIRED)
 endif()
-function(get_pb_file H CPP)
-    list(APPEND PH ${ARGN})
-    list(APPEND PC ${ARGN})
-    list(TRANSFORM PH PREPEND ${CMAKE_BINARY_DIR}/proto/)
-    list(TRANSFORM PH APPEND .pb.h)
-    list(TRANSFORM PC PREPEND ${CMAKE_BINARY_DIR}/proto/)
-    list(TRANSFORM PC APPEND .pb.cc)
-    set(${H} ${PH} PARENT_SCOPE)
-    set(${CPP} ${PC} PARENT_SCOPE)
-endfunction()
-SET(PROTO_META_BASE_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto)
-file(MAKE_DIRECTORY ${PROTO_META_BASE_DIR})
-
-add_subdirectory(plugins)
-
-# find packages
-## find protobuf
-LIST(APPEND PROTO_FLAGS -I${CMAKE_CURRENT_SOURCE_DIR}/../Medusa/share/proto)
-file(GLOB PROTO_FILES "${CMAKE_SOURCE_DIR}/../Medusa/share/proto/*.proto")
-## protobuf_generate_cpp(PROTO_CPP PROTO_H ${PROTO_FILES})
-FOREACH(FIL ${PROTO_FILES})
-    GET_FILENAME_COMPONENT(ABS_FIL ${FIL} ABSOLUTE)
-    GET_FILENAME_COMPONENT(FIL_WE ${ABS_FIL} NAME_WE)
-    EXECUTE_PROCESS(
-        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} ${PROTO_FLAGS} --cpp_out=${PROTO_META_BASE_DIR} ${FIL}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-ENDFOREACH()
-
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 list(APPEND libs ${Protobuf_LIBRARIES})
 
@@ -128,7 +86,7 @@ set(PROJECT_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/vision
     ${CMAKE_CURRENT_SOURCE_DIR}/src/vision/log
     ${CMAKE_CURRENT_SOURCE_DIR}/plugins
-    ${CMAKE_SOURCE_DIR}/../Medusa/share
+    ${CMAKE_SOURCE_DIR}/share
 )
 include_directories(${PROJECT_INCLUDE_DIRS})
 ## core cpp files
@@ -137,7 +95,7 @@ file(GLOB CPPFILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/vision/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/vision/log/*.cpp"
-    "${CMAKE_SOURCE_DIR}/../Medusa/share/*.cpp"
+    "${CMAKE_SOURCE_DIR}/share/*.cpp"
 )
 set(SRC
     ${HEADERS}
@@ -149,6 +107,6 @@ set(SRC
 set(zss_libs
     zss_simulator
 )
-add_executable(${PROJECT_NAME} ${SRC} "Client.qrc" "Client.rc")
-target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${libs} ${zss_libs})
+add_executable(${TARGET_NAME} ${SRC} "Client.qrc" "Client.rc")
+target_compile_definitions(${TARGET_NAME} PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+target_link_libraries(${TARGET_NAME} PRIVATE ${libs} ${zss_libs})

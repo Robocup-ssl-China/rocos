@@ -73,8 +73,7 @@ list(APPEND PROJECT_INCLUDE_DIRS
     ${CMAKE_BINARY_DIR}/proto
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/physics
-    ${CMAKE_SOURCE_DIR}/src/utils
-    ${CMAKE_SOURCE_DIR}/../Medusa/share
+    ${CMAKE_SOURCE_DIR}/share
 )
 include_directories(${PROJECT_INCLUDE_DIRS})
 
@@ -82,7 +81,7 @@ file(GLOB CPPFILES
     "${CMAKE_SOURCE_DIR}/src/utils/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/physics/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-    "${CMAKE_SOURCE_DIR}/../Medusa/share/*.cpp"
+    "${CMAKE_SOURCE_DIR}/share/*.cpp"
 )
 set(EXPORT_HEADERS
 	sslworld.h
