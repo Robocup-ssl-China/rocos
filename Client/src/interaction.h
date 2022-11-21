@@ -22,8 +22,10 @@ class Interaction : public QObject {
     Q_INVOKABLE bool connectSim(bool,int,bool);
     Q_INVOKABLE bool changeMedusaSettings(bool, bool);
     Q_INVOKABLE QStringList getInterfaces();
+    Q_INVOKABLE QStringList getGrsimInterfaces();
     Q_INVOKABLE void updateInterfaces();
     Q_INVOKABLE void changeVisionInterface(int);
+    Q_INVOKABLE void changeGrsimInterface(int);
     Q_INVOKABLE void changeRadioInterface(bool ifBlue,bool ifSender,int);
 
     Q_INVOKABLE void setVision(bool, bool);

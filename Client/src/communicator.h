@@ -15,6 +15,8 @@ class Communicator : public QObject {
     bool connectMedusa(int);
     bool disconnectMedusa(int);
     void reloadSimulation();
+    void setGrsimInterfaceIndex(const int index);
+    int getGrsimInterfaceIndex() {return grsimInterfaceIndex;}
     int getFPS(int);
     const RobotCommands getCommands(int t) {
         return commandBuffer[t];
@@ -32,6 +34,7 @@ class Communicator : public QObject {
     QStringList networkInterfaceReadableNames;
     RobotCommands commandBuffer[PARAM::TEAMS];
     int networkInterfaceIndex;
+    int grsimInterfaceIndex;
     bool isSimulation;
 };
 typedef Singleton<Communicator> ZCommunicator;

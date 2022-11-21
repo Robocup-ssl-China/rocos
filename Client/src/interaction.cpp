@@ -67,6 +67,9 @@ void Interaction::updateInterfaces(){
 QStringList Interaction::getInterfaces(){
     return ZNetworkInterfaces::instance()->getInterfaces();
 }
+QStringList Interaction::getGrsimInterfaces(){
+    return ZNetworkInterfaces::instance()->getGrsimInterfaces();
+}
 void Interaction::changeVisionInterface(int index){
 //    if(portNum < ports.size() && portNum >= 0){
 //        serial.setPortName(ports[portNum]);
@@ -74,6 +77,9 @@ void Interaction::changeVisionInterface(int index){
 //    }
     VisionModule::instance()->setInterfaceIndex(index);
 //    qDebug() << "vision interface : " << index;
+}
+void Interaction::changeGrsimInterface(int index){
+    ZCommunicator::instance()->setGrsimInterfaceIndex(index);
 }
 void Interaction::changeRadioInterface(bool ifBlue,bool ifSender,int index){
 //    qDebug() << "radio  interface : " << ifBlue << ifSender << index;
@@ -176,7 +182,7 @@ bool Interaction::controlMedusa(bool control) {
         emit GlobalSettings::instance()->clearOutput();
     } else {
         medusaProcess = new QProcess();
-        QString name = "./Medusa";
+        QString name = "./Core";
         connect(medusaProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(medusaPrint()));
         medusaProcess->start(name);
         QTextStream(stdout) << "\n------------------------------------\n" << "running " << name << "\n------------------------------------\n";
@@ -195,7 +201,7 @@ bool Interaction::controlMedusa2(bool control) {
         }
     } else {
         medusaProcess2 = new QProcess();
-        QString name = "./Medusa";
+        QString name = "./Core";
         medusaProcess2->start(name);
         QTextStream(stdout) << "\n------------------------------------\n" << "running 2 " << name << "\n------------------------------------\n";
     }
@@ -262,7 +268,7 @@ void Interaction::kill() {
     //QString grSim = "taskkill -im grSim.exe -f";
 #else
     QString athena = "pkill Client";
-    QString medusa = "pkill Medusa";
+    QString medusa = "pkill Core";
     //QString grSim = "pkill grsim";
 #endif
     if (monitorProcess != nullptr) {

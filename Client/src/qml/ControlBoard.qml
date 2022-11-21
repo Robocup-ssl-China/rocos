@@ -123,6 +123,19 @@ Page{
                             interaction.getInterfaces();
                         }
                     }
+                    ZComboBox{
+                        id:grsimInterface;
+                        model:interaction.getGrsimInterfaces();
+                        onActivated: interaction.changeGrsimInterface(currentIndex);
+                        function updateModel(){
+                            model = interaction.getGrsimInterfaces();
+                            if(currentIndex >= 0)
+                                interaction.changeGrsimInterface(currentIndex);
+                        }
+                        Component.onCompleted: {
+                            interaction.getGrsimInterfaces();
+                        }
+                    }
                     ZSwitch{
                         id:simulation;
                         width:parent.itemWidth;
