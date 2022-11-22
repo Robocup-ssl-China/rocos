@@ -128,7 +128,8 @@ void RemoteSim::readBlueData() {
                 GlobalData::instance()->robotInformation[PARAM::BLUE][id].flat = isFlatKick;
                 GlobalData::instance()->robotInformation[PARAM::BLUE][id].chip = isChipKick;
                 robotInfoMutex.unlock();
-                emit receiveRemoteInfo(PARAM::BLUE, id);
+                ZCommunicator::instance()->sendCommand(PARAM::BLUE, id);
+//                emit receiveRemoteInfo(PARAM::BLUE, id);
             }
         }
     }
@@ -155,7 +156,8 @@ void RemoteSim::readYellowData() {
                 GlobalData::instance()->robotInformation[PARAM::YELLOW][id].flat = isFlatKick;
                 GlobalData::instance()->robotInformation[PARAM::YELLOW][id].chip = isChipKick;
                 robotInfoMutex.unlock();
-                emit receiveRemoteInfo(PARAM::YELLOW, id);
+                ZCommunicator::instance()->sendCommand(PARAM::YELLOW, id);
+//                emit receiveRemoteInfo(PARAM::YELLOW, id);
             }
         }
     }

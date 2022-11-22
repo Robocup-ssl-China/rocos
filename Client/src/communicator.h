@@ -25,7 +25,7 @@ class Communicator : public QObject {
         commandBuffer[PARAM::BLUE] = RobotCommands();
         commandBuffer[PARAM::YELLOW] = RobotCommands();
     }
-  private slots:
+  public slots:
     void receiveCommand(int);
     void sendCommand(int, int);
   private:

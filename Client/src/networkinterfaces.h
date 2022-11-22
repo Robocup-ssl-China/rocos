@@ -9,6 +9,8 @@ public:
     void updateInterfaces();
     QStringList getInterfaces(){ return interfaces; }
     QStringList getGrsimInterfaces(){ return grsimInterfaces; }
+    QString getLocalAddress();
+    bool Ping(const QString ip);
     QNetworkInterface getFromIndex(const int index){ return QNetworkInterface::interfaceFromName(interfaces[index]); }
 private:
     QStringList interfaces;
