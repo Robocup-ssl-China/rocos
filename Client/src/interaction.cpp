@@ -34,7 +34,7 @@ Interaction::~Interaction() {
         }
         delete medusaProcess;
         medusaProcess = nullptr;
-        QTextStream(stdout) << "\n------------------------------------\nexit Medusa\n------------------------------------\n";
+        QTextStream(stdout) << "\n------------------------------------\nexit Core\n------------------------------------\n";
     }
     if (medusaProcess2 != nullptr) {
         if (medusaProcess2->isOpen()) {
@@ -42,7 +42,7 @@ Interaction::~Interaction() {
         }
         delete medusaProcess2;
         medusaProcess2 = nullptr;
-        QTextStream(stdout) << "\n------------------------------------\nexit 2 Medusa\n------------------------------------\n";
+        QTextStream(stdout) << "\n------------------------------------\nexit 2 Core\n------------------------------------\n";
     }
     if (crazyProcess != nullptr) {
         if (crazyProcess->isOpen()) {
@@ -171,12 +171,12 @@ bool Interaction::controlMedusa(bool control) {
             }
             delete medusaProcess;
             medusaProcess = nullptr;
-            QTextStream(stdout) << "\n------------------------------------\nexit Medusa\n------------------------------------\n";
+            QTextStream(stdout) << "\n------------------------------------\nexit Core\n------------------------------------\n";
         }
         emit GlobalSettings::instance()->clearOutput();
     } else {
         medusaProcess = new QProcess();
-        QString name = "./Medusa";
+        QString name = "./Core";
         connect(medusaProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(medusaPrint()));
         medusaProcess->start(name);
         QTextStream(stdout) << "\n------------------------------------\n" << "running " << name << "\n------------------------------------\n";
@@ -191,11 +191,11 @@ bool Interaction::controlMedusa2(bool control) {
             }
             delete medusaProcess2;
             medusaProcess2 = nullptr;
-            QTextStream(stdout) << "\n------------------------------------\nexit 2 Medusa\n------------------------------------\n";
+            QTextStream(stdout) << "\n------------------------------------\nexit 2 Core\n------------------------------------\n";
         }
     } else {
         medusaProcess2 = new QProcess();
-        QString name = "./Medusa";
+        QString name = "./Core";
         medusaProcess2->start(name);
         QTextStream(stdout) << "\n------------------------------------\n" << "running 2 " << name << "\n------------------------------------\n";
     }
@@ -258,11 +258,11 @@ void Interaction::kill() {
 #ifdef WIN32
 //    RefereeThread::instance()->disconnectTCP();
     QString athena = "taskkill -im Client.exe -f";
-    QString medusa = "taskkill -im Medusa.exe -f";
+    QString medusa = "taskkill -im Core.exe -f";
     //QString grSim = "taskkill -im grSim.exe -f";
 #else
     QString athena = "pkill Client";
-    QString medusa = "pkill Medusa";
+    QString medusa = "pkill Core";
     //QString grSim = "pkill grsim";
 #endif
     if (monitorProcess != nullptr) {
