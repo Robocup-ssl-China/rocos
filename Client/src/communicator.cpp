@@ -36,7 +36,7 @@ Communicator::Communicator(QObject *parent) : QObject(parent) {
         QObject::connect(ZSS::ZSimModule::instance(), SIGNAL(receiveSimInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     }
     else {
-        QObject::connect(ZSS::ZRemoteSimModule::instance(), SIGNAL(), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
+        QObject::connect(ZSS::ZRemoteSimModule::instance(), SIGNAL(receiveRemoteInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     }
     QObject::connect(ZSS::NActionModule::instance(), SIGNAL(receiveRobotInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     for(int i = 0; i < PARAM::TEAMS; i++) {
