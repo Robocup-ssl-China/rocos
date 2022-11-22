@@ -38,11 +38,13 @@ public:
     void gui_debug_triangle(const CGeoPoint& p1, const CGeoPoint& p2, const CGeoPoint& p3, int debug_color = 1,int RGB_value=0);
     void gui_debug_robot(const CGeoPoint& p, double robot_dir, int debug_color = 1,int RGB_value=0);
     void gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0);
-    void gui_debug_curve(const double num, const double maxLimit, const double minLimit, int debug_color = 1,int RGB_value=0);
     void send(bool);
 private:
     QUdpSocket sendSocket;
     QMutex debugMutex;
+    bool remote_debugger;
+    QString remote_address;
+    int remote_port;
 };
 typedef NormalSingleton< CGDebugEngine > GDebugEngine;
 

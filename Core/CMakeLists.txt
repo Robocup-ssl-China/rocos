@@ -45,6 +45,7 @@ set(PROTO_LIST
     vision_detection
     zss_cmd
     zss_debug
+    zss_geometry
 )
 get_pb_file(PROTO_H PROTO_CPP ${PROTO_LIST})
 

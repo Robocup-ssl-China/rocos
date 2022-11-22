@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package ZSS.Protocol;
+
+message Point{
+	float x = 1;
+	float y = 2;
+}
+message Rectangle{
+	Point point1 = 1;
+	Point point2 = 2;
+}
