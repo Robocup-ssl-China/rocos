@@ -28,6 +28,7 @@ class CVisionModule : public QObject,public ZSPlugin  {
     void oneStepSimData();
   private:
     void readSimData();
+    void readRemoteSimData();
     CGeoPoint saoConvert(CGeoPoint);
     double saoConvert(double);
     void edgeTest();

@@ -6,6 +6,7 @@
 #include "actionmodule.h"
 #include "simmodule.h"
 #include "parammanager.h"
+#include "remotesim.h"
 #include "globaldata.h"
 #include "globalsettings.h"
 #include <mutex>
@@ -25,9 +26,17 @@ int Communicator::getFPS(int t) {
     return res;
 }
 
+void Communicator::setGrsimInterfaceIndex(const int index) {
+    grsimInterfaceIndex = index;
+}
+
 Communicator::Communicator(QObject *parent) : QObject(parent) {
     ZSS::ZParamManager::instance()->loadParam(NoVelY, "Lesson/NoVelY", false);
-    QObject::connect(ZSS::ZSimModule::instance(), SIGNAL(receiveSimInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
+    if (grsimInterfaceIndex == 0){
+        qDebug() << "connect sim";
+        QObject::connect(ZSS::ZSimModule::instance(), SIGNAL(receiveSimInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
+    }
+//    QObject::connect(ZSS::ZRemoteSimModule::instance(), SIGNAL(receiveRemoteInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     QObject::connect(ZSS::NActionModule::instance(), SIGNAL(receiveRobotInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     for(int i = 0; i < PARAM::TEAMS; i++) {
 //        connect(&receiveSocket[i], &QUdpSocket::readyRead, [ = ]() {
@@ -83,7 +92,10 @@ void Communicator::receiveCommand(int t) {
             }
             if(isSimulation) {
 //                qDebug() << "simulation";
-                ZSS::ZSimModule::instance()->sendSim(t, commands);
+                if (grsimInterfaceIndex==0)
+                    ZSS::ZSimModule::instance()->sendSim(t, commands);
+                else
+                    ZSS::ZRemoteSimModule::instance()->sendSim(t, commands);
             } else {
 //                qDebug() << "realreal!";
 //                ZSS::ZActionModule::instance()->sendLegacy(t, commands);
@@ -94,6 +106,7 @@ void Communicator::receiveCommand(int t) {
 }
 
 void Communicator::sendCommand(int team, int id) {
+//    qDebug() << "send";
     GlobalData::instance()->robotInfoMutex.lock();
     bool infrared = GlobalData::instance()->robotInformation[team][id].infrared;
     bool flat = GlobalData::instance()->robotInformation[team][id].flat;

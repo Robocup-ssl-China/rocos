@@ -54,10 +54,20 @@ bool CVisionModule::showIfEdgeTest() {
     return IF_EDGE_TEST;
 }
 void CVisionModule::udpSocketConnect(bool real) {
-    real ? zpm->loadParam(vision_port, "AlertPorts/Vision4Real", 10005) : zpm->loadParam(vision_port, "AlertPorts/Vision4Sim", 10020);
+    int grsimInterface = ZCommunicator::instance()->getGrsimInterfaceIndex();
+    if (real) {
+        zpm->loadParam(vision_port, "AlertPorts/Vision4Real", 10005);
+    }
+    else if(grsimInterface != 0) {
+        zpm->loadParam(vision_port, "AlertPorts/Vision4Remote", 10066);
+    }
+    else{
+        zpm->loadParam(vision_port, "AlertPorts/Vision4Sim", 10020);
+    }
     zpm->loadParam(saoAction, "Alert/SaoAction", 0);
     GlobalData::instance()->setCameraMatrix(real);
-    if(real){
+
+    if(real || grsimInterface != 0){
         qDebug() << "VisionPort : " << vision_port;
         udpReceiveSocket.bind(QHostAddress::AnyIPv4, vision_port, QUdpSocket::ShareAddress);
         udpReceiveSocket.joinMulticastGroup(QHostAddress(ZSS::SSL_ADDRESS),ZNetworkInterfaces::instance()->getFromIndex(_interface));
@@ -165,6 +175,10 @@ void CVisionModule::readSimData(){
         receive("ssl_vision",datagram);
         parse((void*)datagram.data(), datagram.size());
     }
+}
+
+void CVisionModule::readRemoteSimData(){
+
 }
 /**
  * @brief process data

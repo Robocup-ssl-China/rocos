@@ -67,6 +67,9 @@ void Interaction::updateInterfaces(){
 QStringList Interaction::getInterfaces(){
     return ZNetworkInterfaces::instance()->getInterfaces();
 }
+QStringList Interaction::getGrsimInterfaces(){
+    return ZNetworkInterfaces::instance()->getGrsimInterfaces();
+}
 void Interaction::changeVisionInterface(int index){
 //    if(portNum < ports.size() && portNum >= 0){
 //        serial.setPortName(ports[portNum]);
@@ -74,6 +77,9 @@ void Interaction::changeVisionInterface(int index){
 //    }
     VisionModule::instance()->setInterfaceIndex(index);
 //    qDebug() << "vision interface : " << index;
+}
+void Interaction::changeGrsimInterface(int index){
+    ZCommunicator::instance()->setGrsimInterfaceIndex(index);
 }
 void Interaction::changeRadioInterface(bool ifBlue,bool ifSender,int index){
 //    qDebug() << "radio  interface : " << ifBlue << ifSender << index;
