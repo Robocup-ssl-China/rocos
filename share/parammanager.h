@@ -56,12 +56,18 @@ class ParamManagerPoint: public ParamManager {
     ParamManagerPoint(): ParamManager("pointForMessi.ini") {}
     ~ParamManagerPoint() {}
 };
+class ParamManagerSim: public ParamManager{
+public:
+    ParamManagerSim():ParamManager("zss_simulator.ini"){}
+    ~ParamManagerSim(){}
+};
 typedef Singleton<ParamManagerZSS> ZParamManager;
 typedef Singleton<ParamManagerKickParam> KParamManager;
 typedef Singleton<ParamManagerVisionParam> VParamManager;
 typedef Singleton<ParamManagerTemp> TParamManager;
 typedef Singleton<ParamManagerLogClip> LParamManager;
 typedef Singleton<ParamManagerPoint> PParamManager;
+typedef Singleton<ParamManagerSim> SParamManager;
 }
 
 #endif // PARAMMANAGER_H

@@ -143,6 +143,8 @@ git_stats
 
 3rdParty
 
+__temp__
+
 # python
 PyDemo/*_pb2.py
 

@@ -834,10 +834,10 @@ void Field::drawDebugMessages(int team) {
         double minx,miny,maxx,maxy;
         switch(msg.type()) {
         case Debug_Msg_Debug_Type_ARC:
-            x1 = msg.arc().rectangle().point1().x();
-            x2 = msg.arc().rectangle().point2().x();
-            y1 = msg.arc().rectangle().point1().y();
-            y2 = msg.arc().rectangle().point2().y();
+            x1 = msg.arc().rect().point1().x();
+            x2 = msg.arc().rect().point2().x();
+            y1 = msg.arc().rect().point1().y();
+            y2 = msg.arc().rect().point2().y();
             minx = std::min(x1,x2);
             miny = std::min(y1,y2);
             maxx = std::max(x1,x2);
@@ -847,13 +847,13 @@ void Field::drawDebugMessages(int team) {
                                           ::w((maxx - minx)),
                                           ::h((maxy - miny))),
                                   msg.arc().start() * 16,
-                                  msg.arc().end() * 16);
+                                  msg.arc().span() * 16);
 
             break;
         case Debug_Msg_Debug_Type_LINE:
             pixmapPainter.drawLine(::x(msg.line().start().x()), ::y(msg.line().start().y()), ::x(msg.line().end().x()), ::y(msg.line().end().y()));
             break;
-        case Debug_Msg_Debug_Type_Points: {
+        case Debug_Msg_Debug_Type_POINTS: {
             QVector<QLine> lines;
             for(int i = 0; i < msg.points().point_size(); i++) {
                 lines.push_back(QLine(::x((msg.points().point(i).x() + debugPointSize)), ::y((msg.points().point(i).y() + debugPointSize)), ::x((msg.points().point(i).x() - debugPointSize)), ::y((msg.points().point(i).y() - debugPointSize))));
@@ -939,15 +939,15 @@ void Field::receiveScore() {
 }
 void Field::parseScores(QUdpSocket* const socket) {
     static QByteArray datagram;
-    static Debug_Scores scores;
+    static Debug_Heatmap scores;
     while (socket->state() == QUdpSocket::BoundState && socket->hasPendingDatagrams()) {
         datagram.resize(socket->pendingDatagramSize());
         socket->readDatagram(datagram.data(), datagram.size());
         scores.ParseFromArray(datagram.data(), datagram.size());
-        auto size = scores.scores_size();
+        auto size = scores.points_size();
         for(int i = 0; i < size; i++) {
-            auto score = scores.scores(i);
-            auto color = score.color();
+            auto score = scores.points(i);
+            auto color = score.value();
             if(color < 0 || color >= COLOR_LEVEL) {
                 std::cerr << "DEBUG_SCORE : not correct color : " << color << std::endl;
                 continue;

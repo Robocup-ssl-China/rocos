@@ -74,10 +74,13 @@ void CVisionModule::udpSocketConnect(bool real) {
         connect(&udpReceiveSocket, SIGNAL(readyRead()), this, SLOT(storeData()), Qt::DirectConnection);
     }
     else{
+        int desired = 65;
+        ZSS::SParamManager::instance()->loadParam(desired,"worldp_vars/DesiredFPS");
+        if(desired > 500) desired = 500;
         connect(&sim_timer,SIGNAL(timeout()),this,SLOT(oneStepSimData()),Qt::DirectConnection);
         dealThread = new std::thread([ = ] {readSimData();});
         dealThread->detach();
-        sim_timer.start(16);
+        sim_timer.start(int(1000/desired));
     }
     ReceiveVisionMessage temp;
     for (int i = 0; i < PARAM::CAMERA; i++) {

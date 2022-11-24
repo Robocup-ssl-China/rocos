@@ -4,10 +4,14 @@
 #include "zss_debug.pb.h"
 #include "staticparams.h"
 #include "WorldModel.h"
+#include "parammanager.h"
 namespace{
     ZSS::Protocol::Debug_Msgs guiDebugMsgs;
 }
 CGDebugEngine::CGDebugEngine(){
+    ZSS::ZParamManager::instance()->loadParam(remote_debugger,"Alert/z_remoteADebugger",false);
+    ZSS::ZParamManager::instance()->loadParam(remote_address,"Alert/z_remoteDAddr","127.0.0.1");
+    ZSS::ZParamManager::instance()->loadParam(remote_port,"Alert/z_remotePort",22001);
 }
 CGDebugEngine::~CGDebugEngine(){
 }
@@ -26,7 +30,7 @@ void CGDebugEngine::gui_debug_x(const CGeoPoint& p, int debug_color,int RGB_valu
 void CGDebugEngine::gui_debug_points(const std::vector<CGeoPoint> points, int debug_color,int RGB_value){
     debugMutex.lock();
     ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_Points);
+    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_POINTS);
     msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
     if(debug_color==COLOR_USE_RGB)  msg->set_rgb_value(RGB_value);
     ZSS::Protocol::Debug_Points* debugPoints = msg->mutable_points();
@@ -78,9 +82,8 @@ void CGDebugEngine::gui_debug_arc(const CGeoPoint& p, double r, double start_ang
        }
     ZSS::Protocol::Debug_Arc* arc = msg->mutable_arc();
 	arc->set_start(start_angle);
-	arc->set_end(span_angle);
-	arc->set_fill(false);
-    ZSS::Protocol::Rectangle* rec = arc->mutable_rectangle();
+    arc->set_span(span_angle);
+    ZSS::Protocol::Rectangle* rec = arc->mutable_rect();
     ZSS::Protocol::Point
 		*p1 = rec->mutable_point1(),
 		*p2 = rec->mutable_point2();
@@ -180,21 +183,6 @@ void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int de
     text->set_text(msgstr);
     debugMutex.unlock();
 }
-void CGDebugEngine::gui_debug_curve(const double num, const double maxLimit, const double minLimit, int debug_color,int RGB_value)
-{
-    debugMutex.lock();
-    ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_CURVE);
-    msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
-    if(debug_color == COLOR_USE_RGB) {
-           msg->set_rgb_value(RGB_value);
-       }
-    ZSS::Protocol::Debug_Curve_* curve = msg->mutable_curve();
-	curve->set_num(num);
-	curve->set_minlimit(minLimit);
-	curve->set_maxlimit(maxLimit);
-    debugMutex.unlock();
-}
 void CGDebugEngine::send(bool teamIsBlue){
     static QByteArray data;
     debugMutex.lock();
@@ -202,10 +190,10 @@ void CGDebugEngine::send(bool teamIsBlue){
     data.resize(size);
     guiDebugMsgs.SerializeToArray(data.data(),size);
     int sent_size = 0;
-    if(teamIsBlue){
-        sent_size = sendSocket.writeDatagram(data,data.size(),QHostAddress(ZSS::LOCAL_ADDRESS),ZSS::Medusa::DEBUG_MSG_SEND[0]);
-    } else {
-        sent_size = sendSocket.writeDatagram(data,data.size(),QHostAddress(ZSS::LOCAL_ADDRESS),ZSS::Medusa::DEBUG_MSG_SEND[1]);
+    int port = ZSS::Medusa::DEBUG_MSG_SEND[teamIsBlue?0:1];
+    sent_size = sendSocket.writeDatagram(data,data.size(),QHostAddress(ZSS::LOCAL_ADDRESS),port);
+    if(remote_debugger){
+        sendSocket.writeDatagram(data,data.size(),QHostAddress(remote_address),teamIsBlue?remote_port:remote_port+1);
     }
 //    std::cout << "size: " << data.size() << ' ' << sent_size << std::endl;
     guiDebugMsgs.clear_msgs();
