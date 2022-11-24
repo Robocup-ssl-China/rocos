@@ -140,10 +140,10 @@ void RemoteSim::readYellowData() {
     QByteArray datagram;
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(3));
-        while(blueReceiveSocket.state() == QUdpSocket::BoundState && blueReceiveSocket.hasPendingDatagrams()) {
+        while(yellowReceiveSocket.state() == QUdpSocket::BoundState && yellowReceiveSocket.hasPendingDatagrams()) {
             ZSS::Protocol::Robots_Status robotsPacket;
-            datagram.resize(blueReceiveSocket.pendingDatagramSize());
-            blueReceiveSocket.readDatagram(datagram.data(), datagram.size());
+            datagram.resize(yellowReceiveSocket.pendingDatagramSize());
+            yellowReceiveSocket.readDatagram(datagram.data(), datagram.size());
             robotsPacket.ParseFromArray(datagram, datagram.size());
 
             for (int i = 0; i < robotsPacket.robots_status_size(); ++i) {
