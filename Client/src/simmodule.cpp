@@ -68,26 +68,26 @@ SimModule::~SimModule() {
 }
 
 bool SimModule::connectSim(bool color) {
-    if(color) {
-        if(yellowReceiveSocket.bind(QHostAddress::AnyIPv4, ZSS::Sim::YELLOW_STATUS_PORT, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
-            qDebug() << "Yellow connect successfully!!!";
-            return true;
-        }
-        return false;
-    }
-    if(blueReceiveSocket.bind(QHostAddress::AnyIPv4, ZSS::Sim::BLUE_STATUS_PORT, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
-        qDebug() << "Blue connect successfully!!!";
-        return true;
-    }
+    // if(color) {
+    //     if(yellowReceiveSocket.bind(QHostAddress::AnyIPv4, ZSS::Sim::YELLOW_STATUS_PORT, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
+    //         qDebug() << "Yellow connect successfully!!!";
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    // if(blueReceiveSocket.bind(QHostAddress::AnyIPv4, ZSS::Sim::BLUE_STATUS_PORT, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
+    //     qDebug() << "Blue connect successfully!!!";
+    //     return true;
+    // }
     return false;
 }
 
 bool SimModule::disconnectSim(bool color) {
-    if(color) {
-        yellowReceiveSocket.disconnectFromHost();
-    } else {
-        blueReceiveSocket.disconnectFromHost();
-    }
+    // if(color) {
+    //     yellowReceiveSocket.disconnectFromHost();
+    // } else {
+    //     blueReceiveSocket.disconnectFromHost();
+    // }
     return true;
 }
 
