@@ -17,5 +17,7 @@ CPlayerCommand* COpenSpeed::execute(const CVisionModule* pVision) {
 	double speedY = task().player.speed_y; // y方向平动速度
 	double speedR = task().player.rotate_speed; // 转动速度
 	double dribblePower = DribbleStatus::Instance()->getDribbleCommand(num);
-	return CmdFactory::Instance()->newCommand(CPlayerSpeedV2(num, speedX, speedY, speedR, dribblePower));
+	int flag = task().player.flag;
+	bool needReport = task().player.needReport;
+	return CmdFactory::Instance()->newCommand(CPlayerSpeedV2(num, speedX, speedY, speedR, dribblePower, flag, needReport));
 }

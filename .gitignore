@@ -145,6 +145,7 @@ git_stats
 
 __temp__
 
+.vscode
 # python
 PyDemo/*_pb2.py
 

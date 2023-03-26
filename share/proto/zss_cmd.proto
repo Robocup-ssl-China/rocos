@@ -49,4 +49,7 @@ message Robot_Command {
   // new protocol
   optional float current_angle = 8;
   optional float target_angle = 9;
+
+  required bool use_dir = 10;
+  required bool need_report = 11;
 }

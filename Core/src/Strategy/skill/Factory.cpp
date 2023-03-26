@@ -208,7 +208,7 @@ namespace PlayerRole {
 		playerTask.player.flag = flags;
 		return TaskFactoryV2::Instance()->Speed(playerTask);
 	}
-    CPlayerTask* makeItOpenRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags)
+    CPlayerTask* makeItOpenRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags, bool needReport)
     {
         static TaskT playerTask;
         playerTask.executor = num;
@@ -216,6 +216,7 @@ namespace PlayerRole {
         playerTask.player.speed_y = speedY;
         playerTask.player.rotate_speed = rotSpeed;
         playerTask.player.flag = flags;
+        playerTask.player.needReport = needReport;
         return TaskFactoryV2::Instance()->OpenSpeed(playerTask);
     }
 

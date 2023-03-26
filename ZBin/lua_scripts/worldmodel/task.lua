@@ -132,7 +132,7 @@ end
 
 ------------------------------------ 测试相关的skill ---------------------------------------
 
-function openSpeed(vx, vy, vdir)
+function openSpeed(vx, vy, vdir, need_report)
 	local spdX = function()
 		return vx
 	end
@@ -145,7 +145,7 @@ function openSpeed(vx, vy, vdir)
 		return vdir
 	end
 
-	local mexe, mpos = OpenSpeed{speedX = spdX, speedY = spdY, speedW = spdW}
+	local mexe, mpos = OpenSpeed{speedX = spdX, speedY = spdY, speedW = spdW, needReport = need_report}
 	return {mexe, mpos}
 end
 

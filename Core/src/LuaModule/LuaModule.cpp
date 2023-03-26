@@ -380,7 +380,8 @@ extern "C" int Skill_OpenSpeed(lua_State *L)
     double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
     double speedY = LuaModule::Instance()->GetNumberArgument(3,NULL);
     double rotSpeed = LuaModule::Instance()->GetNumberArgument(4,NULL);
-    CPlayerTask* pTask = PlayerRole::makeItOpenRun(runner, speedX, speedY, rotSpeed, 0);
+    bool needReport = LuaModule::Instance()->GetBoolArgument(5);
+    CPlayerTask* pTask = PlayerRole::makeItOpenRun(runner, speedX, speedY, rotSpeed, 0, needReport);
     TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
     return 0;
 }

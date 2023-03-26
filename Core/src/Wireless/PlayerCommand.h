@@ -7,8 +7,7 @@
 
 class CPlayerCommand{
 public:
-	CPlayerCommand(int number = 0, unsigned char dribble = 0) : _number(number), _dribble(dribble)
-	{}
+	CPlayerCommand(int number = 0, unsigned char dribble = 0,bool need_report = false) : _number(number), _dribble(dribble), _need_report(need_report){}
 	virtual ~CPlayerCommand() { }
 	// 执行动作
     virtual void execute(int){}
@@ -26,5 +25,7 @@ public:
 private:
 	int _number; ///<执行者的号码
 	unsigned char _dribble; ///<是否同时带球
+protected:
+	bool _need_report = false;
 };
 #endif
