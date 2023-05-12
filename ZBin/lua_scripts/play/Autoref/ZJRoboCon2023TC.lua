@@ -1,14 +1,15 @@
 local BELONG_DIST = 125
 local BELONG_ANGLE = 30
-local SUM_TIME = 10
+local SUM_TIME = 60
 local FREQ = 73
 local BELONGING_STATES = {
 	NOT_BELONG = 1,
 	YELLOW = 2,
-	BLUE = 3
+	BLUE = 3,
+	BOTH = 4,
 }
 local BELINGING_COLOR = {
-	4,3,6 -- GREEN,YELLOW,BLUE
+	4,3,6,1 -- GREEN,YELLOW,BLUE,RED
 }
 local BELONGING_STATUS = BELONGING_STATES.NOT_BELONG
 local playerDist2Ball = function(playerNum)
@@ -53,6 +54,8 @@ local refRun = function(running)
 	debugEngine:gui_debug_arc(ball.rawPos(),415,0,360,ballColor)
 	debugEngine:gui_debug_arc(ball.rawPos(),430,0,360,ballColor)
 	debugEngine:gui_debug_msg(ball.rawPos(),string.format("v: %.0f",ball.velMod()),ballColor)
+	local blueClose = false
+	local yellowClose = false
 	for i = 0, param.maxPlayer - 1 do
 		if player.valid(i) then
 			playerCount = playerCount + 1
@@ -60,6 +63,7 @@ local refRun = function(running)
 			local dist = playerDist2Ball(i)
 			if dist < BELONG_DIST then
 				if playerDirWithBall(i) < BELONG_ANGLE then
+					blueClose = true
 					BELONGING_STATUS = IS_YELLOW and BELONGING_STATES.YELLOW or BELONGING_STATES.BLUE
 					color = 4
 				end
@@ -72,12 +76,16 @@ local refRun = function(running)
 			local dist = enemyDist2Ball(i)
 			if dist < BELONG_DIST then
 				if enemyDirWithBall(i) < BELONG_ANGLE then
+					yellowClose = true
 					BELONGING_STATUS = IS_YELLOW and BELONGING_STATES.BLUE or BELONGING_STATES.YELLOW
 					color = 4
 				end
 			end
 			debugEngine:gui_debug_msg(CGeoPoint:new_local(-1000,param.pitchWidth/2-30-enemyCount*150),string.format("%02d : %4.0f",i,dist),color)
 		end
+	end
+	if blueClose and yellowClose then
+		BELONGING_STATUS = BELONGING_STATES.BOTH
 	end
 	if running then
 		if IS_YELLOW then
