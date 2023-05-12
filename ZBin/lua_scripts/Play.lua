@@ -6,7 +6,7 @@ function metaadd.__add(a, b)
 	return a
 end
 gPlay = setmetatable({}, metaadd)
-gPlay = gPlay + gRefPlayTable + gTestPlayTable + gBayesPlayTable
+gPlay = gPlay + gRefPlayTable + gTestPlayTable + gBayesPlayTable + gAutoRefTable
 
 gPlayTable = {}
 gTimeCounter = 0

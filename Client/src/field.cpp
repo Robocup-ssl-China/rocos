@@ -24,12 +24,12 @@ const static QColor CAR_DIR[2] = {Qt::white, Qt::white};
 const static QColor FONT_COLOR[2] = {Qt::white, Qt::white};
 const static QColor DEBUG_COLOR[10] = {
     Qt::white,
-    Qt::red,
+    QColor(240,53,69),
     QColor(255, 100, 0),
-    Qt::yellow,
-    Qt::green,
+    QColor(255, 240, 10),
+    QColor(40,207,69),
     Qt::cyan,
-    Qt::blue,
+    QColor(0,120,255),
     QColor(128, 0, 255),
     Qt::gray,
     Qt::black
@@ -38,7 +38,7 @@ const static QColor DEBUG_BRUSH_COLOR = QColor(255, 255, 255, 20);
 const static QColor COLOR_ORANGE(255, 0, 255);
 const static QColor COLOR_ORANGE_SHADOW(255, 0, 255, 60);
 const static QColor COLOR_TRANSORANGE(255, 170, 85, 100);
-const static QColor COLOR_DARKGREEN(48, 48, 48);
+const static QColor COLOR_DARKGREEN(30, 30, 30);
 const static QColor COLOR_RED(220, 53, 47);
 const static QColor COLOR_RED_SHADOW(220, 53, 47, 60);
 const static QColor COLOR_LIGHTWHITE(255, 255, 255, 20);
