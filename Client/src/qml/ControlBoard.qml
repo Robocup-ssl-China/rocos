@@ -123,19 +123,19 @@ Page{
                             interaction.getInterfaces();
                         }
                     }
-                    ZComboBox{
-                        id:grsimInterface;
-                        model:interaction.getGrsimInterfaces();
-                        onActivated: interaction.changeGrsimInterface(currentIndex);
-                        function updateModel(){
-                            model = interaction.getGrsimInterfaces();
-                            if(currentIndex >= 0)
-                                interaction.changeGrsimInterface(currentIndex);
-                        }
-                        Component.onCompleted: {
-                            interaction.getGrsimInterfaces();
-                        }
-                    }
+//                    ZComboBox{
+//                        id:grsimInterface;
+//                        model:interaction.getGrsimInterfaces();
+//                        onActivated: interaction.changeGrsimInterface(currentIndex);
+//                        function updateModel(){
+//                            model = interaction.getGrsimInterfaces();
+//                            if(currentIndex >= 0)
+//                                interaction.changeGrsimInterface(currentIndex);
+//                        }
+//                        Component.onCompleted: {
+//                            interaction.getGrsimInterfaces();
+//                        }
+//                    }
                     ZSwitch{
                         id:simulation;
                         width:parent.itemWidth;
@@ -264,20 +264,80 @@ Page{
                         rowSpacing: 0;
                         columns:2;
                         property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
-//                        SpinBox{
-//                            id:medusaFrq1;
-//                            width:parent.itemWidth;
-//                            from:0;to:15;
-//                            wrap:true;
-//                            value:8
-//                        }
-//                        SpinBox{
-//                            id:medusaFrq2;
-//                            width:parent.itemWidth;
-//                            from:0;to:15;
-//                            wrap:true;
-//                            value:6
-//                        }
+                        SpinBox{
+                            id:medusaFrq1;
+                            width:parent.itemWidth;
+                            from:0;to:15;
+                            wrap:true;
+                            value:8
+                        }
+                        SpinBox{
+                            id:medusaFrq2;
+                            width:parent.itemWidth;
+                            from:0;to:15;
+                            wrap:true;
+                            value:6
+                        }
+                        ZComboBox{
+                            enabled: !control.autoIMUBlue;
+                            id:buleAdderss;
+                            model:interaction.getAllAddress();
+                            contentItem: Text {
+                                          id:blueText
+                                          text: interaction.getRealAddress(0)
+                                          color: enabled ? "#ffffff" : "#888"
+                                          font: buleAdderss.font
+                                          elide: Text.ElideNone
+                                          wrapMode: Text.WordWrap
+                                          verticalAlignment: Text.AlignVCenter
+                                          horizontalAlignment: Text.AlignHCenter
+                                      }
+                            onActivated:{
+                                interaction.changeAddress(0,currentIndex);
+                                blueText.text = interaction.getRealAddress(0);
+                            }
+                            function updateModel(){
+                                model = interaction.getAllAddress();
+                                if(currentIndex >= 0){
+                                    interaction.changeAddress(0,currentIndex);
+                                    blueText.text = interaction.getRealAddress(0);
+                                }
+                            }
+                            Component.onCompleted: {
+                                interaction.getAllAddress();
+                                blueText.text = interaction.getRealAddress(0);
+                            }
+                        }
+                        ZComboBox{
+                            enabled: !control.autoIMUYellow;
+                            id:yellowAdderss;
+                            model:interaction.getAllAddress();
+                            contentItem: Text {
+                                          id:yellowText
+                                          text: interaction.getRealAddress(1)
+                                          color: enabled ? "#ffffff" : "#888"
+                                          font: yellowAdderss.font
+                                          elide: Text.ElideNone
+                                          wrapMode: Text.WordWrap
+                                          verticalAlignment: Text.AlignVCenter
+                                          horizontalAlignment: Text.AlignHCenter
+                                      }
+                            onActivated:{
+                                interaction.changeAddress(1,currentIndex);
+                                yellowText.text = interaction.getRealAddress(1);
+                            }
+                            function updateModel(){
+                                model = interaction.getAllAddress();
+                                if(currentIndex >= 0){
+                                    interaction.changeAddress(1,currentIndex);
+                                    yellowText.text = interaction.getRealAddress(1);
+                                }
+                            }
+                            Component.onCompleted: {
+                                model = interaction.getAllAddress();
+                                yellowText.text = interaction.getRealAddress(1);
+                            }
+                        }
                         ZButton{
                             icon.source:control.medusaConnect ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#2976ca";
@@ -287,7 +347,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
-//                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
+                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
                                 }
                                 interaction.controlMedusa(control.medusaConnect)
                             }
@@ -301,7 +361,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
-//                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
+                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
                                 }
                                 interaction.controlMedusa2(control.medusaConnect2)
                             }

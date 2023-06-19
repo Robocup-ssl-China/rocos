@@ -304,3 +304,12 @@ QStringList Interaction::getSerialPortsList(){
 int Interaction::getFrequency(){
     return ZSS::NActionModule::instance()->getFrequency();
 }
+void Interaction::changeAddress(int team, int index){
+    ZSS::ZActionModule::instance()->changeAddress(team,index);
+}
+QStringList Interaction::getAllAddress(){
+    return ZSS::ZActionModule::instance()->getAllAddress();
+}
+QString Interaction::getRealAddress(int index){
+    return ZSS::ZActionModule::instance()->getRealAddress(index);
+};

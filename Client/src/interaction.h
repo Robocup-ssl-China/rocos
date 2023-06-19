@@ -48,7 +48,9 @@ class Interaction : public QObject {
     Q_INVOKABLE bool changeSerialPort(int);
     Q_INVOKABLE QStringList getSerialPortsList();
     Q_INVOKABLE int getFrequency();
-
+    Q_INVOKABLE QStringList getAllAddress();
+    Q_INVOKABLE QString getRealAddress(int index);
+    Q_INVOKABLE void changeAddress(int team, int index);
     ~Interaction();
 public slots:
     void medusaPrint();

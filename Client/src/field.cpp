@@ -59,13 +59,8 @@ int param_canvas_height;
 int param_goalWidth;
 int param_goalDepth;
 int param_centerCircleRadius;
-bool if_ellipse_penalty;
-// rectangle penalty
 int param_penaltyWidth;
 int param_penaltyLength;
-// ellipse penalty
-int param_penalty_radius;
-int param_penalty_area_l;  // a line segment connecting two arcs
 
 auto zpm = ZSS::ZParamManager::instance();
 bool isSimulation;
@@ -527,9 +522,6 @@ void Field::init() {
     zpm->loadParam(param_penaltyWidth, "field/penaltyWidth", 1000);
     zpm->loadParam(param_penaltyLength, "field/penaltyLength", 2000);
     zpm->loadParam(param_centerCircleRadius, "field/centerCircleRadius",  500);
-    zpm->loadParam(param_penalty_radius, "field/penalty_radius", 800);
-    zpm->loadParam(param_penalty_area_l, "field/penalty_area_l", 350);
-    zpm->loadParam(if_ellipse_penalty, "field/if_ellipse_penalty", false);
     ::area = QRect(0, 0, this->property("width").toReal(), this->property("height").toReal());
 //    ::size = QSize(this->property("width").toReal()/2.0, this->property("height").toReal()/2.0);
     pressedRobot = false;
@@ -599,66 +591,16 @@ void Field::initPainterPath() {
     painterPath.addRect(::x(-param_width / 2.0), ::y(-param_height / 2.0), ::w(param_width), ::h(param_height));
     painterPath.addRect(::x(-param_width / 2.0), ::y(-param_goalWidth / 2.0), ::w(-param_goalDepth), ::h(param_goalWidth));
     painterPath.addRect(::x(param_width / 2.0), ::y(-param_goalWidth / 2.0), ::w(param_goalDepth), ::h(param_goalWidth));
-//    painterPath.moveTo(::x(-param_width / 2.0), ::y(0));
-//    painterPath.lineTo(::x(param_width / 2.0), ::y(0));
+    painterPath.moveTo(::x(-param_width / 2.0), ::y(0));
+    painterPath.lineTo(::x(param_width / 2.0), ::y(0));
     painterPath.moveTo(::x(0), ::y(param_height / 2.0));
     painterPath.lineTo(::x(0), ::y(-param_height / 2.0));
     painterPath.addEllipse(::x(-param_centerCircleRadius), ::y(-param_centerCircleRadius), ::w(2 * param_centerCircleRadius), ::h(2 * param_centerCircleRadius));
-    if ( if_ellipse_penalty ) {
-        painterPath.moveTo(::x(-param_width / 2.0 + param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.arcTo(QRectF(::x( -param_width / 2.0 -
-                                      param_penalty_radius),
-                                 ::y( param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          0.0,
-                          -90.0);
-        painterPath.moveTo(::x( -param_width / 2.0 + param_penalty_radius ),
-                           ::y( -param_penalty_area_l / 2.0 ) );
-        painterPath.arcTo(QRectF(::x( -param_width / 2.0 -
-                                      param_penalty_radius ),
-                                 ::y( -param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          0.0,
-                          90.0);
-        painterPath.moveTo(::x(-param_width / 2.0 + param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.lineTo(::x(-param_width / 2.0 + param_penalty_radius),
-                           ::y(-param_penalty_area_l / 2));
-
-        painterPath.moveTo(::x(param_width / 2.0 - param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.arcTo(QRectF(::x( param_width / 2.0 -
-                                      param_penalty_radius),
-                                 ::y( param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          180.0,
-                          90.0);
-        painterPath.moveTo(::x( param_width / 2.0 - param_penalty_radius ),
-                           ::y( -param_penalty_area_l / 2.0 ) );
-        painterPath.arcTo(QRectF(::x( param_width / 2.0 -
-                                      param_penalty_radius ),
-                                 ::y( -param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          180.0,
-                          -90.0);
-        painterPath.moveTo(::x(param_width / 2.0 - param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.lineTo(::x(param_width / 2.0 - param_penalty_radius),
-                           ::y(-param_penalty_area_l / 2));
-    } else {
-        painterPath.addRect(::x(-param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(param_penaltyWidth), ::h(param_penaltyLength));
-        painterPath.addRect(::x(param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(-param_penaltyWidth), ::h(param_penaltyLength));
-    }
-
+    painterPath.addRect(::x(-param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(param_penaltyWidth), ::h(param_penaltyLength));
+    painterPath.addRect(::x(param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(-param_penaltyWidth), ::h(param_penaltyLength));
+    double penaltyPointWidth = 15;
+    painterPath.addRect(::x(-param_width/6.0-penaltyPointWidth),::y(0-penaltyPointWidth),::w(2*penaltyPointWidth),::h(2*penaltyPointWidth));
+    painterPath.addRect(::x(param_width/6.0-penaltyPointWidth),::y(0-penaltyPointWidth),::w(2*penaltyPointWidth),::h(2*penaltyPointWidth));
 }
 void Field::drawOriginVision(int index) {
     for(int i = 0; i < PARAM::CAMERA; i++) {

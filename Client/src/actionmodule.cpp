@@ -2,11 +2,13 @@
 #include "parammanager.h"
 #include "globaldata.h"
 #include "dealrobot.h"
+#include "crc.h"
 #include "messageinfo.h"
 #include <QtDebug>
 #include <chrono>
 #include <thread>
 #include <cmath>
+#include <QtSerialPort/QSerialPortInfo>
 #include "staticparams.h"
 #include "networkinterfaces.h"
 namespace ZSS {
@@ -23,24 +25,112 @@ const double LOW_CAPACITANCE = 29.0;
 auto zpm = ZSS::ZParamManager::instance();
 void encodeLegacy(const ZSS::Protocol::Robot_Command&, QByteArray&, int);
 quint8 kickStandardization(quint8, bool, quint16);
-const QString radioSendAddress[PARAM::TEAMS] = {"10.10.11.22", "10.10.11.22"};
-const QString radioReceiveAddress[PARAM::TEAMS] = {"10.10.11.23", "10.10.11.23"};
-int blue_sender_interface,blue_receiver_interface,yellow_sender_interface,yellow_receiver_interface;
-std::thread* receiveThread = nullptr;
+const QStringList radioSendAddress2choose=  {"10.12.225.240", "10.12.225.241","10.12.225.109","10.12.225.78"};
+const QStringList radioReceiveAddress2choose =  {"10.12.225.240", "10.12.225.241","10.12.225.110","10.12.225.79"};
+QString radioSendAddress[PARAM::TEAMS] = {radioSendAddress2choose[0],radioSendAddress2choose[1]};
+QString radioReceiveAddress[PARAM::TEAMS] = {radioReceiveAddress2choose[0],radioReceiveAddress2choose[1]};
+// int blue_sender_interface,blue_receiver_interface,yellow_sender_interface,yellow_receiver_interface;
+// std::thread* receiveThread = nullptr;
 bool IS_SIMULATION;
-bool NoVelY = true;
+
+const int SERIAL_TRANSMIT_PACKET_SIZE = 25;
+const int SERIAL_TRANS_FEEDBACK_SIZE = 25;
+struct NJ_Command{
+    float power;
+    float dribble;
+    float vx;
+    float vy;
+    float vr;
+    int id;
+    bool valid;
+    bool kick_mode;
+    bool use_dir;
+    bool need_report;
+};
+void encodeNJLegacy(const NJ_Command&,QByteArray&,int);
+NJ_Command NJ_CMDS[PARAM::ROBOTMAXID];
+}
+Action_Serial24L01::Action_Serial24L01(const Config& config,const __callback_type& f,QObject *parent):QObject(parent),_cb(f),_config(config){}
+Action_Serial24L01::~Action_Serial24L01(){
+    disconnect();
+}
+bool Action_Serial24L01::start(){
+    return false;
+}
+bool Action_Serial24L01::stop(){
+    return true;
+}
+bool Action_Serial24L01::send(const char* ptr,const size_t size){
+
+}
+bool sendConfigPacket(const char* ptr,const size_t size){
+    return true;
+}
+void Action_Serial24L01::receiveData(){
+    static QByteArray datagram;
+//    while (_recvSocket.hasPendingDatagrams()) {
+//        datagram.resize(_recvSocket.pendingDatagramSize());
+//        _recvSocket.readDatagram(datagram.data(), datagram.size());
+//        if(_cb){
+//            std::invoke(_cb,datagram.data(),datagram.size());
+//        }
+//    }
 }
 
+Action_UDP24L01::Action_UDP24L01(const Config& config,const __callback_type& f,QObject *parent):QObject(parent),_cb(f),_config(config){}
+Action_UDP24L01::~Action_UDP24L01(){
+    disconnect();
+}
+bool Action_UDP24L01::start(){
+    if(_recvSocket.bind(QHostAddress::AnyIPv4, _config.recv_port, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
+        QObject::connect(&_recvSocket, SIGNAL(readyRead()), this, SLOT(receiveData()), Qt::DirectConnection);
+        return true;
+    }
+    qDebug() << "Bind Error in Action_UDP24L01 !";
+    return false;
+}
+bool Action_UDP24L01::stop(){
+    QObject::disconnect(&_recvSocket);
+    _recvSocket.abort();
+    _recvSocket.disconnectFromHost();
+    return true;
+}
+void Action_UDP24L01::reConfig(const Config& config){
+    _config = config;
+    // stop();
+    // start();
+}
+bool Action_UDP24L01::sendConfigPacket(const char* ptr,const size_t size){
+    _sendSocket.writeDatagram(ptr,size,QHostAddress(_config.send_ip),_config.send_port);
+    _sendSocket.writeDatagram(ptr,size,QHostAddress(_config.recv_ip),_config.recv_port);
+}
+bool Action_UDP24L01::send(const char* ptr,const size_t size){
+    _sendSocket.writeDatagram(ptr,size,QHostAddress(_config.send_ip),_config.send_port);
+}
+void Action_UDP24L01::receiveData(){
+    static QByteArray datagram;
+    while (_recvSocket.hasPendingDatagrams()) {
+        datagram.resize(_recvSocket.pendingDatagramSize());
+        _recvSocket.readDatagram(datagram.data(), datagram.size());
+        if(_cb){
+            std::invoke(_cb,datagram.data(),datagram.size());
+        }
+    }
+}
 ActionModule::ActionModule(QObject *parent) : QObject(parent), team{-1, -1} {
-	ZSS::ZParamManager::instance()->loadParam(NoVelY, "Lesson/NoVelY", true);
-    blue_sender_interface = blue_receiver_interface = yellow_sender_interface = yellow_receiver_interface = 0;
+//    blue_sender_interface = blue_receiver_interface = yellow_sender_interface = yellow_receiver_interface = 0;
     tx.resize(TRANSMIT_PACKET_SIZE);
     tx[0] = 0x40;
 //    QObject::connect(&receiveSocket, SIGNAL(readyRead()), this, SLOT(readData()), Qt::DirectConnection);
+    bool newType;
+    for(int i=0;i<PARAM::ROBOTNUM;i++){
+        zpm->loadParam(newType,QString("RobotProtocol/%1New?").arg(i, 2, 10, QChar('0')),false);
+        _protocolType[i] = newType? ProtocolType::UDP_24L01 : ProtocolType::Serial_24L01;
+    }
     if(receiveSocket.bind(QHostAddress::AnyIPv4, PORT_RECEIVE, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)) {
         qDebug() << "****** start receive ! ******";
-        receiveThread = new std::thread([ = ] {readData();});
-        receiveThread->detach();
+//        receiveThread = new std::thread([ = ] {readData();});
+//        receiveThread->detach();
     } else {
         qDebug() << "Bind Error in action module !";
     }
@@ -80,82 +170,33 @@ void ActionModule::sendStartPacket(int t, int frequency) {
     // this 't' is id
     QByteArray startPacketSend(TRANSMIT_START_PACKET_SIZE, 0);
     QByteArray startPacketReceive(TRANSMIT_START_PACKET_SIZE, 0);
-    if(frequency == 8) {
-        startPacketSend[0] = (char)0xf0;
-        startPacketSend[1] = (char)0x5a;
-        startPacketSend[2] = (char)0x5a;
-        startPacketSend[3] = (char)0x01;
-        startPacketSend[4] = (char)0x02;
-        startPacketSend[5] = (char)0xa7;
-
-        startPacketReceive[0] = (char)0xf0;
-        startPacketReceive[1] = (char)0x5a;
-        startPacketReceive[2] = (char)0x5a;
-        startPacketReceive[3] = (char)0x02;
-        startPacketReceive[4] = (char)0x02;
-        startPacketReceive[5] = (char)0xa8;
-    } else if(frequency == 6) {
-        startPacketSend[0] = (char)0xf0;
-        startPacketSend[1] = (char)0x18;
-        startPacketSend[2] = (char)0x5a;
-        startPacketSend[3] = (char)0x01;
-        startPacketSend[4] = (char)0x02;
-        startPacketSend[5] = (char)0x65;
-
-        startPacketReceive[0] = (char)0xf0;
-        startPacketReceive[1] = (char)0x18;
-        startPacketReceive[2] = (char)0x18;
-        startPacketReceive[3] = (char)0x02;
-        startPacketReceive[4] = (char)0x02;
-        startPacketReceive[5] = (char)0x24;
-    } else if(frequency == 1) {
-        startPacketSend[0] = (char)0xf0;
-        startPacketSend[1] = (char)0x58;
-        startPacketSend[2] = (char)0x58;
-        startPacketSend[3] = (char)0x01;
-        startPacketSend[4] = (char)0x02;
-        startPacketSend[5] = (char)0xa3;
-
-        startPacketReceive[0] = (char)0xf0;
-        startPacketReceive[1] = (char)0x58;
-        startPacketReceive[2] = (char)0x58;
-        startPacketReceive[3] = (char)0x02;
-        startPacketReceive[4] = (char)0x02;
-        startPacketReceive[5] = (char)0xa4;
-    } else if(frequency == 2) {
-        startPacketSend[0] = (char)0xf0;
-        startPacketSend[1] = (char)0x64;
-        startPacketSend[2] = (char)0x64;
-        startPacketSend[3] = (char)0x01;
-        startPacketSend[4] = (char)0x02;
-        startPacketSend[5] = (char)0xbb;
-
-        startPacketReceive[0] = (char)0xf0;
-        startPacketReceive[1] = (char)0x64;
-        startPacketReceive[2] = (char)0x64;
-        startPacketReceive[3] = (char)0x02;
-        startPacketReceive[4] = (char)0x02;
-        startPacketReceive[5] = (char)0xbc;
-    }   else if(frequency == 11) {
-        startPacketSend[0] = (char)0xf0;
-        startPacketSend[1] = (char)0x66;
-        startPacketSend[2] = (char)0x66;
-        startPacketSend[3] = (char)0x01;
-        startPacketSend[4] = (char)0x02;
-        startPacketSend[5] = (char)0xbf;
-
-        startPacketReceive[0] = (char)0xf0;
-        startPacketReceive[1] = (char)0x66;
-        startPacketReceive[2] = (char)0x66;
-        startPacketReceive[3] = (char)0x02;
-        startPacketReceive[4] = (char)0x02;
-        startPacketReceive[5] = (char)0xc0;
+    int freq_encode = 0;
+    if(frequency < 8){
+        freq_encode = frequency*4;
+    }else{
+        freq_encode = frequency*4+58;
     }
-        else{
-        qDebug() << "Frequency ERROR !!!";
+    startPacketSend[0] = (char)0xf0;
+    startPacketSend[1] = (char)(freq_encode & 0xff);
+    startPacketSend[2] = (char)(freq_encode & 0xff);
+    startPacketSend[3] = (char)0x01;
+    startPacketSend[4] = (char)0x02;
+    int temp_value = 0;
+    for(int i=0;i<TRANSMIT_START_PACKET_SIZE-1;i++){
+        temp_value += startPacketSend[i];
     }
-//    sendSocket.setMulticastInterface(ZNetworkInterfaces::instance()->getFromIndex(0));
-//    receiveSocket.setMulticastInterface(ZNetworkInterfaces::instance()->getFromIndex(0));
+    startPacketSend[TRANSMIT_START_PACKET_SIZE-1] = (char)(temp_value & 0xff);
+
+    startPacketReceive[0] = (char)0xf0;
+    startPacketReceive[1] = (char)(freq_encode & 0xff);
+    startPacketReceive[2] = (char)(freq_encode & 0xff);
+    startPacketReceive[3] = (char)0x02;
+    startPacketReceive[4] = (char)0x02;
+    temp_value = 0;
+    for(int i=0;i<TRANSMIT_START_PACKET_SIZE-1;i++){
+        temp_value += startPacketReceive[i];
+    }
+    startPacketReceive[TRANSMIT_START_PACKET_SIZE-1] = (char)(temp_value & 0xff);
     sendSocket.writeDatagram(startPacketSend, TRANSMIT_START_PACKET_SIZE, QHostAddress(radioSendAddress[t]), PORT_SEND);
     receiveSocket.writeDatagram(startPacketReceive, TRANSMIT_START_PACKET_SIZE, QHostAddress(radioReceiveAddress[t]), PORT_SEND);
     std::this_thread::sleep_for(std::chrono::milliseconds(4));
@@ -184,7 +225,11 @@ void ActionModule::sendLegacy(int t, const ZSS::Protocol::Robots_Command& comman
             tx[0] = 0x40;
             count = 0;
         }
+
         auto& command = commands.command(i);
+        if(_protocolType[command.robot_id()] == ProtocolType::Serial_24L01){
+            continue;
+        }
         encodeLegacy(command, this->tx, count++);
     }
     //qDebug() << "sendLegacy : " << (t ? "Yellow" : "Blue") << id << "size:" << size;
@@ -262,11 +307,209 @@ void ActionModule::readData() {
                 GlobalData::instance()->robotInfoMutex.unlock();
                 emit receiveRobotInfo(color, id);
             }
-            qDebug() << rx.toHex();
+//            qDebug() << rx.toHex();
             qDebug() << color << id << infrared << flat << address;
         }
     }
 }
+void ActionModule::changeAddress(int team, int index){
+    radioSendAddress[team] = radioSendAddress2choose[index];
+    radioReceiveAddress[team] = radioReceiveAddress2choose[index];
+}
+QStringList ActionModule::getAllAddress(){
+    return radioSendAddress2choose;
+}
+QString ActionModule::getRealAddress(int index){
+    return radioSendAddress[index];
+}
+
+ActionModuleSerialVersion::ActionModuleSerialVersion(QObject *parent) : QObject(parent) {
+    bool newType;
+    for(int i=0;i<PARAM::ROBOTNUM;i++){
+        zpm->loadParam(newType,QString("RobotProtocol/%1New?").arg(i, 2, 10, QChar('0')),false);
+        _protocolType[i] = newType? ProtocolType::UDP_24L01 : ProtocolType::Serial_24L01;
+    }
+    updatePortsList();
+    serial.setBaudRate(QSerialPort::Baud115200);
+    serial.setDataBits(QSerialPort::Data8);
+    serial.setParity(QSerialPort::NoParity);
+    serial.setStopBits(QSerialPort::OneStop);
+    zpm->loadParam(frequency,"Alert/Frequency",8);
+    tx.resize(SERIAL_TRANSMIT_PACKET_SIZE);
+    rx.resize(SERIAL_TRANS_FEEDBACK_SIZE);
+    tx[0] = 0x40;
+    connect(&serial, &QSerialPort::readyRead, this, &ActionModuleSerialVersion::readData);
+}
+ActionModuleSerialVersion::~ActionModuleSerialVersion(){
+    closeSerialPort();
+}
+QStringList& ActionModuleSerialVersion::updatePortsList(){
+    this->ports.clear();
+    const auto& ports = QSerialPortInfo::availablePorts();
+    for(const auto &port : ports){
+        this->ports.append(port.portName());
+    }
+    if(this->ports.size() > 0)
+        serial.setPortName(this->ports[this->ports.size() - 1]);
+    return this->ports;
+}
+void ActionModuleSerialVersion::setMedusaSettings(bool color,bool side){
+    _color = color ? 1 : 0;// 1 for Yellow , 0 for Blue
+    _side = side ? 1 : 0;// 1 for right , 0 for left
+}
+bool ActionModuleSerialVersion::init(){
+    if (serial.isOpen()) {
+        serial.close();
+    }
+    if (serial.open(QIODevice::ReadWrite)) {
+        qDebug() << "SerialPort connected... : " << serial.portName();
+        sendStartPacket();
+        return true;
+    }
+    qDebug() << "SerialPort connect failed... : " << serial.portName();
+    return false;
+}
+void ActionModuleSerialVersion::sendStartPacket(){
+    QByteArray startPacket1(SERIAL_TRANSMIT_PACKET_SIZE,0);
+    QByteArray startPacket2(SERIAL_TRANSMIT_PACKET_SIZE,0);
+    startPacket1[0] = (char)0xff;
+    startPacket1[1] = (char)0xb0;
+    startPacket1[2] = (char)0x01;
+    startPacket1[3] = (char)0x02;
+    startPacket1[4] = (char)0x03;
+    startPacket1[TRANSMIT_PACKET_SIZE - 1] = CCrc8::calc((unsigned char*)(startPacket1.data()), TRANSMIT_PACKET_SIZE - 1);
+
+    startPacket2[0] = (char)0xff;
+    startPacket2[1] = (char)0xb0;
+    startPacket2[2] = (char)0x04;
+    startPacket2[3] = (char)0x05;
+    startPacket2[4] = (char)0x06;
+    startPacket2[5] = 0x10 + frequency;
+    startPacket2[TRANSMIT_PACKET_SIZE - 1] = CCrc8::calc((unsigned char*)(startPacket2.data()), TRANSMIT_PACKET_SIZE - 1);
+    serial.write(startPacket1);
+    serial.flush();
+    if(serial.waitForBytesWritten(2000)){
+        if(serial.waitForReadyRead(2000)){
+            serial.readAll();
+            while (serial.waitForReadyRead(10))
+                serial.readAll();
+        }
+    }else{
+        qDebug() << "Start packet write timeout!";
+    }
+    serial.write(startPacket2);
+    serial.flush();
+}
+bool ActionModuleSerialVersion::changePorts(int portNum){
+    if(portNum < ports.size() && portNum >= 0){
+        serial.setPortName(ports[portNum]);
+        return true;
+    }
+    serial.setPortName("");
+    return false;
+}
+bool ActionModuleSerialVersion::changeFrequency(int frequency){
+    if(frequency >= 0 && frequency <= 15){
+        this->frequency = frequency;
+        zpm->changeParam("Alert/Frequency",frequency);
+        return true;
+    }
+    return false;
+}
+void ActionModuleSerialVersion::sendLegacy(const ZSS::Protocol::Robots_Command& commands){
+    int size = commands.command_size();
+    for(int i=0;i<size;i++){
+        auto& command = commands.command(i);
+        int id = command.robot_id();
+        if(id >= 0 && id < PARAM::ROBOTMAXID){
+            NJ_CMDS[id].valid = true;
+            NJ_CMDS[id].id = id;
+            NJ_CMDS[id].vx = command.velocity_x()/10.0;
+            NJ_CMDS[id].vy = -command.velocity_y()/10.0;
+            NJ_CMDS[id].vr = -command.velocity_r()*40;
+            NJ_CMDS[id].dribble = command.dribbler_spin();
+            NJ_CMDS[id].power = command.power()/10.0;
+            NJ_CMDS[id].kick_mode = command.kick();
+        }
+    }
+
+    int count = 0;
+    tx.fill(0x00);
+    tx[0] = 0xff;
+    tx[21] = ((this->frequency&0x0f)<<4) | 0x07;
+
+    for(int i=0;i<PARAM::ROBOTMAXID;i++){
+        if(NJ_CMDS[i].valid){
+            if(count == 3){
+                serial.write(this->tx.data(),TRANSMIT_PACKET_SIZE);
+                serial.flush();
+                std::this_thread::sleep_for(std::chrono::milliseconds(4));
+                qDebug() << tx.toHex();
+                tx.fill(0x00);
+                tx[0] = 0xff;
+                tx[21] = ((this->frequency&0x0f)<<4) | 0x07;
+                count = 0;
+            }
+            encodeNJLegacy(NJ_CMDS[i],this->tx,count++);
+        }
+    }
+    serial.write(this->tx.data(),TRANSMIT_PACKET_SIZE);
+    serial.flush();
+    qDebug() << tx.toHex();
+
+    for(int i=0;i<PARAM::ROBOTMAXID;i++){
+        NJ_CMDS[i].valid = false;
+    }
+
+}
+bool ActionModuleSerialVersion::openSerialPort(){
+    if (serial.open(QIODevice::ReadWrite)) {
+        qDebug() << "SerialPort connected... : " << serial.portName();
+        return true;
+    }
+    qDebug() << "SerialPort connect failed... : " << serial.portName();
+    return false;
+}
+bool ActionModuleSerialVersion::closeSerialPort(){
+    if (serial.isOpen()) {
+        serial.close();
+        qDebug() << "SerialPort Disconnected... : " << serial.portName();
+        return true;
+    }
+    return false;
+}
+void ActionModuleSerialVersion::readData(){
+    rx = serial.readAll();
+    auto& data = rx;
+    int id = 0;
+    bool infrared = false;
+    bool flat = false;
+    bool chip = false;
+    int battery = 0;
+    int capacitance = 0;
+    if(data[0] == (char)0xff){
+        if(data[1] == (char)0x02){
+            id       = (quint8)data[2] - 1;//old protocal
+            infrared = (quint8)data[3] & 0x40;
+            flat     = (quint8)data[3] & 0x20;
+            chip     = (quint8)data[3] & 0x10;
+            GlobalData::instance()->robotInfoMutex.lock();
+            GlobalData::instance()->robotInformation[_color][id].infrared = infrared;
+            GlobalData::instance()->robotInformation[_color][id].flat = flat;
+            GlobalData::instance()->robotInformation[_color][id].chip = chip;
+            GlobalData::instance()->robotInfoMutex.unlock();
+            emit receiveRobotInfo(_color, id);
+            qDebug() << id << ' ' << infrared << ' ' << flat << ' ' << chip << ' ' << battery << ' ' << capacitance;
+        }
+        //        else if(data[1] == (char)0x01){
+        //            id          = (quint8)data[2];
+        //            battery     = (quint8)data[3];
+        //            capacitance = (quint8)data[4];
+        //        }
+    }
+
+}
+
 namespace {
 void encodeLegacy(const ZSS::Protocol::Robot_Command& command, QByteArray& tx, int num) {
     // send back to vision module
@@ -274,7 +517,7 @@ void encodeLegacy(const ZSS::Protocol::Robot_Command& command, QByteArray& tx, i
     // id  0 ~ 15
     quint8 id = (quint8)command.robot_id();
     double origin_vx = command.velocity_x();
-    double origin_vy = NoVelY ? 0.0f : command.velocity_y();
+    double origin_vy = command.velocity_y();
     double origin_vr = command.velocity_r();
     double dt = 1. / Athena::FRAME_RATE;
     double theta = - origin_vr * dt;
@@ -289,9 +532,9 @@ void encodeLegacy(const ZSS::Protocol::Robot_Command& command, QByteArray& tx, i
     }
 
 
-    qint16 vx = (qint16)(origin_vx);
-    qint16 vy = (qint16)(origin_vy);
-    qint16 vr = (qint16)(origin_vr * 40);
+    qint16 vx = (qint16)(origin_vx/10.0);
+    qint16 vy = (qint16)(origin_vy/10.0);
+    qint16 vr = (qint16)(origin_vr * 160);
     qint16 abs_vx = std::abs(vx);
     qint16 abs_vy = std::abs(vy);
     qint16 abs_vr = std::abs(vr);
@@ -338,6 +581,57 @@ quint8 kickStandardization(quint8 id, bool mode, quint16 power) {
     new_power = std::max(min_power, std::min(new_power, max_power));
     new_power = std::max(10.0, std::min(new_power, 127.0));
     return (quint8)new_power;
+}
+void encodeNJLegacy(const NJ_Command& command,QByteArray& tx,int num){
+
+    auto& TXBuff = tx;
+    int i = num;
+    int real_num = command.id;
+    qint16 vx = (qint16)(command.vx);
+    qint16 vy = (qint16)(command.vy);
+    qint16 ivr = (qint16)(command.vr);
+    qint16 vr = abs(ivr)> 511 ? (ivr > 0 ? 1 : -1)*(511) : (ivr);
+    qint16 power = (qint16)(command.power);
+    bool kick_mode = command.kick_mode;
+    qint16 dribble = (qint16)(command.dribble*3+0.4);
+    // vx
+    unsigned int vx_value_uint = (unsigned int)abs(vx);
+    // vy
+    unsigned int vy_value_uint = (unsigned int)abs(vy);
+    // w
+    unsigned int w_value_uint = (unsigned int)abs(vr);
+
+    if(real_num >= 8)
+        TXBuff[1] = TXBuff[1] | 0x01 << (real_num - 8);
+
+    TXBuff[2] =  TXBuff[2] | 0x01 << real_num;
+    // dribble & kick_mode
+    TXBuff[6*i + 3] = 0x01 | ((((kick_mode?0x01:0x00)<<2)|(0x03 & dribble))<<4);
+
+    // velx
+    if(vx < 0) TXBuff[6*i + 4] = TXBuff[6*i + 4] | (0x20);
+    TXBuff[6*i + 4] = TXBuff[6*i + 4] | ((vx_value_uint & 0x1f0) >> 4);
+    TXBuff[6*i + 5] = TXBuff[6*i + 5] | ((vx_value_uint & 0x0f) << 4);
+    // vely
+    if(vy < 0) TXBuff[6*i + 5] = TXBuff[6*i + 5] | (0x08);
+    TXBuff[6*i + 5] = TXBuff[6*i + 5] | ((vy_value_uint & 0x1c0) >> 6);
+    TXBuff[6*i + 6] = TXBuff[6*i + 6] | ((vy_value_uint & 0x3f) << 2);
+    // w
+    if(vr < 0) TXBuff[6*i + 6] = TXBuff[6*i + 6] | 0x02;
+    TXBuff[6*i + 6] = TXBuff[6*i + 6] | ((w_value_uint & 0x100) >> 8);
+    TXBuff[6*i + 7] = TXBuff[6*i + 7] | (w_value_uint & 0x0ff);
+
+
+    // shoot power
+    quint8 p = command.power > 0.01 ? std::max(10.0, std::min((double)power, 127.0)) : 0;
+    TXBuff[6*i + 8] = p;
+
+}
+quint8 kickStandardization(quint8 id,bool mode,float power){
+    quint8 res = 0;
+    if(power > 0.5)
+        res = (quint8)std::max(10.0, std::min((double)power, 127.0));
+    return res;
 }
 } // namespace ZSS::anonymous
 }
