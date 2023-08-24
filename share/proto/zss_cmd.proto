@@ -23,9 +23,9 @@ message Multicast_Status{
 
 message Robot_Status {
   required int32 robot_id  = 1;
-  optional bool infrared   = 2;
-  optional bool flat_kick  = 3;
-  optional bool chip_kick  = 4;
+  required bool infrared   = 2;
+  required bool flat_kick  = 3;
+  required bool chip_kick  = 4;
 }
 message Robots_Command {
   repeated Robot_Command command = 1;
