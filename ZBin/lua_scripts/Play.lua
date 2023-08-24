@@ -257,7 +257,7 @@ function RunPlay(name)
 					end
 					
 					if(type(rolename)=="string") then
-						debugEngine:gui_debug_msg(vision:ourPlayer(roleNum):Pos(), string.sub(rolename, 1, 1))
+						debugEngine:gui_debug_msg(vision:ourPlayer(roleNum):Pos(), string.sub(rolename, 1, 1),5)
 					end
 					task[1](roleNum) --Very Important !!!!
 				end

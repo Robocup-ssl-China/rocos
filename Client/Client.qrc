@@ -85,5 +85,7 @@
         <file>source/scissors1.png</file>
         <file>source/scissors2.png</file>
         <file>src/qml/ZComboBox.qml</file>
+        <file>src/qml/ZButtonGroup.qml</file>
+        <file>src/qml/ZColumn.qml</file>
     </qresource>
 </RCC>

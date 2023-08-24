@@ -18,7 +18,7 @@ using namespace ZSS::Protocol;
 namespace {
 const static float MIN_LENGTH = 500;//area length : mm
 Qt::KeyboardModifiers mouse_modifiers;
-const static QColor CAR_COLOR[2]  = {QColor(25, 30, 150), QColor(241, 201, 50)};
+const static QColor CAR_COLOR[2]  = {QColor(76, 252, 252), QColor(219, 252, 76)};
 const static QColor CAR_SHADOW[2] = {QColor(100, 120, 200, 50), QColor(255, 230, 150, 50)};
 const static QColor CAR_DIR[2] = {Qt::white, Qt::white};
 const static QColor FONT_COLOR[2] = {Qt::white, Qt::white};
@@ -648,7 +648,7 @@ void Field::drawMaintainVision(int index) {
     for(int j = 0; j < maintain.ballSize; j++) {
         auto& ball = maintain.ball[j];
         paintBall(ball.valid ? COLOR_ORANGE : COLOR_ORANGE_SHADOW, ball.pos.x(), ball.pos.y());
-//        paintFocus(ball.valid ? COLOR_RED : COLOR_RED_SHADOW, ball.pos.x(), ball.pos.y(), 500, ballFocusCount++);
+        paintFocus(ball.valid ? COLOR_RED : COLOR_RED_SHADOW, ball.pos.x(), ball.pos.y(), 500, ballFocusCount++);
     }
 }
 void Field::paintCar(const QColor& color, quint8 num, qreal x, qreal y, qreal radian, bool ifDrawNum, const QColor& textColor, bool needCircle) {

@@ -74,6 +74,8 @@ set(PROTO_LIST
     ssl_referee
     vision_detection
     zss_cmd
+    zss_cmd_new
+    zss_cmd_type
     zss_debug
     zss_geometry
     zss_rec_old

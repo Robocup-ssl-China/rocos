@@ -99,7 +99,7 @@ void Communicator::receiveCommand(int t) {
             } else {
 //                qDebug() << "realreal!";
                 ZSS::ZActionModule::instance()->sendLegacy(t, commands);
-                ZSS::NActionModule::instance()->sendLegacy(commands);
+                ZSS::NActionModule::instance()->sendLegacy(t, commands);
             }
         }
     }
@@ -112,7 +112,7 @@ void Communicator::sendCommand(int team, int id) {
     bool flat = GlobalData::instance()->robotInformation[team][id].flat;
     bool chip = GlobalData::instance()->robotInformation[team][id].chip;
     GlobalData::instance()->robotInfoMutex.unlock();
-
+    qDebug() << "1";
     ZSS::Protocol::Robot_Status robot_status;
     robot_status.set_robot_id(id);
     robot_status.set_infrared(infrared);

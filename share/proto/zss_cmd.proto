@@ -1,16 +1,31 @@
 syntax = "proto2";
-
+//import "zss_cmd_type.proto";
 package ZSS.Protocol;
 
 message Robots_Status{
   repeated Robot_Status robots_status = 1;
 }
+enum Team{
+    UNKNOWN = 0;
+    BLUE = 1;
+    YELLOW = 2;
+}
+message Multicast_Status{
+   required string ip = 1;
+   required string uuid = 2;
+   required Team team = 3;
+   required int32 robot_id = 4;
+    // battery voltage
+   required float battery = 5;
+    // capacitance
+   required float capacitance = 6;
+}
 
 message Robot_Status {
   required int32 robot_id  = 1;
-  required bool infrared   = 2;
-  required bool flat_kick  = 3;
-  required bool chip_kick  = 4;
+  optional bool infrared   = 2;
+  optional bool flat_kick  = 3;
+  optional bool chip_kick  = 4;
 }
 message Robots_Command {
   repeated Robot_Command command = 1;
