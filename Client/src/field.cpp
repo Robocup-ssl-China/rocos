@@ -18,18 +18,18 @@ using namespace ZSS::Protocol;
 namespace {
 const static float MIN_LENGTH = 500;//area length : mm
 Qt::KeyboardModifiers mouse_modifiers;
-const static QColor CAR_COLOR[2]  = {QColor(25, 30, 150), QColor(241, 201, 50)};
+const static QColor CAR_COLOR[2]  = {QColor(76, 252, 252), QColor(219, 252, 76)};
 const static QColor CAR_SHADOW[2] = {QColor(100, 120, 200, 50), QColor(255, 230, 150, 50)};
 const static QColor CAR_DIR[2] = {Qt::white, Qt::white};
 const static QColor FONT_COLOR[2] = {Qt::white, Qt::white};
 const static QColor DEBUG_COLOR[10] = {
     Qt::white,
-    Qt::red,
+    QColor(240,53,69),
     QColor(255, 100, 0),
-    Qt::yellow,
-    Qt::green,
+    QColor(255, 240, 10),
+    QColor(40,207,69),
     Qt::cyan,
-    Qt::blue,
+    QColor(0,120,255),
     QColor(128, 0, 255),
     Qt::gray,
     Qt::black
@@ -38,7 +38,7 @@ const static QColor DEBUG_BRUSH_COLOR = QColor(255, 255, 255, 20);
 const static QColor COLOR_ORANGE(255, 0, 255);
 const static QColor COLOR_ORANGE_SHADOW(255, 0, 255, 60);
 const static QColor COLOR_TRANSORANGE(255, 170, 85, 100);
-const static QColor COLOR_DARKGREEN(48, 48, 48);
+const static QColor COLOR_DARKGREEN(30, 30, 30);
 const static QColor COLOR_RED(220, 53, 47);
 const static QColor COLOR_RED_SHADOW(220, 53, 47, 60);
 const static QColor COLOR_LIGHTWHITE(255, 255, 255, 20);
@@ -59,13 +59,8 @@ int param_canvas_height;
 int param_goalWidth;
 int param_goalDepth;
 int param_centerCircleRadius;
-bool if_ellipse_penalty;
-// rectangle penalty
 int param_penaltyWidth;
 int param_penaltyLength;
-// ellipse penalty
-int param_penalty_radius;
-int param_penalty_area_l;  // a line segment connecting two arcs
 
 auto zpm = ZSS::ZParamManager::instance();
 bool isSimulation;
@@ -527,9 +522,6 @@ void Field::init() {
     zpm->loadParam(param_penaltyWidth, "field/penaltyWidth", 1000);
     zpm->loadParam(param_penaltyLength, "field/penaltyLength", 2000);
     zpm->loadParam(param_centerCircleRadius, "field/centerCircleRadius",  500);
-    zpm->loadParam(param_penalty_radius, "field/penalty_radius", 800);
-    zpm->loadParam(param_penalty_area_l, "field/penalty_area_l", 350);
-    zpm->loadParam(if_ellipse_penalty, "field/if_ellipse_penalty", false);
     ::area = QRect(0, 0, this->property("width").toReal(), this->property("height").toReal());
 //    ::size = QSize(this->property("width").toReal()/2.0, this->property("height").toReal()/2.0);
     pressedRobot = false;
@@ -599,66 +591,16 @@ void Field::initPainterPath() {
     painterPath.addRect(::x(-param_width / 2.0), ::y(-param_height / 2.0), ::w(param_width), ::h(param_height));
     painterPath.addRect(::x(-param_width / 2.0), ::y(-param_goalWidth / 2.0), ::w(-param_goalDepth), ::h(param_goalWidth));
     painterPath.addRect(::x(param_width / 2.0), ::y(-param_goalWidth / 2.0), ::w(param_goalDepth), ::h(param_goalWidth));
-//    painterPath.moveTo(::x(-param_width / 2.0), ::y(0));
-//    painterPath.lineTo(::x(param_width / 2.0), ::y(0));
+    painterPath.moveTo(::x(-param_width / 2.0), ::y(0));
+    painterPath.lineTo(::x(param_width / 2.0), ::y(0));
     painterPath.moveTo(::x(0), ::y(param_height / 2.0));
     painterPath.lineTo(::x(0), ::y(-param_height / 2.0));
     painterPath.addEllipse(::x(-param_centerCircleRadius), ::y(-param_centerCircleRadius), ::w(2 * param_centerCircleRadius), ::h(2 * param_centerCircleRadius));
-    if ( if_ellipse_penalty ) {
-        painterPath.moveTo(::x(-param_width / 2.0 + param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.arcTo(QRectF(::x( -param_width / 2.0 -
-                                      param_penalty_radius),
-                                 ::y( param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          0.0,
-                          -90.0);
-        painterPath.moveTo(::x( -param_width / 2.0 + param_penalty_radius ),
-                           ::y( -param_penalty_area_l / 2.0 ) );
-        painterPath.arcTo(QRectF(::x( -param_width / 2.0 -
-                                      param_penalty_radius ),
-                                 ::y( -param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          0.0,
-                          90.0);
-        painterPath.moveTo(::x(-param_width / 2.0 + param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.lineTo(::x(-param_width / 2.0 + param_penalty_radius),
-                           ::y(-param_penalty_area_l / 2));
-
-        painterPath.moveTo(::x(param_width / 2.0 - param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.arcTo(QRectF(::x( param_width / 2.0 -
-                                      param_penalty_radius),
-                                 ::y( param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          180.0,
-                          90.0);
-        painterPath.moveTo(::x( param_width / 2.0 - param_penalty_radius ),
-                           ::y( -param_penalty_area_l / 2.0 ) );
-        painterPath.arcTo(QRectF(::x( param_width / 2.0 -
-                                      param_penalty_radius ),
-                                 ::y( -param_penalty_area_l / 2.0 -
-                                      param_penalty_radius),
-                                 ::w( param_penalty_radius * 2.0 ),
-                                 ::h( param_penalty_radius * 2.0)),
-                          180.0,
-                          -90.0);
-        painterPath.moveTo(::x(param_width / 2.0 - param_penalty_radius),
-                           ::y(param_penalty_area_l / 2.0));
-        painterPath.lineTo(::x(param_width / 2.0 - param_penalty_radius),
-                           ::y(-param_penalty_area_l / 2));
-    } else {
-        painterPath.addRect(::x(-param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(param_penaltyWidth), ::h(param_penaltyLength));
-        painterPath.addRect(::x(param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(-param_penaltyWidth), ::h(param_penaltyLength));
-    }
-
+    painterPath.addRect(::x(-param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(param_penaltyWidth), ::h(param_penaltyLength));
+    painterPath.addRect(::x(param_width / 2.0), ::y(-param_penaltyLength / 2.0), ::w(-param_penaltyWidth), ::h(param_penaltyLength));
+    double penaltyPointWidth = 15;
+    painterPath.addRect(::x(-param_width/6.0-penaltyPointWidth),::y(0-penaltyPointWidth),::w(2*penaltyPointWidth),::h(2*penaltyPointWidth));
+    painterPath.addRect(::x(param_width/6.0-penaltyPointWidth),::y(0-penaltyPointWidth),::w(2*penaltyPointWidth),::h(2*penaltyPointWidth));
 }
 void Field::drawOriginVision(int index) {
     for(int i = 0; i < PARAM::CAMERA; i++) {
@@ -706,7 +648,7 @@ void Field::drawMaintainVision(int index) {
     for(int j = 0; j < maintain.ballSize; j++) {
         auto& ball = maintain.ball[j];
         paintBall(ball.valid ? COLOR_ORANGE : COLOR_ORANGE_SHADOW, ball.pos.x(), ball.pos.y());
-//        paintFocus(ball.valid ? COLOR_RED : COLOR_RED_SHADOW, ball.pos.x(), ball.pos.y(), 500, ballFocusCount++);
+        paintFocus(ball.valid ? COLOR_RED : COLOR_RED_SHADOW, ball.pos.x(), ball.pos.y(), 500, ballFocusCount++);
     }
 }
 void Field::paintCar(const QColor& color, quint8 num, qreal x, qreal y, qreal radian, bool ifDrawNum, const QColor& textColor, bool needCircle) {

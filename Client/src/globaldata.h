@@ -12,6 +12,9 @@ struct RobotInformation {
     bool chip;
     double battery;
     double capacitance;
+    bool wifiMulticast;
+    bool imucleaned;
+    std::string ip;
     RobotInformation(): infrared(false), flat(false), chip(false), battery(0), capacitance(0) {}
 };
 struct RobotSpeed {

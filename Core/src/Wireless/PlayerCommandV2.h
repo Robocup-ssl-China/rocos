@@ -6,7 +6,7 @@
 /************************************************************************/
 class CPlayerSpeedV2 : public CPlayerCommand{
 public:
-    CPlayerSpeedV2(int number, double xspeed, double yspeed, double rspeed, unsigned char dribble, int flag = 0);
+    CPlayerSpeedV2(int number, double xspeed, double yspeed, double rspeed, unsigned char dribble, int flag = 0, bool need_report = false);
     virtual void execute(int realNum);	// 2015/7/11 add by bykang
 	virtual CVector getAffectedVel() const;
 	virtual double getAffectedRotateSpeed() const;

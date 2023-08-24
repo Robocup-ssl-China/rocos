@@ -21,7 +21,9 @@ struct RobotCommand{
     double flat_kick;
     double chip_kick;
     double dribble_spin;
-    RobotCommand():velocity_x(0),velocity_y(0),velocity_r(0),flat_kick(0),chip_kick(0),dribble_spin(0) {}
+    bool use_dir;
+    bool need_report;
+    RobotCommand():velocity_x(0),velocity_y(0),velocity_r(0),flat_kick(0),chip_kick(0),dribble_spin(0),use_dir(false),need_report(false) {}
 };
 
 class CCommandInterface : public QObject
@@ -35,6 +37,7 @@ public:
     static void destruct();
     void setSpeed(int num, double dribble, double vx, double vy, double vr);
     void setKick(int num, double kp, double cp);
+    void setNeedReport(int num, bool needReport);
     void sendCommands();
 private slots:
     void receiveInformation();

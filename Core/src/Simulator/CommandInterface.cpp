@@ -65,6 +65,15 @@ void CCommandInterface::setKick(int num, double kp, double cp) {
     commands[number].chip_kick = cp;
 }
 
+void CCommandInterface::setNeedReport(int num, bool needReport){
+    int number = num;
+    if (number < 0 || number > PARAM::Field::MAX_PLAYER - 1) {
+        //std::cout << "Robot Number Error in Simulator setKick" << std::endl;
+        return;
+    }
+    commands[number].need_report = needReport;
+}
+
 void CCommandInterface::sendCommands() {
 //    GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(-400,-200),"COMMAND_VALID : ",COLOR_GRAY);
     for (int i = 0; i < PARAM::Field::MAX_PLAYER; i++) {
@@ -78,6 +87,8 @@ void CCommandInterface::sendCommands() {
         robot_command->set_velocity_y(commands[i].velocity_y);
         robot_command->set_velocity_r(commands[i].velocity_r);
         robot_command->set_dribbler_spin(commands[i].dribble_spin);
+        robot_command->set_use_dir(commands[i].use_dir);
+        robot_command->set_need_report(commands[i].need_report);
         if(commands[i].dribble_spin >=1){
             GDebugEngine::Instance()->gui_debug_arc(VisionModule::Instance()->ourPlayer(i).RawPos(),5,0,360,COLOR_BLACK);
         }

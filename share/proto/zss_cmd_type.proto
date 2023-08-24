@@ -1,0 +1,64 @@
+syntax = "proto3";
+package ZSS.New;
+
+message Pose{
+    float x = 1;
+    float y = 2;
+    float w = 3;
+}
+message Twist{
+    float x = 1;
+    float y = 2;
+    float w = 3;
+}
+
+message Odom{
+    repeated Pose poses = 1;
+}
+
+message CmdWheel {
+    float wheel1 = 1;
+    float wheel2 = 2;
+    float wheel3 = 3;
+    float wheel4 = 4;
+}
+
+message CmdVel {
+    // velocity in m/s
+    float velocity_x = 1;
+    float velocity_y = 2;
+    // if use_imu is false, than use velocity_r
+    // if use_imu is true, than use imu_theta (need calibrate)
+    bool use_imu = 3;
+    // use_imu == false
+    float velocity_r = 4;
+    // use_imu == true
+    float imu_theta = 5;
+}
+
+message CmdPoseConfig{
+    float max_vx = 1;
+    float max_vy = 2;
+    float max_vw = 3;
+    float max_ax = 4;
+    float max_ay = 5;
+    float max_aw = 6;
+}
+
+message CmdPose {
+    Pose start = 1;
+    Twist start_v = 2;
+    Pose target = 3;
+    Twist target_v = 4;
+    // sense of desire rotation, 1 for anticlockwise, -1 for clockwise
+    int32 rotation_sense = 5;
+    bool use_config = 6;
+    CmdPoseConfig config = 7;
+}
+
+message CmdChase {
+    Pose start = 1;
+    Twist start_v = 2;
+    Pose ball = 3;
+    Twist ball_v = 4;
+}

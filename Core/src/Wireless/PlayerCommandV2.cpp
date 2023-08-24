@@ -16,8 +16,8 @@ namespace{
 /************************************************************************/
 /*                      CPlayerSpeed                                    */
 /************************************************************************/
-CPlayerSpeedV2::CPlayerSpeedV2(int number, double xspeed, double yspeed, double rspeed, unsigned char dribble, int flag)
-	: CPlayerCommand(number,dribble)
+CPlayerSpeedV2::CPlayerSpeedV2(int number, double xspeed, double yspeed, double rspeed, unsigned char dribble, int flag, bool need_report)
+	: CPlayerCommand(number,dribble,need_report)
 	,_rspeed(rspeed)
 {
 	const CRobotCapability* robotCap = RobotCapFactory::Instance()->getRobotCap(1, 1);
@@ -49,6 +49,7 @@ CPlayerSpeedV2::CPlayerSpeedV2(int number, double xspeed, double yspeed, double 
 }
 
 void CPlayerSpeedV2::execute(int realNum){
+    CCommandInterface::instance()->setNeedReport(realNum, this->_need_report);
     CCommandInterface::instance()->setSpeed(realNum, dribble(), xspeed(), yspeed(), rspeed());
 }
 void CPlayerSpeedV2::toStream(std::ostream& os) const

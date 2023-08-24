@@ -7,7 +7,8 @@ import ZSS 1.0 as ZSS
 Page{
     id:control;
     property bool socketConnect : false;
-    property bool radioConnect : false;
+    property bool radioConnect1 : false;
+    property bool radioConnect2 : false;
     property bool medusaConnect : false;
     property bool medusaConnect2 : false;
     property bool simConnect : false;
@@ -20,6 +21,9 @@ Page{
     property bool isReplaying: false;
     property bool isCutting: true;
     property int playspeed: 1
+    property int serial_24L01: 1
+    property int udp_24L01: 2
+    property int udp_WiFi: 3
 
     Timer{
         id:oneSecond;
@@ -29,7 +33,9 @@ Page{
         onTriggered: {
             interaction.updateInterfaces();
             interfaces4vision.updateModel();
-            radioComboBox.updateModel();
+            radioComboBox_blue.updateModel();
+            radioComboBox_yellow.updateModel();
+            interfaces4WifiComm.updateModel();
 //            interfaces4BlueSender.updateModel();
 //            interfaces4BlueReceiver.updateModel();
 //            interfaces4YellowSender.updateModel();
@@ -110,32 +116,19 @@ Page{
                     padding:0;
                     property int itemWidth : width - 2*padding;
                     property bool ifConnected : false;
-                    ZComboBox{
-                        id:interfaces4vision;
-                        model:interaction.getInterfaces();
-                        onActivated: interaction.changeVisionInterface(currentIndex);
-                        function updateModel(){
-                            model = interaction.getInterfaces();
-                            if(currentIndex >= 0)
-                                interaction.changeVisionInterface(currentIndex);
-                        }
-                        Component.onCompleted: {
-                            interaction.getInterfaces();
-                        }
-                    }
-                    ZComboBox{
-                        id:grsimInterface;
-                        model:interaction.getGrsimInterfaces();
-                        onActivated: interaction.changeGrsimInterface(currentIndex);
-                        function updateModel(){
-                            model = interaction.getGrsimInterfaces();
-                            if(currentIndex >= 0)
-                                interaction.changeGrsimInterface(currentIndex);
-                        }
-                        Component.onCompleted: {
-                            interaction.getGrsimInterfaces();
-                        }
-                    }
+//                    ZComboBox{
+//                        id:grsimInterface;
+//                        model:interaction.getGrsimInterfaces();
+//                        onActivated: interaction.changeGrsimInterface(currentIndex);
+//                        function updateModel(){
+//                            model = interaction.getGrsimInterfaces();
+//                            if(currentIndex >= 0)
+//                                interaction.changeGrsimInterface(currentIndex);
+//                        }
+//                        Component.onCompleted: {
+//                            interaction.getGrsimInterfaces();
+//                        }
+//                    }
                     ZSwitch{
                         id:simulation;
                         width:parent.itemWidth;
@@ -145,6 +138,7 @@ Page{
                     Grid{
                         id:cameraControls;
                         width:parent.itemWidth - 10;
+                        height: 35;
                         columns:8;
                         columnSpacing: 0;
                         rowSpacing: 0;
@@ -166,58 +160,630 @@ Page{
                             }
                         }
                     }
-                    Button{
-                        width:parent.itemWidth;
-                        icon.source:visionControls.ifConnected ? "/source/connect.png" : "/source/disconnect.png";
-                        onClicked: {
-                            visionControls.ifConnected = !visionControls.ifConnected;
-                            interaction.setVision(visionControls.ifConnected,simulation.checked);
+                    Grid{
+                        width:parent.itemWidth - 10;
+                        columns:2;
+                        columnSpacing: 0;
+                        rowSpacing: 0;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        ZComboBox{
+                            id:interfaces4vision;
+                            width: parent.width/4.0;
+                            height: 45;
+                            model:interaction.getInterfaces();
+                            onActivated: interaction.changeVisionInterface(currentIndex);
+                            function updateModel(){
+                                model = interaction.getInterfaces();
+                                if(currentIndex >= 0)
+                                    interaction.changeVisionInterface(currentIndex);
+                            }
+                            Component.onCompleted: {
+                                interaction.getInterfaces();
+                            }
+                        }
+                        Button{
+                            width:parent.width/4.0*3.0;
+                            height: 45;
+                            icon.source:visionControls.ifConnected ? "/source/connect.png" : "/source/disconnect.png";
+                            onClicked: {
+                                visionControls.ifConnected = !visionControls.ifConnected;
+                                interaction.setVision(visionControls.ifConnected,simulation.checked);
+                            }
                         }
                     }
                 }
             }
             ZGroupBox{
-                title: qsTr("Radio")
+                title: qsTr("Config")
                 Grid{
                     width:parent.width;
                     verticalItemAlignment: Grid.AlignVCenter;
                     horizontalItemAlignment: Grid.AlignHCenter;
                     spacing: 0;
+                    rowSpacing: 5;
                     columns:1;
-                    property int itemWidth : width - 2*padding;
-                    SpinBox{
-                        width:parent.itemWidth;
-                        from:0;to:15;
-                        wrap:true;
-                        value:interaction.getFrequency();
-                        onValueModified: {
-                            if(!interaction.changeSerialFrequency(value))
-                                value:interaction.getFrequency();
+                    Grid{
+                        height: 90;
+                        width: parent.width;
+                        columns: 2;
+                        columnSpacing: 0;
+                        rowSpacing: 0;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        Column{
+                            height: 120;
+                            width: 35;
+                            spacing:-12;
+                            ZButton{
+                                width: 30;
+                                height: 40;
+                                Text {
+                                    height: 40;
+                                    width: 30;
+                                    horizontalAlignment: Text.AlignHCenter;
+                                    verticalAlignment: Text.AlignVCenter;
+                                    text: "Uart";
+                                    ///font.family: "Helvetica";
+                                    font.pointSize: 13;
+                                    color: "#3CC77F";
+                                }
+                                MouseArea{
+                                    anchors.fill: parent;
+                                    acceptedButtons: Qt.RightButton;
+                                    onClicked: {
+                                        interaction.changeUnityCarVariaty(serial_24L01);
+                                    }
+                                }
+
+                            }
+
+                            ZButton{
+                                width: 30;
+                                height: 40;
+                                Text {
+                                    height: 40;
+                                    width: 30;
+                                    horizontalAlignment: Text.AlignHCenter;
+                                    verticalAlignment: Text.AlignVCenter;
+                                    text: "UDP";
+                                    ///font.family: "Helvetica";
+                                    font.pointSize: 13;
+                                    color: "#3CC77F";
+                                }
+                                MouseArea{
+                                    anchors.fill: parent;
+                                    acceptedButtons: Qt.RightButton;
+                                    onClicked: {
+                                        interaction.changeUnityCarVariaty(udp_24L01);
+                                    }
+                                }
+
+                            }
+
+                            ZButton{
+                                width: 30;
+                                height: 40;
+                                Text {
+                                    height: 40;
+                                    width: 30;
+                                    horizontalAlignment: Text.AlignHCenter;
+                                    verticalAlignment: Text.AlignVCenter;
+                                    text: "WiFi";
+                                    ///font.family: "Helvetica";
+                                    font.pointSize: 13;
+                                    color: "#3CC77F";
+                                }
+                                MouseArea{
+                                    anchors.fill: parent;
+                                    acceptedButtons: Qt.RightButton;
+                                    onClicked: {
+                                        interaction.changeUnityCarVariaty(udp_WiFi);
+                                    }
+                                }
+
+                            }
+
                         }
-                    }
-                    ComboBox{
-                        id:radioComboBox;
-                        enabled: !control.radioConnect;
-                        model:interaction.getSerialPortsList();
-                        onActivated: interaction.changeSerialPort(currentIndex);
-                        width:parent.itemWidth;
-                        function updateModel(){
-                            model = interaction.getSerialPortsList();
-                            if(currentIndex >= 0)
-                                interaction.changeSerialPort(currentIndex);
-                        }
-                        Component.onCompleted: updateModel();
-                    }
-                    Button{
-                        width:parent.itemWidth;
-                        icon.source:control.radioConnect ? "/source/connect.png" : "/source/disconnect.png";
-                        onClicked: {
-                            control.radioConnect = !control.radioConnect;
-                            if(!interaction.connectSerialPort(control.radioConnect)){
-                                control.radioConnect = !control.radioConnect;
+                        Grid{
+                            height: 120 ;
+                            width: parent.width;
+                            columns: 16;
+                            columnSpacing: 0;
+                            rowSpacing: 0;
+                            horizontalItemAlignment: Grid.AlignHCenter;
+                            verticalItemAlignment: Grid.AlignVCenter;
+                            Repeater{
+                                model: 16;
+                                Column {
+                                    property int itemIndex: index;
+                                    property bool ifConnected1 : interaction.getSerial24L01Car(itemIndex);
+                                    property bool ifConnected2 : interaction.getUDP24L01Car(itemIndex);
+                                    property bool ifConnected3 : interaction.getUDPWiFiCar(itemIndex);
+                                    height: 120;
+                                    width: 35;
+                                    spacing:-12;
+                                    ZButton {
+                                        text: itemIndex.toString(16).toUpperCase();
+                                        height: 40;
+                                        width: 30;
+                                        icon.source:ifConnected1 ? "/source/connect.png" : "";
+                                        icon.color: ifConnected1 ? "#17a81a" : "";
+                                        onClicked: {
+                                            ifConnected1 = !ifConnected1;
+                                            ifConnected1 = interaction.checkedChange(itemIndex,serial_24L01,ifConnected1);
+                                            interaction.setSerial24L01Car(itemIndex,ifConnected1);
+                                        }
+//                                        contentItem: Text {
+//                                            text: ifConnected1 ? "√":parent.text
+//                                            font: parent.font
+//                                            opacity: enabled ? 1.0 : 0.3
+//                                            color: ifConnected1 ? "#17a81a" : "white"
+//                                            horizontalAlignment: Text.AlignHCenter
+//                                            verticalAlignment: Text.AlignVCenter
+//                                            elide: Text.ElideRight
+//                                        }
+                                        Timer{
+                                            interval:100;
+                                            running:true;
+                                            repeat:true;
+                                            onTriggered: {
+                                                ifConnected1=interaction.getSerial24L01Car(itemIndex);
+                                            }
+                                        }
+                                    }
+                                    ZButton {
+                                        text: itemIndex.toString(16).toUpperCase();
+                                        height: 40;
+                                        width: 30;
+                                        icon.source:ifConnected2 ? "/source/connect.png" : "";
+                                        icon.color: ifConnected2 ? "#17a81a" : "";
+                                        onClicked: {
+                                            ifConnected2 = !ifConnected2;
+                                            ifConnected2 = interaction.checkedChange(itemIndex,udp_24L01,ifConnected2);
+                                            interaction.setUDP24L01Car(itemIndex,ifConnected2);
+
+                                        }
+//                                        contentItem: Text {
+//                                            text: ifConnected2 ? "√":parent.text
+//                                            font: parent.font
+//                                            opacity: enabled ? 1.0 : 0.3
+//                                            color: ifConnected2 ? "#17a81a" : "white"
+//                                            horizontalAlignment: Text.AlignHCenter
+//                                            verticalAlignment: Text.AlignVCenter
+//                                            elide: Text.ElideRight
+//                                        }
+                                        Timer{
+                                            interval:100;
+                                            running:true;
+                                            repeat:true;
+                                            onTriggered: {
+                                                ifConnected2=interaction.getUDP24L01Car(itemIndex);
+                                            }
+                                        }
+                                    }
+                                    ZButton {
+                                        text: itemIndex.toString(16).toUpperCase();
+                                        height: 40;
+                                        width: 30;
+                                        icon.source:ifConnected3 ? "/source/connect.png" : "";
+                                        icon.color: ifConnected3 ? "#17a81a" : "";
+                                        onClicked: {
+                                            ifConnected3 = !ifConnected3;
+                                            ifConnected3 = interaction.checkedChange(itemIndex,udp_WiFi,ifConnected3);
+                                            interaction.setUDPWiFiCar(itemIndex,ifConnected3);
+                                        }
+//                                        contentItem: Text {
+//                                            text: ifConnected3 ? "√":parent.text
+//                                            font: parent.font
+//                                            opacity: enabled ? 1.0 : 0.3
+//                                            color: ifConnected3 ? "#17a81a" : "white"
+//                                            horizontalAlignment: Text.AlignHCenter
+//                                            verticalAlignment: Text.AlignVCenter
+//                                            elide: Text.ElideRight
+//                                        }
+                                        Timer{
+                                            interval:100;
+                                            running:true;
+                                            repeat:true;
+                                            onTriggered: {
+                                                ifConnected3=interaction.getUDPWiFiCar(itemIndex);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
+//                    Grid{
+//                        id:serial_24L01_Car_Select;
+//                        height: 26 + 26 + 26;
+//                        width: parent.width;
+//                        columns: 16;
+//                        columnSpacing: 0;
+//                        rowSpacing: 0;
+//                        horizontalItemAlignment: Grid.AlignHCenter;
+//                        verticalItemAlignment: Grid.AlignVCenter;
+//                        property int itemWidth: (width - (columns - 1) * columnSpacing)/columns
+//                        Repeater{
+//                            model: 16;
+//                            CheckBox{
+//                                property int itemIndex: index;
+//                                width: serial_24L01_Car_Select.itemWidth;
+//                                checked: interaction.getSerial24L01Car(itemIndex);
+//                                height: 26;
+//                                onCheckStateChanged: {
+//                                    checked = interaction.checkedChange(itemIndex,serial_24L01,checked);
+//                                    interaction.setSerial24L01Car(itemIndex,checked);
+//                                }
+//                                Component.onCompleted: {
+//                                    interaction.setSerial24L01Car(itemIndex,checked);
+//                                    checked = interaction.defaultCar(itemIndex);
+//                                }
+//                                Text {
+//                                    property int itemIndex: index;
+//                                    height: 13;
+//                                    width: serial_24L01_Car_Select.itemWidth;
+//                                    horizontalAlignment: Text.Center;
+//                                    verticalAlignment: Text.Center;
+//                                    text: itemIndex.toString(16).toUpperCase();
+//                                    font.family: "Helvetica";
+//                                    font.pointSize: height;
+//                                    color: "#FF7F50";
+//                                }
+//                                Timer{
+//                                    interval:100;
+//                                    running:true;
+//                                    repeat:true;
+//                                    onTriggered: {
+//                                        checked=interaction.getSerial24L01Car(itemIndex);
+//                                    }
+//                                }
+//                            }
+
+//                        }
+//                        Repeater{
+//                            model: 16;
+//                            CheckBox{
+//                                property int itemIndex: index;
+//                                width: serial_24L01_Car_Select.itemWidth;
+//                                checked: interaction.getUDP24L01Car(itemIndex);
+//                                height: 26;
+//                                onCheckStateChanged: {
+//                                    checked = interaction.checkedChange(itemIndex,udp_24L01,checked);
+//                                    interaction.setUDP24L01Car(itemIndex,checked);
+//                                }
+//                                Component.onCompleted: {
+//                                    interaction.setUDP24L01Car(itemIndex,checked);
+//                                }
+//                                Text {
+//                                    property int itemIndex: index;
+//                                    height: 13;
+//                                    width: serial_24L01_Car_Select.itemWidth;
+//                                    horizontalAlignment: Text.Center;
+//                                    verticalAlignment: Text.Center;
+//                                    text: itemIndex.toString(16).toUpperCase();
+//                                    font.family: "Helvetica";
+//                                    font.pointSize: height;
+//                                    color: "#00FFFF";
+//                                }
+//                                Timer{
+//                                    interval:100;
+//                                    running:true;
+//                                    repeat:true;
+//                                    onTriggered: {
+//                                        checked= interaction.getUDP24L01Car(itemIndex);
+//                                    }
+//                                }
+//                            }
+
+//                        }
+//                        Repeater{
+//                            model: 16;
+//                            CheckBox{
+//                                property int itemIndex: index;
+//                                width: serial_24L01_Car_Select.itemWidth;
+//                                checked: interaction.getUDPWiFiCar(itemIndex);
+//                                height: 26;
+//                                onCheckStateChanged: {
+//                                    checked = interaction.checkedChange(itemIndex,udp_WiFi,checked);
+//                                    interaction.setUDPWiFiCar(itemIndex,checked);
+//                                }
+//                                Component.onCompleted: {
+//                                    interaction.setUDPWiFiCar(itemIndex,checked);
+//                                }
+//                                Text {
+//                                    property int itemIndex: index;
+//                                    height: 13;
+//                                    width: serial_24L01_Car_Select.itemWidth;
+//                                    horizontalAlignment: Text.Center;
+//                                    verticalAlignment: Text.Center;
+//                                    text: itemIndex.toString(16).toUpperCase();
+//                                    font.family: "Helvetica";
+//                                    font.pointSize: height;
+//                                    color: "#3CC77F";
+//                                }
+//                                Timer{
+//                                    interval:100;
+//                                    running:true;
+//                                    repeat:true;
+//                                    onTriggered: {
+//                                        //enabled = interaction.enabled(itemIndex,udp_WiFi);
+//                                        checked=interaction.getUDPWiFiCar(itemIndex);
+//                                    }
+//                                }
+//                            }
+
+//                        }
+//                    }
+                    Grid{
+                        width:parent.width;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        spacing: 0;
+                        rowSpacing: 5;
+                        columns:2;
+                        Text {
+                            height: 13;
+                            width: parent.width/6;
+                            horizontalAlignment: Text.right;
+                            verticalAlignment: Text.AlignVCenter;
+                            text: "WiFicomm : ";
+                            font.family: "Helvetica";
+                            font.pointSize: height;
+                            color: "#3CC77F";
+                        }
+                        ZComboBox{
+                            id:interfaces4WifiComm;
+                            width: parent.width/6*5;
+                            model:interaction.getInterfaces();
+                            onActivated: {
+                                interaction.changeActionWifiCommInterface(currentIndex);
+                            }
+                            function updateModel(){
+                                model = interaction.getInterfaces();
+                                if(currentIndex >= 0)
+                                    interaction.changeActionWifiCommInterface(currentIndex);
+                            }
+                            Component.onCompleted: {
+                                interaction.getInterfaces();
+                            }
+                        }
+                    }
+                    Text {
+                        height: 13;
+                        width: parent.width;
+                        horizontalAlignment: Text.right;
+                        verticalAlignment: Text.AlignRight;
+                        text: "UDP_24L01 : ";
+                        font.family: "Helvetica";
+                        font.pointSize: height;
+                        color: "#3CC77F";
+                    }
+                    Grid{
+                        width:parent.width;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        spacing: 0;
+                        rowSpacing: 0;
+                        columns:2;
+                        property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
+                        SpinBox{
+                            id:medusaFrq1;
+                            width:parent.itemWidth;
+                            height: 40;
+                            from:0;to:15;
+                            wrap:true;
+                            value:8
+                        }
+                        SpinBox{
+                            id:medusaFrq2;
+                            width:parent.itemWidth;
+                            height: 40;
+                            from:0;to:15;
+                            wrap:true;
+                            value:6
+                        }
+                        ZComboBox{
+                            enabled: !control.autoIMUBlue;
+                            id:buleAdderss;
+                            model:interaction.getAllAddress();
+                            contentItem: Text {
+                                          id:blueText
+                                          text: interaction.getRealAddress(0)
+                                          color: enabled ? "#ffffff" : "#888"
+                                          font: buleAdderss.font
+                                          elide: Text.ElideNone
+                                          wrapMode: Text.WordWrap
+                                          verticalAlignment: Text.AlignVCenter
+                                          horizontalAlignment: Text.AlignHCenter
+                                      }
+                            onActivated:{
+                                interaction.changeAddress(0,currentIndex);
+                                blueText.text = interaction.getRealAddress(0);
+                            }
+                            function updateModel(){
+                                model = interaction.getAllAddress();
+                                if(currentIndex >= 0){
+                                    interaction.changeAddress(0,currentIndex);
+                                    blueText.text = interaction.getRealAddress(0);
+                                }
+                            }
+                            Component.onCompleted: {
+                                interaction.getAllAddress();
+                                blueText.text = interaction.getRealAddress(0);
+                            }
+                        }
+                        ZComboBox{
+                            enabled: !control.autoIMUYellow;
+                            id:yellowAdderss;
+                            model:interaction.getAllAddress();
+                            contentItem: Text {
+                                          id:yellowText
+                                          text: interaction.getRealAddress(1)
+                                          color: enabled ? "#ffffff" : "#888"
+                                          font: yellowAdderss.font
+                                          elide: Text.ElideNone
+                                          wrapMode: Text.WordWrap
+                                          verticalAlignment: Text.AlignVCenter
+                                          horizontalAlignment: Text.AlignHCenter
+                                      }
+                            onActivated:{
+                                interaction.changeAddress(1,currentIndex);
+                                yellowText.text = interaction.getRealAddress(1);
+                            }
+                            function updateModel(){
+                                model = interaction.getAllAddress();
+                                if(currentIndex >= 0){
+                                    interaction.changeAddress(1,currentIndex);
+                                    yellowText.text = interaction.getRealAddress(1);
+                                }
+                            }
+                            Component.onCompleted: {
+                                model = interaction.getAllAddress();
+                                yellowText.text = interaction.getRealAddress(1);
+                            }
+                        }
+                    }
+                    Grid{
+                        width:parent.width;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        spacing: 0;
+                        columns:1;
+                        Text {
+                            height: 13;
+                            width: parent.width;
+                            horizontalAlignment: Text.right;
+                            verticalAlignment: Text.AlignRight;
+                            text: "Serial_24L01 : ";
+                            font.family: "Helvetica";
+                            font.pointSize: height;
+                            color: "#3CC77F";
+                        }
+                        Grid{
+                            width:parent.width;
+                            verticalItemAlignment: Grid.AlignVCenter;
+                            horizontalItemAlignment: Grid.AlignHCenter;
+                            spacing: 0;
+                            columns:2;
+                            SpinBox{
+                                width:parent.width/2.0;
+                                height: 40;
+                                from:0;to:15;
+                                wrap:true;
+                                value:interaction.getFrequency(0);
+                                onValueModified: {
+                                    if(!interaction.changeSerialFrequency(value,0))
+                                        value:interaction.getFrequency(0);
+                                }
+                            }
+                            SpinBox{
+                                width:parent.width/2.0;
+                                height: 40;
+                                from:0;to:15;
+                                wrap:true;
+                                value:interaction.getFrequency(1);
+                                onValueModified: {
+                                    if(!interaction.changeSerialFrequency(value,1))
+                                        value:interaction.getFrequency(1);
+                                }
+                            }
+                        }
+                    }
+                    Grid{
+                        width:parent.width;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        spacing: 0;
+                        columns:2;
+                        ComboBox{
+                            id:radioComboBox_blue;
+                            enabled: !control.radioConnect1;
+                            model:interaction.getSerialPortsList();
+                            onActivated: interaction.changeSerialPort(currentIndex,0);
+                            width:parent.width/2.0;
+                            height: 45;
+                            function updateModel(){
+                                model = interaction.getSerialPortsList();
+                                if(currentIndex >= 0)
+                                    interaction.changeSerialPort(currentIndex,0);
+                            }
+                            Component.onCompleted: updateModel();
+                        }
+                        ComboBox{
+                            id:radioComboBox_yellow;
+                            enabled: !control.radioConnect2;
+                            model:interaction.getSerialPortsList();
+                            onActivated: interaction.changeSerialPort(currentIndex,1);
+                            width:parent.width/2.0;
+                            height: 45;
+                            function updateModel(){
+                                model = interaction.getSerialPortsList();
+                                if(currentIndex >= 0)
+                                    interaction.changeSerialPort(currentIndex,1);
+                            }
+                            Component.onCompleted: updateModel();
+                        }
+
+                    }
+//                    Grid{
+//                        width:parent.width;
+//                        verticalItemAlignment: Grid.AlignVCenter;
+//                        horizontalItemAlignment: Grid.AlignHCenter;
+//                        spacing: 0;
+//                        columns:2;
+//                        Button{
+//                            width:parent.width/2;
+//                            icon.source:control.radioConnect1 ? "/source/connect.png" : "/source/disconnect.png";
+//                            onClicked: {
+//                                control.radioConnect1 = !control.radioConnect1;
+//                                if(!interaction.connectSerialPort(control.radioConnect1,0)){
+//                                    control.radioConnect1 = !control.radioConnect1;
+//                                }
+//                            }
+//                        }
+//                        Button{
+//                            width:parent.width/2;
+//                            icon.source:control.radioConnect2 ? "/source/connect.png" : "/source/disconnect.png";
+//                            onClicked: {
+//                                control.radioConnect2 = !control.radioConnect2;
+//                                if(!interaction.connectSerialPort(control.radioConnect2,1)){
+//                                    control.radioConnect2 = !control.radioConnect2;
+//                                }
+//                            }
+//                        }
+//                    }
+//                    Grid{
+//                        width:parent.width;
+//                        verticalItemAlignment: Grid.AlignVCenter;
+//                        horizontalItemAlignment: Grid.AlignHCenter;
+//                        spacing: 0;
+//                        columns:2;
+//                        Button{
+//                            width:parent.width/2.0;
+//                            height: 45;
+//                            icon.source:control.radioConnect1 ? "/source/connect.png" : "/source/disconnect.png";
+//                            onClicked: {
+//                                control.radioConnect1 = !control.radioConnect1;
+//                                if(!interaction.connectSerialPort(control.radioConnect1,0)){
+//                                    control.radioConnect1 = !control.radioConnect1;
+//                                }
+//                            }
+//                        }
+//                        Button{
+//                            width:parent.width/2.0;
+//                            height: 45;
+//                            icon.source:control.radioConnect2 ? "/source/connect.png" : "/source/disconnect.png";
+//                            onClicked: {
+//                                control.radioConnect2 = !control.radioConnect2;
+//                                if(!interaction.connectSerialPort(control.radioConnect2,1)){
+//                                    control.radioConnect2 = !control.radioConnect2;
+//                                }
+//                            }
+//                        }
+//                    }
+
                 }
             }
             ZGroupBox{
@@ -230,29 +796,38 @@ Page{
                     rowSpacing: 5;
                     columns:1;
                     property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
-                    ZButton{
-                        icon.source:control.monitorConnect ? "/source/stop.png" : "/source/start.png";
-                        onClicked: {
-                            control.monitorConnect = !control.monitorConnect;
-                            interaction.controlMonitor(control.monitorConnect)
-                        }
-                    }
                     Grid{
                         width:parent.width;
                         verticalItemAlignment: Grid.AlignVCenter;
                         horizontalItemAlignment: Grid.AlignHCenter;
                         spacing: 0;
                         rowSpacing: 5;
-                        columns:2;
-                        property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
-                        ZSwitch{
-                            id:medusaSide;
-                            width:parent.itemWidth * 2;
-                            leftText:qsTr("Left");
-                            rightText:qsTr("Right");
-                            checked: false;
-                            onCheckedChanged: {
-                                interaction.changeMedusaSettings(false,medusaSide.checked)
+                        columns:1;
+                        ZButton{
+                            width: parent.width;
+                            icon.source:control.monitorConnect ? "/source/stop.png" : "/source/start.png";
+                            onClicked: {
+                                control.monitorConnect = !control.monitorConnect;
+                                interaction.controlMonitor(control.monitorConnect)
+                            }
+                        }
+                        Grid{
+                            width:parent.width;
+                            verticalItemAlignment: Grid.AlignVCenter;
+                            horizontalItemAlignment: Grid.AlignHCenter;
+                            spacing: 0;
+                            rowSpacing: 5;
+                            columns:2;
+                            property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
+                            ZSwitch{
+                                id:medusaSide;
+                                width:parent.itemWidth * 2;
+                                leftText:qsTr("Left");
+                                rightText:qsTr("Right");
+                                checked: false;
+                                onCheckedChanged: {
+                                    interaction.changeMedusaSettings(false,medusaSide.checked)
+                                }
                             }
                         }
                     }
@@ -278,6 +853,66 @@ Page{
 //                            wrap:true;
 //                            value:6
 //                        }
+//                        ZComboBox{
+//                            enabled: !control.autoIMUBlue;
+//                            id:buleAdderss;
+//                            model:interaction.getAllAddress();
+//                            contentItem: Text {
+//                                          id:blueText
+//                                          text: interaction.getRealAddress(0)
+//                                          color: enabled ? "#ffffff" : "#888"
+//                                          font: buleAdderss.font
+//                                          elide: Text.ElideNone
+//                                          wrapMode: Text.WordWrap
+//                                          verticalAlignment: Text.AlignVCenter
+//                                          horizontalAlignment: Text.AlignHCenter
+//                                      }
+//                            onActivated:{
+//                                interaction.changeAddress(0,currentIndex);
+//                                blueText.text = interaction.getRealAddress(0);
+//                            }
+//                            function updateModel(){
+//                                model = interaction.getAllAddress();
+//                                if(currentIndex >= 0){
+//                                    interaction.changeAddress(0,currentIndex);
+//                                    blueText.text = interaction.getRealAddress(0);
+//                                }
+//                            }
+//                            Component.onCompleted: {
+//                                interaction.getAllAddress();
+//                                blueText.text = interaction.getRealAddress(0);
+//                            }
+//                        }
+//                        ZComboBox{
+//                            enabled: !control.autoIMUYellow;
+//                            id:yellowAdderss;
+//                            model:interaction.getAllAddress();
+//                            contentItem: Text {
+//                                          id:yellowText
+//                                          text: interaction.getRealAddress(1)
+//                                          color: enabled ? "#ffffff" : "#888"
+//                                          font: yellowAdderss.font
+//                                          elide: Text.ElideNone
+//                                          wrapMode: Text.WordWrap
+//                                          verticalAlignment: Text.AlignVCenter
+//                                          horizontalAlignment: Text.AlignHCenter
+//                                      }
+//                            onActivated:{
+//                                interaction.changeAddress(1,currentIndex);
+//                                yellowText.text = interaction.getRealAddress(1);
+//                            }
+//                            function updateModel(){
+//                                model = interaction.getAllAddress();
+//                                if(currentIndex >= 0){
+//                                    interaction.changeAddress(1,currentIndex);
+//                                    yellowText.text = interaction.getRealAddress(1);
+//                                }
+//                            }
+//                            Component.onCompleted: {
+//                                model = interaction.getAllAddress();
+//                                yellowText.text = interaction.getRealAddress(1);
+//                            }
+//                        }
                         ZButton{
                             icon.source:control.medusaConnect ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#2976ca";
@@ -287,7 +922,8 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
-//                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
+                                    interaction.connectSerialPort(control.medusaConnect,0)
+                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
                                 }
                                 interaction.controlMedusa(control.medusaConnect)
                             }
@@ -301,7 +937,8 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
-//                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
+                                    interaction.connectSerialPort(control.medusaConnect2,1)
+                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
                                 }
                                 interaction.controlMedusa2(control.medusaConnect2)
                             }
@@ -357,7 +994,7 @@ Page{
             ZSS.Display{
                 type:1;
                 width:parent.width - 2*parent.padding;
-                height:300;
+                height:200;
                 onWidthChanged: {
                     resetSize(width,height);
                 }

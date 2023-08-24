@@ -44,6 +44,10 @@ function valid(role)
 	return instance(role):Valid()
 end
 
+function toBallDir(role)
+	return (ball.pos() - pos(role)):dir()
+end
+
 function attackNum()
 	return defenceInfo:getAttackNum()
 end

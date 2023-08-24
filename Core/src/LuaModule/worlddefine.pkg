@@ -33,6 +33,8 @@ struct PlayerPoseT : public ObjectPoseT{
 	void SetDir(double d);
 	double RotVel() const;
 	void SetRotVel(double d);
+    double RawRotVel() const;
+    void SetRawRotVel(double d);
 };
 
 class PlayerTypeT{

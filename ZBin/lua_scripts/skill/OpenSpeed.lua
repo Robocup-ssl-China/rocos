@@ -3,6 +3,7 @@ function OpenSpeed(task)
 	local mspeedX = task.speedX or 0
 	local mspeedY = task.speedY or 0
 	local mspeedW = task.speedW or 0
+	local needReport = task.needReport or false
 	
 	execute = function(runner)
 		if type(task.speedX) == "function" then
@@ -28,7 +29,7 @@ function OpenSpeed(task)
 			mspeedY = task.mod * math.sin(mdir)
 		end
 		
-		return COpenSpeed(runner, mspeedX, mspeedY, mspeedW)
+		return COpenSpeed(runner, mspeedX, mspeedY, mspeedW, needReport)
 	end
 
 	matchPos = function()

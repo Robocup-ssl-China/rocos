@@ -37,6 +37,7 @@ struct PlayerStatus{
 	CVector vel;													// 全局目标到点平动速度	
 	double rotvel;													// 全局目标到点转动速度
 	int rotdir;														// 旋转的方向
+	bool needReport;												// 是否需要返回信息
 	/// 运动参数 ： 用于底层运动控制 ，指定标签辅助
 	double max_acceleration;										// 最大加速度
 	double max_deceleration;										// 最大减速度

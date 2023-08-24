@@ -84,6 +84,9 @@ void Interaction::changeGrsimInterface(int index){
 void Interaction::changeRadioInterface(bool ifBlue,bool ifSender,int index){
 //    qDebug() << "radio  interface : " << ifBlue << ifSender << index;
 }
+void Interaction::changeActionWifiCommInterface(int index){
+    ZSS::ZActionModule::instance()->resetWifiCommInterface(index);
+}
 void Interaction::setIfEdgeTest(bool ifEdgeTest) {
     VisionModule::instance()->setIfEdgeTest(ifEdgeTest);
 }
@@ -114,10 +117,10 @@ void Interaction::controlProcess(int index, bool state) {
 }
 bool Interaction::connectRadio(bool sw, int id, int frq) {
     if(sw) {
-        ZCommunicator::instance()->disconnectMedusa(id);
-        ZCommunicator::instance()->connectMedusa(id);
-        ZSS::ZActionModule::instance()->disconnectRadio(id);
-        return ZSS::ZActionModule::instance()->connectRadio(id, frq);
+        auto res = ZCommunicator::instance()->disconnectMedusa(id);
+        res = res && ZSS::ZActionModule::instance()->disconnectRadio(id);
+        res = res && ZCommunicator::instance()->connectMedusa(id);
+        return res && ZSS::ZActionModule::instance()->connectRadio(id, frq);
     } else {
 //        return ZSS::ZActionModule::instance()->disconnectRadio(id);
     }
@@ -283,24 +286,130 @@ void Interaction::kill() {
     killTask.execute(athena);
     killTask.close();
 }
-bool Interaction::connectSerialPort(bool sw){
+bool Interaction::connectSerialPort(bool sw,int team){
     if(sw){
-        return ZSS::NActionModule::instance()->init();
+        return ZSS::NActionModule::instance()->init(team);
     }
-    return ZSS::NActionModule::instance()->closeSerialPort();
+    return ZSS::NActionModule::instance()->closeSerialPort(team);
 }
 
-bool Interaction::changeSerialFrequency(int frequency){
-    return ZSS::NActionModule::instance()->changeFrequency(frequency);
+bool Interaction::changeSerialFrequency(int frequency,int team){
+    return ZSS::NActionModule::instance()->changeFrequency(frequency,team);
 }
 
-bool Interaction::changeSerialPort(int index){
-    return ZSS::NActionModule::instance()->changePorts(index);
+bool Interaction::changeSerialPort(int index,int team){
+    return ZSS::NActionModule::instance()->changePorts(index,team);
 }
 
 QStringList Interaction::getSerialPortsList(){
     return ZSS::NActionModule::instance()->updatePortsList();
 }
-int Interaction::getFrequency(){
-    return ZSS::NActionModule::instance()->getFrequency();
+int Interaction::getFrequency(int team){
+    return ZSS::NActionModule::instance()->getFrequency(team);
 }
+void Interaction::changeAddress(int team, int index){
+    ZSS::ZActionModule::instance()->changeAddress(team,index);
+}
+QStringList Interaction::getAllAddress(){
+    return ZSS::ZActionModule::instance()->getAllAddress();
+}
+QString Interaction::getRealAddress(int index){
+    return ZSS::ZActionModule::instance()->getRealAddress(index);
+};
+void Interaction::setSerial24L01Car(int index, bool checked){
+    ZSS::ZParamManager::instance()->changeParam(QString("Serial2401Car/%1_car").arg(index),checked);
+    if(checked){
+        //qDebug() << "viperDebug :" << "serial_car :" << index <<   "connect";
+        ZSS::ZActionModule::instance()->setcar_varity(index,ZSS::CommType::SERIAL_24L01);
+        ZSS::ZParamManager::instance()->changeParam(QString("UDP2401Car/%1_car").arg(index),false);
+        ZSS::ZParamManager::instance()->changeParam(QString("UDPWiFiCar/%1_car").arg(index),false);
+    }
+    else if (ZSS::ZActionModule::instance()->getcar_varity(index) == ZSS::CommType::SERIAL_24L01){
+        ZSS::ZActionModule::instance()->setcar_varity(index,ZSS::CommType::DEFAULT);
+        //qDebug() << "viperDebug :" << "serial_car :" << index <<  "disconnect";
+    }
+}
+bool Interaction::getSerial24L01Car(int index){
+    bool res;
+    ZSS::ZParamManager::instance()->loadParam(res,QString("Serial2401Car/%1_car").arg(index));
+    return res;
+}
+void Interaction::setUDP24L01Car(int index, bool checked){
+    ZSS::ZParamManager::instance()->changeParam(QString("UDP2401Car/%1_car").arg(index),checked);
+    if(checked){
+        //qDebug() << "viperDebug :" << "UDP2401_car :" << index <<   "connect";
+        ZSS::ZActionModule::instance()->setcar_varity(index,ZSS::CommType::UDP_24L01);
+        ZSS::ZParamManager::instance()->changeParam(QString("Serial2401Car/%1_car").arg(index),false);
+        ZSS::ZParamManager::instance()->changeParam(QString("UDPWiFiCar/%1_car").arg(index),false);
+    }
+    else if (ZSS::ZActionModule::instance()->getcar_varity(index) == ZSS::CommType::UDP_24L01){
+        ZSS::ZActionModule::instance()->setcar_varity(index,ZSS::CommType::DEFAULT);
+        //qDebug() << "viperDebug :" << "UDP2401_car :" << index <<  "disconnect";
+    }
+}
+bool Interaction::getUDP24L01Car(int index){
+    bool res;
+    ZSS::ZParamManager::instance()->loadParam(res,QString("UDP2401Car/%1_car").arg(index));
+    return res;
+}
+void Interaction::setUDPWiFiCar(int index, bool checked){
+    ZSS::ZParamManager::instance()->changeParam(QString("UDPWiFiCar/%1_car").arg(index),checked);
+    if(checked){
+        //qDebug() << "viperDebug :" << "UDPWiFiCar :" << index <<   "connect";
+        ZSS::ZActionModule::instance()->setcar_varity(index,ZSS::CommType::UDP_WIFI);
+        ZSS::ZParamManager::instance()->changeParam(QString("UDP2401Car/%1_car").arg(index),false);
+        ZSS::ZParamManager::instance()->changeParam(QString("Serial2401Car/%1_car").arg(index),false);
+    }
+    else if (ZSS::ZActionModule::instance()->getcar_varity(index) == ZSS::CommType::UDP_WIFI){
+        //qDebug() << "viperDebug :" << "UDPWiFiCar :" << index <<  "disconnect";
+        ZSS::ZActionModule::instance()->setcar_varity(index,ZSS::CommType::DEFAULT);
+    }
+}
+bool Interaction::getUDPWiFiCar(int index){
+    bool res;
+    ZSS::ZParamManager::instance()->loadParam(res,QString("UDPWiFiCar/%1_car").arg(index));
+    return res;
+}
+bool Interaction::defaultCar(int index){
+    return (getUDP24L01Car(index) || getUDPWiFiCar(index)) ? false : true;
+}
+bool Interaction::checkedChange(int index,int type,bool checked){
+    if(type == ZSS::CommType::SERIAL_24L01){
+            bool res1 = getUDPWiFiCar(index),res2 = getUDP24L01Car(index),res3 = checked;
+            if(!res1 && !res2 && checked==false) res3 = true;
+            return res3;
+    }else if(type == ZSS::CommType::UDP_24L01){
+            bool res1 = getSerial24L01Car(index),res2 = getUDPWiFiCar(index),res3 = checked;
+            if(!res1 && !res2 && checked==false) res3 = true;
+            return res3;
+    }else if(type == ZSS::CommType::UDP_WIFI){
+            bool res1 = getSerial24L01Car(index),res2 = getUDP24L01Car(index),res3 = checked;
+            if(!res1 && !res2 && checked==false) res3 = true;
+            return res3;
+    }
+}
+QStringList Interaction::getAllCarChoose(){
+    return ZSS::ZActionModule::instance()->getAllCarChoose();
+}
+void Interaction::changeUnityCarVariaty(int index){
+    if(index == ZSS::CommType::SERIAL_24L01){
+        for(int i = 0;i < PARAM::ROBOTNUM; i++){
+            setSerial24L01Car(i,true);
+        }
+    }else if(index == ZSS::CommType::UDP_24L01){
+        for(int i = 0;i < PARAM::ROBOTNUM; i++){
+            setUDP24L01Car(i,true);
+        }
+    }else if(index == ZSS::CommType::UDP_WIFI){
+        for(int i = 0;i < PARAM::ROBOTNUM; i++){
+            setUDPWiFiCar(i,true);
+        }
+    }
+}
+//QString Interaction::getCurrentPort(int team){
+//    return ZSS::NActionModule::instance()->getCurrentPort();
+//}
+//void Interaction::setCanStart(){
+//    ZSS::NActionModule::instance()->setcanstart(true);
+//}
+

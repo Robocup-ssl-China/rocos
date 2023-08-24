@@ -42,7 +42,7 @@ namespace PlayerRole{
     extern CPlayerTask* makeItSmartGoto(const int num, const CGeoPoint& target, const double dir, const CVector& vel, const double rotVel, const double maxAcc, const double maxRotAcc, const double maxSpeed = 0, const double maxRotSpeed = 0, const int flags = 0);
 
     extern CPlayerTask* makeItRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags = 0);
-    extern CPlayerTask* makeItOpenRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags = 0);
+    extern CPlayerTask* makeItOpenRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags = 0, bool needReport = false);
 }
 
 #endif // _TASK_FACTORY_V2_H_
