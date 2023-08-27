@@ -213,7 +213,15 @@ void ActionModule::n_mcRecvData(){
         }
         //qDebug() << QString::fromStdString(mc_status.DebugString());
         int id = mc_status.robot_id();
-        int team = ZSS::NActionModule::instance()->get_team();
+        int team = -1;
+        if(mc_status.team() == ZSS::New::Team::BLUE){
+            team = PARAM::BLUE;
+        }
+        else if(mc_status.team() == ZSS::New::Team::YELLOW){
+            team = PARAM::YELLOW;
+        }else{
+            continue;
+        }
         if(team >= 0){
             const auto ip = source.toString();//QString::fromStdString(mc_status.ip());
             if (ip != QString::fromStdString(mc_status.ip())){

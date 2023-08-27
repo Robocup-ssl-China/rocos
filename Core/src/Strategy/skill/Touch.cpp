@@ -4,6 +4,7 @@
 #include "WorldDefine.h"
 #include "VisionModule.h"
 #include "staticparams.h"
+#include "KickStatus.h"
 namespace{
     const CGeoPoint THEIR_GOAL = CGeoPoint(PARAM::Field::PITCH_LENGTH/2,0);
     bool DEBUG_SWITCH;
@@ -18,7 +19,7 @@ void CTouch::plan(const CVisionModule* pVision){
     const CGeoPoint target = task().player.pos;
     const bool useInter = task().player.is_specify_ctrl_method;
     const int runner = task().executor;
-    auto taskFlag = task().player.flag;
+    auto taskFlag = task().player.flag | PlayerStatus::DRIBBLING | PlayerStatus::NOT_AVOID_PENALTY;
     const PlayerVisionT& me = pVision->ourPlayer(runner);
     const auto mousePos = me.Pos() + Utils::Polar2Vector(PARAM::Vehicle::V2::PLAYER_CENTER_TO_BALL_CENTER,me.Dir());
     const MobileVisionT& ball = pVision->ball();
@@ -44,6 +45,8 @@ void CTouch::plan(const CVisionModule* pVision){
         taskFlag |= PlayerStatus::DODGE_BALL;
     }
 
+
+    KickStatus::Instance()->setKick(runner,6000);
 
     TaskT newTask(task());
     newTask.player.pos = targetPos;

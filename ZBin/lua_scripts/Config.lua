@@ -10,10 +10,10 @@ DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 
-gTestPlay = "ZJRoboCon2023TC"
+gTestPlay = "TestSkill"
 
 gRoleFixNum = {
-        ["Kicker"]   = {},
+        ["Kicker"]   = {4},
         ["Goalie"]   = {},
         ["Tier"]     = {},
 }
@@ -79,6 +79,7 @@ gTestPlayTable = {
         "Test/TestDribbleAndKick",
         "Test/RunMilitaryBoxing",
         "Test/TestTuningPID",
+        "Test/TestCarMotion"
 }
 gAutoRefTable = {
         "Autoref/ZJRoboCon2023TC"

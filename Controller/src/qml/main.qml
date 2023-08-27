@@ -20,6 +20,9 @@ ApplicationWindow{
     id:window;
     Client.Serial { id : serial; }
     Client.Translator{ id : translator; }
+    Client.Settings { id: settings; }
+    Client.Udp24L01 { id: udp24l01; }
+    Client.UdpWiFi { id: udpwifi; }
     property bool useGamepad:false;
     Timer{
         id:timer;
@@ -30,7 +33,13 @@ ApplicationWindow{
             if(switchControl.checked)
                 crazyShow.updateFromGamepad();
             crazyShow.updateCommand();//调用serial.updateCommandParams()
-            serial.sendCommand();//把数据发出去
+            if(settings.getCurrentComm() === "Serial_24L01"){
+                serial.sendCommand();//把数据发出去
+            }else if(settings.getCurrentComm() === "UDP_24L01"){
+                udp24l01.sendCommand();
+            }else{
+                udpwifi.sendCommand();
+            }
         }
     }
     Column{
@@ -38,7 +47,7 @@ ApplicationWindow{
         Rectangle{
             id : radio;
             width:parent.width;
-            height:380;
+            height:400;
             color:"transparent";
             Rectangle{
                 width:parent.width;
@@ -76,32 +85,130 @@ ApplicationWindow{
                             }
                         }
                         ZText{
-                            text: qsTr(" ");
+                            text: qsTr("Comm Type");
                         }
-                        ZText{
-                            text: qsTr(" ");
+                        ComboBox{
+                            model: settings.getCommunicationList();
+                            onActivated: settings.changeCommunication(index);
+                            width: parent.itemWidth;
                         }
                         //端口相关
                         ZText{
                             text: qsTr("Ports")+ translator.emptyString;
+                            Timer{
+                                interval: 100;
+                                repeat: true;
+                                running: true;
+                                onTriggered: {
+                                    if(settings.getCurrentComm() === "Serial_24L01"){
+                                        parent.text = qsTr("Ports")+ translator.emptyString;
+                                    }else if(settings.getCurrentComm() === "UDP_24L01"){
+                                        parent.text = qsTr("Address")+ translator.emptyString;
+                                    }else{
+                                        parent.text = qsTr("Interface")+ translator.emptyString;
+                                    }
+                                }
+                            }
                             width:parent.itemWidth;
                         }
                         ComboBox{
-                            model:serial.getCrazySetting(0);
-                            currentIndex : serial.getDefaultIndex(0);
-                            onActivated: serial.sendCrazySetting(0,index);
-                            width:parent.itemWidth;
+                            model: {
+                                if(settings.getCurrentComm() === "Serial_24L01"){
+                                    serial.getCrazySetting(0);
+                                }else if(settings.getCurrentComm() === "UDP_24L01"){
+                                    udp24l01.getCrazySetting(0);
+                                }else{
+                                    udpwifi.getInterfaces();
+                                }
+                            }
+                            //currentIndex : serial.getDefaultIndex(0);
+                            onActivated: {
+                                if(settings.getCurrentComm() === "Serial_24L01"){
+                                    serial.sendCrazySetting(0,index)
+                                }else if(settings.getCurrentComm() === "UDP_24L01"){
+                                    udp24l01.sendCrazySetting(0,index);
+                                }else{
+                                    udpwifi.changeActionWifiCommInterface(index);
+                                }
+                            }
+                            width:130;
+                            Timer{
+                                interval:200;//200ms启动一次
+                                running:true;
+                                repeat:true;
+                                onTriggered: {
+                                    udpwifi.updateInterfaces();
+                                    if(settings.getCurrentComm() === "Serial_24L01"){
+                                      parent.model = serial.getCrazySetting(0);
+                                      serial.sendCrazySetting(0,parent.currentIndex)
+                                    }else if(settings.getCurrentComm() === "UDP_24L01"){
+                                      parent.model = udp24l01.getCrazySetting(0);
+                                      udp24l01.sendCrazySetting(0,parent.currentIndex);
+                                    }else{
+                                      parent.model = udpwifi.getInterfaces();
+                                      if(parent.currentIndex >= 0)
+                                          udpwifi.changeActionWifiCommInterface(parent.currentIndex);
+                                    }
+                                }
+                            }
                         }
                         //频率相关
                         ZText{
                             text: qsTr("Frequency")+ translator.emptyString;
+                            Timer{
+                                interval: 100;
+                                repeat: true;
+                                running: true;
+                                onTriggered: {
+                                    if(settings.getCurrentComm() === "UDP_WIFI"){
+                                        parent.text = qsTr("IP")+ translator.emptyString;
+                                    }else{
+                                        parent.text = qsTr("Frequency")+ translator.emptyString;
+                                    }
+                                }
+                            }
                             width:parent.itemWidth;
                         }
                         ComboBox{
-                            model:serial.getCrazySetting(1);
-                            currentIndex : serial.getDefaultIndex(1);
-                            onActivated: serial.sendCrazySetting(1,index);
+                            id:frequency;
+                            model: {
+                                if(settings.getCurrentComm() === "Serial_24L01"){
+                                    serial.getCrazySetting(1)
+                                } else if(settings.getCurrentComm() === "UDP_24L01"){
+                                    udp24l01.getCrazySetting(1);
+                                }else{
+                                    udpwifi.getipList()
+                                }
+                            }
+                            //currentIndex : serial.getDefaultIndex(1);
+                            onActivated:{
+                                if(settings.getCurrentComm() === "Serial_24L01") {
+                                    serial.sendCrazySetting(1,index)
+                                }else if(settings.getCurrentComm() === "UDP_24L01"){
+                                    udp24l01.sendCrazySetting(1,index);
+                                }else{
+                                    udpwifi.sendControlIP(index);
+                                }
+                            }
                             width:parent.itemWidth;
+                            Timer{
+                                interval: 200;
+                                running: true;
+                                repeat: true;
+                                onTriggered: {
+                                    if(settings.getCurrentComm() === "Serial_24L01"){
+                                         parent.model = serial.getCrazySetting(1);
+                                         serial.sendCrazySetting(1,parent.currentIndex)
+                                    } else if(settings.getCurrentComm() === "UDP_24L01"){
+                                         parent.model = udp24l01.getCrazySetting(1);
+                                         udp24l01.sendCrazySetting(1,parent.currentIndex);
+                                    }else{
+                                         parent.model =  udpwifi.getipList();
+                                         //udpwifi.initInterface();
+                                        // udpwifi.sendControlIP(parent.currentIndex);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -119,10 +226,18 @@ ApplicationWindow{
                         if(ifConnected){
                             timer.stop();
                             if(crazyStart.ifStarted) crazyStart.handleClickEvent();
-                            serial.closeSerialPort();
+                            if(settings.getCurrentComm() === "Serial_24L01"){
+                                serial.closeSerialPort();
+                            }
                         }else{
-                            serial.openSerialPort();
-                            serial.sendStartPacket();
+                            if(settings.getCurrentComm() === "Serial_24L01"){
+                                serial.openSerialPort();
+                                serial.sendStartPacket();
+                            }else if(settings.getCurrentComm() === "UDP_24L01"){
+                                udp24l01.sendStartPacket(frequency.currentIndex);
+                            }else{
+                                udpwifi.sendControlIP(frequency.currentIndex);
+                            }
                         }
                         ifConnected = !ifConnected;
                     }
@@ -169,8 +284,8 @@ ApplicationWindow{
 
                         ZText{ text:qsTr("Robot") + translator.emptyString }
                         //最多12辆车
-                        SpinBox{ minimumValue:0; maximumValue:15; value:parent.robotID; width:parent.itemWidth
-                            onEditingFinished:{parent.robotID = value}}
+                        SpinBox{ minimumValue:0; maximumValue:15; value: parent.robotID; width:parent.itemWidth
+                            onEditingFinished:{parent.robotID = settings.getCurrentComm() === "UDP_WIFI"? udpwifi.getControlId(): value} Timer{ interval: 100; running: true; repeat: true;onTriggered: {parent.value = settings.getCurrentComm() === "UDP_WIFI"? udpwifi.getControlId(): parent.value;}} }
                         ZText{ text:"Stop" }
                         //有用吗？
                         Button{ text:qsTr("[Space]") + translator.emptyString;width:parent.itemWidth
@@ -320,7 +435,13 @@ ApplicationWindow{
                         }
                         //serial.updateCommandParams在C++中实现
                         function updateCommand(){
-                            serial.updateCommandParams(crazyShow.robotID,crazyShow.velX,crazyShow.velY,crazyShow.velR,crazyShow.dribble,crazyShow.dribbleLevel,crazyShow.mode,crazyShow.shoot,crazyShow.power);
+                            if(settings.getCurrentComm() === "Serial_24L01"){
+                                serial.updateCommandParams(crazyShow.robotID,crazyShow.velX,crazyShow.velY,crazyShow.velR,crazyShow.dribble,crazyShow.dribbleLevel,crazyShow.mode,crazyShow.shoot,crazyShow.power);
+                            }else if(settings.getCurrentComm() === "UDP_24L01") {
+                                udp24l01.updateCommandParams(crazyShow.robotID,crazyShow.velX,crazyShow.velY,crazyShow.velR,crazyShow.dribble,crazyShow.dribbleLevel,crazyShow.mode,crazyShow.shoot,crazyShow.power);
+                            }else{
+                                udpwifi.updateCommandParams(crazyShow.robotID,crazyShow.velX,crazyShow.velY,crazyShow.velR,crazyShow.dribble,crazyShow.dribbleLevel,crazyShow.mode,crazyShow.shoot,crazyShow.power);
+                            }
                         }
                         function updateFromGamepad(){
                             crazyShow.velX = -parseInt(gamepad.axisLeftY*10)/10.0*crazyShow.m_VEL;
@@ -587,10 +708,10 @@ ApplicationWindow{
                 }
             }
 
-            Connections {
-                target: GamepadManager
-                onGamepadConnected: gamepad.deviceId = deviceId
-            }
+//            Connections {
+//                target: GamepadManager
+//                onGamepadConnected: gamepad.deviceId = deviceId
+//            }
 
             Gamepad {
                 id: gamepad

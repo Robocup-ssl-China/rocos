@@ -8,18 +8,31 @@ TARGET = CrazyNaN
 
 RESOURCES += qml.qrc
 
+LIBS +=\
+-lprotobuf
+
 HEADERS += \
     $$PWD/src/radiopacket.h \
     $$PWD/src/serialobject.h \
     $$PWD/src/singleton.hpp \
     $$PWD/src/lib/crc/crc.h \
     $$PWD/src/translation.hpp \
+    $$PWD/src/settings.hpp \
+    $$PWD/src/udp24l01object.h \
+    $$PWD/src/lib/udp24l01object.h \
+    $$PWD/src/lib/share/cpp/zss_cmd.pb.h \
+    $$PWD/src/lib/share/cpp/zss_cmd_type.pb.h \
+    $$PWD/src/udpwifiobject.h
 
 SOURCES += \
     $$PWD/src/main.cpp \
     $$PWD/src/radiopacket.cpp \
     $$PWD/src/serialobject.cpp \
     $$PWD/src/lib/crc/crc.cpp \
+    $$PWD/src/udp24l01object.cpp \
+    $$PWD/src/lib/share/cpp/zss_cmd.pb.cc \
+    $$PWD/src/lib/share/cpp/zss_cmd_type.pb.cc \
+    $$PWD/src/udpwifiobject.cpp
 
 TRANSLATIONS = t1_zh.ts
 
@@ -54,3 +67,8 @@ macx {
     system(lrelease t1_zh.ts)
     copyToDestdir($$PWD/t1_zh.qm)
 }
+
+DISTFILES += \
+    src/lib/share/auto.sh \
+    src/lib/share/zss_cmd.proto \
+    src/lib/share/zss_cmd_type.proto

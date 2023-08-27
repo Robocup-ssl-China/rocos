@@ -4,12 +4,14 @@
 #include <QSerialPort>
 #include <QUdpSocket>
 #include <QtDebug>
-class RadioPacket
+class RadioPacket : public QObject
 {
 public:
-    explicit RadioPacket(QSerialPort* serialPtr);
-    bool sendStartPacket();
-    bool sendCommand();
+    explicit RadioPacket(QSerialPort* serialPtr,QObject *parent,QUdpSocket* udpSender,QUdpSocket* udpReceiver);
+    bool sendStartPacketSerial();
+    void sendStartPacketUdp24L01(int frequency);
+    bool sendCommandNJ();
+    bool sendCommandUDP24L01();
     void updateCommandParams(int robotID,int velX,int velY,int velR,bool ctrl,int ctrlLevel,bool mode,bool shoot,int power){
         this->robotID = robotID;
         this->velX = velX; this->velY = velY; this->velR = velR;
@@ -17,6 +19,7 @@ public:
         this->shootMode = mode;this->shoot = shoot; this->shootPowerLevel = power;
         this->ctrlPowerLevel = ctrlLevel;
     }
+    void updateAddress(const QHostAddress& sendaddress,const QHostAddress& receiveAddress);
     void updateFrequency(int);
 private:
     static const int TRANSMIT_PACKET_SIZE = 25;
@@ -26,9 +29,12 @@ private:
     QByteArray transmitPacket;
     QSerialPort* serialPtr;
     int frequency;
-    bool encode();
+    QUdpSocket* udpSender,* udpReceiver;
+    bool encodenj();
+    bool encodeudp24l01();
+    QHostAddress sendaddress, receiveAddress;
 private:
-    QUdpSocket sendSocket;
+    QUdpSocket sendSocket,receiveSocket;
     bool shoot;
     bool ctrl;
     bool shootMode;//false is "flat shoot" and true is "lift shoot".

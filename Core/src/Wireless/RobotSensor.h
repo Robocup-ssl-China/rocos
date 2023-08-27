@@ -84,6 +84,10 @@ public:
                 robotMsg[i].fraredOn = 0;
                 robotMsg[i].fraredOff = robotMsg[i].fraredOff >= MAX_FRARED ? MAX_FRARED : robotMsg[i].fraredOff + 1;
             }
+            if(robotMsg[i].fraredOn){
+                GDebugEngine::Instance()->gui_debug_arc(robotMsg[i].dribblePoint,1000,0,360,COLOR_PURPLE);
+                GDebugEngine::Instance()->gui_debug_msg(robotMsg[i].dribblePoint,QString::number(i).toLatin1(),COLOR_PURPLE);
+            }
             robotMsg[i]._mutex.unlock();
         }
     }
