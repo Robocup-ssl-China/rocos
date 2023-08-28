@@ -6,7 +6,7 @@
 #include <QUdpSocket>
 #include <QNetworkInterface>
 #include <QDateTime>
-#include "lib/share/cpp/zss_cmd.pb.h"
+#include "zss_cmd.pb.h"
 
 class udpwifiobject : public QObject
 {
