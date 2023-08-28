@@ -795,7 +795,7 @@ void encodeWifiCmd(ZSS::New::Robot_Command& cmd, int team){
    // }
      if(cmd.dribble_spin()>0.1) cmd.set_dribble_spin(3.0);
      cmd.set_kick_discharge_time(discharge_time*50);
-     cmd.set_desire_power(discharge_time/10);
+     cmd.set_desire_power(discharge_time);
         //AutoShootFit::instance()->getKickPower(discharge_time, power);
     //cmd.set_kick_discharge_time(discharge_time);
     //AutoShootFit::instance()->getKickPower(discharge_time, power);
