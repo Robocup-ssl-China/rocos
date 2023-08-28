@@ -6,13 +6,18 @@
 #include <iostream>
 #include "serialobject.h"
 #include "radiopacket.h"
+#include "udp24l01object.h"
+#include "udpwifiobject.h"
+#include "settings.hpp"
 #include "translation.hpp"
 using namespace std;
-
 
 void qmlRegister(){
     qmlRegisterType<SerialObject>("Client.Component", 1, 0, "Serial");
     qmlRegisterType<TranslationTest>("Client.Component", 1, 0, "Translator");
+    qmlRegisterType<SettingsObject>("Client.Component", 1, 0, "Settings");
+    qmlRegisterType<udp24l01object>("Client.Component", 1, 0, "Udp24L01");
+    qmlRegisterType<udpwifiobject>("Client.Component", 1, 0, "UdpWiFi");
 }
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

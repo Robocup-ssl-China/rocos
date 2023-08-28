@@ -1,4 +1,4 @@
-#include "communicator.h"
+﻿#include "communicator.h"
 #include "staticparams.h"
 #include <QNetworkInterface>
 #include <QHostAddress>
@@ -38,6 +38,7 @@ Communicator::Communicator(QObject *parent) : QObject(parent) {
     }
 //    QObject::connect(ZSS::ZRemoteSimModule::instance(), SIGNAL(receiveRemoteInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     QObject::connect(ZSS::NActionModule::instance(), SIGNAL(receiveRobotInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
+    QObject::connect(ZSS::ZActionModule::instance(), SIGNAL(receiveRobotInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     for(int i = 0; i < PARAM::TEAMS; i++) {
 //        connect(&receiveSocket[i], &QUdpSocket::readyRead, [ = ]() {
 //            receiveCommand(i);
@@ -106,13 +107,11 @@ void Communicator::receiveCommand(int t) {
 }
 
 void Communicator::sendCommand(int team, int id) {
-//    qDebug() << "send";
     GlobalData::instance()->robotInfoMutex.lock();
     bool infrared = GlobalData::instance()->robotInformation[team][id].infrared;
     bool flat = GlobalData::instance()->robotInformation[team][id].flat;
     bool chip = GlobalData::instance()->robotInformation[team][id].chip;
     GlobalData::instance()->robotInfoMutex.unlock();
-    qDebug() << "1";
     ZSS::Protocol::Robot_Status robot_status;
     robot_status.set_robot_id(id);
     robot_status.set_infrared(infrared);

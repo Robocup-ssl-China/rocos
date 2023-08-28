@@ -12,16 +12,17 @@ class SerialObject : public QObject
     Q_OBJECT
 public:
     SerialObject(QObject *parent = 0);
+    ~SerialObject();
     Q_INVOKABLE QString getName(int itemIndex) const;
-    Q_INVOKABLE QStringList getCrazySetting(int itemIndex) const;
+    Q_INVOKABLE QStringList getCrazySetting(int itemIndex) ;
     Q_INVOKABLE void sendCrazySetting(int itemIndex,int index);
     Q_INVOKABLE int getDefaultIndex(int itemIndex) const;
     Q_INVOKABLE void openSerialPort();
     Q_INVOKABLE void closeSerialPort();
     Q_INVOKABLE void sendStartPacket();
-    Q_INVOKABLE void sendCommand(){radioPacket.sendCommand();}
+    Q_INVOKABLE void sendCommand(){radioPacket->sendCommandNJ();}
     Q_INVOKABLE void updateCommandParams(int robotID,int velX,int velY,int velR,bool dribble,int dribbleLevel,bool mode,bool shoot,int power){
-        radioPacket.updateCommandParams(robotID,velX,velY,velR,dribble,dribbleLevel,mode,shoot,power);
+        radioPacket->updateCommandParams(robotID,velX,velY,velR,dribble,dribbleLevel,mode,shoot,power);
     }
 private:
     QStringList ports;
@@ -39,7 +40,8 @@ private:
     QByteArray currentIndex;
     QByteArray defaultIndex;
     QSerialPort serial;
-    RadioPacket radioPacket;
+    QUdpSocket *udpSender,*udpReceiver;
+    RadioPacket *radioPacket;
 };
 
 #endif // SERIALOBJECT_H

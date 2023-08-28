@@ -1,8 +1,12 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include "serialobject.h"
-SerialObject::SerialObject(QObject *parent):QObject(parent),radioPacket(&serial){
+SerialObject::SerialObject(QObject *parent):QObject(parent){
     // add needed settings
     char tempIndex[] = {-1,8};
+
+    udpSender = new QUdpSocket();
+    udpReceiver = new QUdpSocket();
+    radioPacket = new RadioPacket(&serial,this,udpSender,udpReceiver);
 
     const auto& ports = QSerialPortInfo::availablePorts();
     for(const auto &port : ports){
@@ -21,24 +25,33 @@ SerialObject::SerialObject(QObject *parent):QObject(parent),radioPacket(&serial)
     dataBits.append(QSerialPort::Data8);        stringDataBits.append("7");
     parity.append(QSerialPort::NoParity);       stringParity.append("OddParity");
     stopBits.append(QSerialPort::TwoStop);      stringStopBits.append("Two");
-    frequency.append(0);                        stringFrequency.append("0");
-    frequency.append(1);                        stringFrequency.append("1");
-    frequency.append(2);                        stringFrequency.append("2");
-    frequency.append(3);                        stringFrequency.append("3");
-    frequency.append(4);                        stringFrequency.append("4");
-    frequency.append(5);                        stringFrequency.append("5");
-    frequency.append(6);                        stringFrequency.append("6");
-    frequency.append(7);                        stringFrequency.append("7");
-    frequency.append(8);                        stringFrequency.append("8");
-    frequency.append(9);                        stringFrequency.append("9");
+    for(int i = 0; i < 16;++i){
+        frequency.append(i);
+    }
+    for(int i = 0; i < 16;++i){
+        stringFrequency.append(QString::number(i));
+    }
 }
+
+SerialObject::~SerialObject(){
+    delete udpSender;
+    delete udpReceiver;
+}
+
 QString SerialObject::getName(int itemIndex) const{
     return settingsName[itemIndex];
 }
-QStringList SerialObject::getCrazySetting(int itemIndex) const{
+QStringList SerialObject::getCrazySetting(int itemIndex){
     switch(itemIndex){
-    case 0:
-        return ports;
+    case 0:{
+        this->ports.clear();
+        const auto& ports1 = QSerialPortInfo::availablePorts();
+        for(const auto &port : ports1){
+            this->ports.append(port.portName());
+            //tempIndex[0]++;
+        }
+            return ports;
+        }
     case 1:
         return stringFrequency;
     default:
@@ -70,7 +83,6 @@ void SerialObject::openSerialPort(){
 
     if (serial.open(QIODevice::ReadWrite)) {
         qDebug() << "SerialPort Connected...";
-
     } else {
         qDebug() << "SerialPort connect failed..." << serial.error();
     }
@@ -83,6 +95,6 @@ void SerialObject::closeSerialPort(){
 }
 void SerialObject::sendStartPacket(){
     qDebug() << "Set Frequency... : " << frequency[currentIndex[1]];
-    radioPacket.updateFrequency(frequency[currentIndex[1]]);
-    radioPacket.sendStartPacket();
+    radioPacket->updateFrequency(frequency[currentIndex[1]]);
+    radioPacket->sendStartPacketSerial();
 }

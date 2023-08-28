@@ -130,9 +130,9 @@ void CCommandInterface::receiveInformation() {
             msg.chip_kick = robot_status.chip_kick() ? 5 : (msg.chip_kick);
             msg.flat_kick = robot_status.flat_kick() ? 5 : (msg.flat_kick);
             msg._mutex.unlock();
-//            qDebug() << address << udp_port << id << msg.infrared
-//                     << msg.chip_kick
-//                     << msg.flat_kick;
+            qDebug() << address << udp_port << id << msg.infrared
+                     << msg.chip_kick
+                     << msg.flat_kick;
         }
     }
 }

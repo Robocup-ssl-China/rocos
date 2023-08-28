@@ -34,7 +34,7 @@ QString radioSendAddress[PARAM::TEAMS] = {radioSendAddress2choose[0],radioSendAd
 QString radioReceiveAddress[PARAM::TEAMS] = {radioReceiveAddress2choose[0],radioReceiveAddress2choose[1]};
 // int blue_sender_interface,blue_receiver_interface,yellow_sender_interface,yellow_receiver_interface;
 std::thread* receiveThread = nullptr;
-std::thread* NreceiveThread = nullptr;
+//std::thread* NreceiveThread = nullptr;
 bool IS_SIMULATION;
 
 const int SERIAL_TRANSMIT_PACKET_SIZE = 25;
@@ -213,7 +213,15 @@ void ActionModule::n_mcRecvData(){
         }
         //qDebug() << QString::fromStdString(mc_status.DebugString());
         int id = mc_status.robot_id();
-        int team = ZSS::NActionModule::instance()->get_team();
+        int team = -1;
+        if(mc_status.team() == ZSS::New::Team::BLUE){
+            team = PARAM::BLUE;
+        }
+        else if(mc_status.team() == ZSS::New::Team::YELLOW){
+            team = PARAM::YELLOW;
+        }else{
+            continue;
+        }
         if(team >= 0){
             const auto ip = source.toString();//QString::fromStdString(mc_status.ip());
             if (ip != QString::fromStdString(mc_status.ip())){
@@ -528,22 +536,28 @@ void ActionModuleSerialVersion::setMedusaSettings(bool color,bool side){
 bool ActionModuleSerialVersion::init(int team){
     _team = team;
     QSerialPort &serial = (team == 1) ? y_serial : b_serial;
-    serial.setBaudRate(QSerialPort::Baud115200);
-    serial.setDataBits(QSerialPort::Data8);
-    serial.setParity(QSerialPort::NoParity);
-    serial.setStopBits(QSerialPort::OneStop);
-    connect(&serial, &QSerialPort::readyRead, this, &ActionModuleSerialVersion::readData);
-    if(serial.isOpen()){
-        serial.close();
+    if(serial.portName()==""){
+        serial.setBaudRate(QSerialPort::Baud115200);
+        serial.setDataBits(QSerialPort::Data8);
+        serial.setParity(QSerialPort::NoParity);
+        serial.setStopBits(QSerialPort::OneStop);
+        qDebug() << serial.portName().size();
+
+        connect(&serial, &QSerialPort::readyRead, this, &ActionModuleSerialVersion::readData);
+        if(serial.isOpen()){
+            serial.close();
+        }
+        if (serial.open(QIODevice::ReadWrite)) {
+            qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected... : " << serial.portName();
+            sendStartPacket(team);
+            qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected OK : " << serial.portName();
+            return true;
+        }
+        qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connect failed... : " << serial.portName();
+        return false;
+    }else{
+        return false;
     }
-    if (serial.open(QIODevice::ReadWrite)) {
-        qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected... : " << b_serial.portName();
-        sendStartPacket(team);
-        qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected OK : " << b_serial.portName();
-        return true;
-    }
-    qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connect failed... : " << b_serial.portName();
-    return false;
 }
 void ActionModuleSerialVersion::sendStartPacket(int team){
     int frequency = (team==1) ? yellow_frequency : blue_frequency;
@@ -583,7 +597,7 @@ void ActionModuleSerialVersion::sendStartPacket(int team){
 }
 bool ActionModuleSerialVersion::changePorts(int portNum,int team){
     QSerialPort &serial = (team == 1) ? y_serial : b_serial;
-    if(portNum < ports.size() && portNum >= 0){
+    if(portNum < ports.size() && portNum >= 0 && ports[portNum] !="ttyS0"){
         serial.setPortName(ports[portNum]);
         return true;
     }
@@ -622,26 +636,28 @@ void ActionModuleSerialVersion::sendLegacy(int t,const ZSS::Protocol::Robots_Com
     tx[0] = 0xff;
     //qDebug() << "color:" << _color;
     tx[21] = ((frequency&0x0f)<<4) | 0x07;
-    for(int i=0;i<PARAM::ROBOTMAXID;i++){
-        if(NJ_CMDS[i].valid){
-            if(count == 3){
-                serial.write(this->tx.data(),TRANSMIT_PACKET_SIZE);
-                serial.flush();
-                std::this_thread::sleep_for(std::chrono::milliseconds(4));
-//                qDebug() << tx.toHex();
-                tx.fill(0x00);
-                tx[0] = 0xff;
-                tx[21] = ((frequency&0x0f)<<4) | 0x07;
-                count = 0;
+    if(serial.isOpen()){
+        for(int i=0;i<PARAM::ROBOTMAXID;i++){
+            if(NJ_CMDS[i].valid){
+                if(count == 3){
+                    serial.write(this->tx.data(),TRANSMIT_PACKET_SIZE);
+                    serial.flush();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(4));
+    //                qDebug() << tx.toHex();
+                    tx.fill(0x00);
+                    tx[0] = 0xff;
+                    tx[21] = ((frequency&0x0f)<<4) | 0x07;
+                    count = 0;
+                }
+                if(ZSS::ZActionModule::instance()->getcar_varity(NJ_CMDS[i].id) == ZSS::CommType::UDP_24L01 || ZSS::ZActionModule::instance()->getcar_varity(NJ_CMDS[i].id) == ZSS::CommType::UDP_WIFI){
+                    continue;
+                }
+                encodeNJLegacy(NJ_CMDS[i],this->tx,count++);
             }
-            if(ZSS::ZActionModule::instance()->getcar_varity(NJ_CMDS[i].id) == ZSS::CommType::UDP_24L01 || ZSS::ZActionModule::instance()->getcar_varity(NJ_CMDS[i].id) == ZSS::CommType::UDP_WIFI){
-                continue;
-            }
-            encodeNJLegacy(NJ_CMDS[i],this->tx,count++);
         }
+        serial.write(this->tx.data(),TRANSMIT_PACKET_SIZE);
+        serial.flush();
     }
-    serial.write(this->tx.data(),TRANSMIT_PACKET_SIZE);
-    serial.flush();
 //    qDebug() << tx.toHex();
 
     for(int i=0;i<PARAM::ROBOTMAXID;i++){
@@ -651,19 +667,23 @@ void ActionModuleSerialVersion::sendLegacy(int t,const ZSS::Protocol::Robots_Com
 }
 bool ActionModuleSerialVersion::openSerialPort(int team){
     QSerialPort &serial = (team==1) ? y_serial : b_serial;
-    if (serial.open(QIODevice::ReadWrite)) {
-        qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected... : " << b_serial.portName();
-        qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected OK : " << b_serial.portName();
-        return true;
+    if(serial.portName().size()>0){
+        if (serial.open(QIODevice::ReadWrite)) {
+            qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected... : " << serial.portName();
+            qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected OK : " << serial.portName();
+            return true;
+        }
+        qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connect failed... : " << serial.portName();
+        return false;
+    }else{
+        return false;
     }
-    qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connect failed... : " << b_serial.portName();
-    return false;
 }
 bool ActionModuleSerialVersion::closeSerialPort(int team){
     QSerialPort &serial = team ? y_serial : b_serial;
     if (serial.isOpen()) {
         serial.close();
-        qDebug() << ((team == 1) ? "Yellow" : "Blue") <<"SerialPort Disconnected... : " << y_serial.portName();
+        qDebug() << ((team == 1) ? "Yellow" : "Blue") <<"SerialPort Disconnected... : " << serial.portName();
         return true;
     }
     return false;
@@ -775,7 +795,7 @@ void encodeWifiCmd(ZSS::New::Robot_Command& cmd, int team){
    // }
      if(cmd.dribble_spin()>0.1) cmd.set_dribble_spin(3.0);
      cmd.set_kick_discharge_time(discharge_time*50);
-     cmd.set_desire_power(discharge_time/10);
+     cmd.set_desire_power(discharge_time);
         //AutoShootFit::instance()->getKickPower(discharge_time, power);
     //cmd.set_kick_discharge_time(discharge_time);
     //AutoShootFit::instance()->getKickPower(discharge_time, power);
