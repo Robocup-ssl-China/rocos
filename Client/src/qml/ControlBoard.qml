@@ -690,43 +690,77 @@ Page{
                                 }
                             }
                         }
-                    }
                     Grid{
                         width:parent.width;
                         verticalItemAlignment: Grid.AlignVCenter;
                         horizontalItemAlignment: Grid.AlignHCenter;
-                        spacing: 0;
-                        columns:2;
-                        ComboBox{
-                            id:radioComboBox_blue;
-                            enabled: !control.radioConnect1;
-                            model:interaction.getSerialPortsList();
-                            onActivated: interaction.changeSerialPort(currentIndex,0);
-                            width:parent.width/2.0;
-                            height: 45;
-                            function updateModel(){
-                                model = interaction.getSerialPortsList();
-                                if(currentIndex >= 0)
-                                    interaction.changeSerialPort(currentIndex,0);
+                        spacing: -10;
+                        columnSpacing: 0;
+                        columns:1;
+                        Grid{
+                            width:parent.width;
+                            verticalItemAlignment: Grid.AlignVCenter;
+                            horizontalItemAlignment: Grid.AlignHCenter;
+                            spacing: 0;
+                            columnSpacing: 0;
+                            columns:2;
+                            ComboBox{
+                                id:radioComboBox_blue;
+                                enabled: !control.radioConnect1;
+                                model:interaction.getSerialPortsList();
+                                onActivated: interaction.changeSerialPort(currentIndex,0);
+                                width:parent.width/2.0;
+                                height: 45;
+                                function updateModel(){
+                                    model = interaction.getSerialPortsList();
+                                    if(currentIndex >= 0)
+                                        interaction.changeSerialPort(currentIndex,0);
+                                }
+                                Component.onCompleted: updateModel();
                             }
-                            Component.onCompleted: updateModel();
-                        }
-                        ComboBox{
-                            id:radioComboBox_yellow;
-                            enabled: !control.radioConnect2;
-                            model:interaction.getSerialPortsList();
-                            onActivated: interaction.changeSerialPort(currentIndex,1);
-                            width:parent.width/2.0;
-                            height: 45;
-                            function updateModel(){
-                                model = interaction.getSerialPortsList();
-                                if(currentIndex >= 0)
-                                    interaction.changeSerialPort(currentIndex,1);
+                            ComboBox{
+                                id:radioComboBox_yellow;
+                                enabled: !control.radioConnect2;
+                                model:interaction.getSerialPortsList();
+                                onActivated: interaction.changeSerialPort(currentIndex,1);
+                                width:parent.width/2.0;
+                                height: 45;
+                                function updateModel(){
+                                    model = interaction.getSerialPortsList();
+                                    if(currentIndex >= 0)
+                                        interaction.changeSerialPort(currentIndex,1);
+                                }
+                                Component.onCompleted: updateModel();
                             }
-                            Component.onCompleted: updateModel();
                         }
-
+                        Grid{
+                            id: radioControls;
+                            width:parent.width;
+                            verticalItemAlignment: Grid.AlignVCenter;
+                            horizontalItemAlignment: Grid.AlignHCenter;
+                            spacing: 0;
+                            columns:2;
+                            ZButton{
+                                width:parent.width/2.0;
+                                height: 40;
+                                icon.source:control.radioConnect1 ? "/source/connect.png" : "/source/disconnect.png";
+                                onClicked: {
+                                    control.radioConnect1 = !control.radioConnect1;
+                                    interaction.connectSerialPort(control.radioConnect1,0);
+                                }
+                            }
+                            ZButton{
+                                width:parent.width/2.0;
+                                height: 40;
+                                icon.source:control.radioConnect2 ? "/source/connect.png" : "/source/disconnect.png";
+                                onClicked: {
+                                    control.radioConnect2 = !control.radioConnect2;
+                                    interaction.connectSerialPort(control.radioConnect2,1);
+                                }
+                            }
+                        }
                     }
+                }
 //                    Grid{
 //                        width:parent.width;
 //                        verticalItemAlignment: Grid.AlignVCenter;
@@ -922,7 +956,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
-                                    interaction.connectSerialPort(control.medusaConnect,0)
+                                    //interaction.connectSerialPort(control.medusaConnect,0)
                                     interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
                                 }
                                 interaction.controlMedusa(control.medusaConnect)
@@ -937,7 +971,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
-                                    interaction.connectSerialPort(control.medusaConnect2,1)
+                                    //interaction.connectSerialPort(control.medusaConnect2,1)
                                     interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
                                 }
                                 interaction.controlMedusa2(control.medusaConnect2)

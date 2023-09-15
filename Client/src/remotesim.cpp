@@ -113,7 +113,7 @@ void RemoteSim::readBlueData() {
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(3));
         while(blueReceiveSocket.state() == QUdpSocket::BoundState && blueReceiveSocket.hasPendingDatagrams()) {
-            ZSS::Protocol::Robots_Status robotsPacket;
+            ZSS::New::Robots_Status robotsPacket;
             datagram.resize(blueReceiveSocket.pendingDatagramSize());
             blueReceiveSocket.readDatagram(datagram.data(), datagram.size());
             robotsPacket.ParseFromArray(datagram, datagram.size());
@@ -141,7 +141,7 @@ void RemoteSim::readYellowData() {
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(3));
         while(yellowReceiveSocket.state() == QUdpSocket::BoundState && yellowReceiveSocket.hasPendingDatagrams()) {
-            ZSS::Protocol::Robots_Status robotsPacket;
+            ZSS::New::Robots_Status robotsPacket;
             datagram.resize(yellowReceiveSocket.pendingDatagramSize());
             yellowReceiveSocket.readDatagram(datagram.data(), datagram.size());
             robotsPacket.ParseFromArray(datagram, datagram.size());
@@ -163,7 +163,7 @@ void RemoteSim::readYellowData() {
     }
 }
 
-void RemoteSim::sendSim(int t, ZSS::Protocol::Robots_Command& command) {
+void RemoteSim::sendSim(int t, ZSS::New::Robots_Command& command) {
     if(t != 0 && t != 1) {
         qDebug() << "Team ERROR in Simmodule !";
         return;
@@ -180,25 +180,25 @@ void RemoteSim::sendSim(int t, ZSS::Protocol::Robots_Command& command) {
         grsim_robots[id]->set_id(id);
         grsim_robots[id]->set_wheelsspeed(false);
         //set flatkick or chipkick
-        if (!commands.kick()) {
+        if (commands.kick_mode() == ZSS::New::Robot_Command_KickMode_CHIP) {
             grsim_robots[id]->set_kickspeedz(0);
-            grsim_robots[id]->set_kickspeedx(trans_length(commands.power()));
+            grsim_robots[id]->set_kickspeedx(trans_length(commands.desire_power()));
         } else {
             double radian = ZSS::Sim::CHIP_ANGLE * ZSS::Sim::PI / 180.0;
-            double vx = sqrt(trans_length(commands.power()) * ZSS::Sim::G / 2.0 / tan(radian));
+            double vx = sqrt(trans_length(commands.desire_power()) * ZSS::Sim::G / 2.0 / tan(radian));
             double vz = vx * tan(radian);
             grsim_robots[id]->set_kickspeedz(vx);
             grsim_robots[id]->set_kickspeedx(vz);
         }
 
         //set velocity and dribble
-        double vx = commands.velocity_x();
-        double vy = commands.velocity_y();
-        double vr = commands.velocity_r();
+        double vx = commands.cmd_vel().velocity_x();
+        double vy = commands.cmd_vel().velocity_y();
+        double vr = commands.cmd_vel().velocity_r();
         grsim_robots[id]->set_veltangent(trans_length(vx));
         grsim_robots[id]->set_velnormal(trans_length(vy));
         grsim_robots[id]->set_velangular(trans_vr(vr));
-        grsim_robots[id]->set_spinner(trans_dribble(commands.dribbler_spin()));
+        grsim_robots[id]->set_spinner(trans_dribble(commands.dribble_spin()));
     }
     int size = grsim_packet.ByteSize();
     QByteArray data(size, 0);

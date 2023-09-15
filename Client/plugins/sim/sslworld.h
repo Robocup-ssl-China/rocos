@@ -69,7 +69,7 @@ public:
     void sendVisionBuffer();
     bool visibleInCam(int id, double x, double y);
     int  robotIndex(int robot,int team);
-    void addRobotStatus(ZSS::Protocol::Robots_Status& robotsPacket, int robotID, int team, bool infrared, KickStatus kickStatus);
+    void addRobotStatus(ZSS::New::Robots_Status& robotsPacket, int robotID, int team, bool infrared, KickStatus kickStatus);
 
     ConfigWidget* cfg;
     PWorld* p;

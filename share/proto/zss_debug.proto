@@ -1,6 +1,6 @@
 syntax = "proto3";
 import "zss_geometry.proto";
-package ZSS.Protocol;
+package ZSS.New;
 
 message Debug_Robot{
 	Point pos = 1;

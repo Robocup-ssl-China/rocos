@@ -14,7 +14,7 @@
 #include "geometry.h"
 #include <QElapsedTimer>
 #include <thread>
-using namespace ZSS::Protocol;
+using namespace ZSS::New;
 namespace {
 const static float MIN_LENGTH = 500;//area length : mm
 Qt::KeyboardModifiers mouse_modifiers;

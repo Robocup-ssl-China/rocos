@@ -1,7 +1,7 @@
 # ChinaOpen SSL Code
 
 > RoboCup中国公开赛 小型组开源代码
-> iLoboke机器人请使用[v0.0.1](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.1)，目前版本存在回包的bug
+> iLoboke机器人请使用[v0.0.1](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.1)，目前版本已解决回包的bug
 ---
 ## 更新
 * latest
@@ -42,5 +42,7 @@ Linux使用发射机可能会遇到串口权限不足的问题
 ```bash
 sudo usermod -a -G dialout $USER
 ```
+
+* 解决
 
 执行上述语句后Log Out，再次进入可以获取权限

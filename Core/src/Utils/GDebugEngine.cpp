@@ -6,7 +6,7 @@
 #include "WorldModel.h"
 #include "parammanager.h"
 namespace{
-    ZSS::Protocol::Debug_Msgs guiDebugMsgs;
+    ZSS::New::Debug_Msgs guiDebugMsgs;
 }
 CGDebugEngine::CGDebugEngine(){
     ZSS::ZParamManager::instance()->loadParam(remote_debugger,"Alert/z_remoteADebugger",false);
@@ -29,13 +29,13 @@ void CGDebugEngine::gui_debug_x(const CGeoPoint& p, int debug_color,int RGB_valu
 }
 void CGDebugEngine::gui_debug_points(const std::vector<CGeoPoint> points, int debug_color,int RGB_value){
     debugMutex.lock();
-    ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_POINTS);
-    msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
+    ZSS::New::Debug_Msg* msg = guiDebugMsgs.add_msgs();
+    msg->set_type(ZSS::New::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_POINTS);
+    msg->set_color(ZSS::New::Debug_Msg_Color(debug_color));
     if(debug_color==COLOR_USE_RGB)  msg->set_rgb_value(RGB_value);
-    ZSS::Protocol::Debug_Points* debugPoints = msg->mutable_points();
+    ZSS::New::Debug_Points* debugPoints = msg->mutable_points();
     for (int i=0; i < points.size(); i++) {
-        ZSS::Protocol::Point* point = debugPoints->add_point();
+        ZSS::New::Point* point = debugPoints->add_point();
         if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT ){
             point->set_x(-points[i].x());
             point->set_y(-points[i].y());
@@ -49,12 +49,12 @@ void CGDebugEngine::gui_debug_points(const std::vector<CGeoPoint> points, int de
 }
 void CGDebugEngine::gui_debug_line(const CGeoPoint& p1, const CGeoPoint& p2, int debug_color,int RGB_value){
     debugMutex.lock();
-    ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_LINE);
-    msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
+    ZSS::New::Debug_Msg* msg = guiDebugMsgs.add_msgs();
+    msg->set_type(ZSS::New::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_LINE);
+    msg->set_color(ZSS::New::Debug_Msg_Color(debug_color));
     if(debug_color==COLOR_USE_RGB)  msg->set_rgb_value(RGB_value);
-    ZSS::Protocol::Debug_Line* line = msg->mutable_line();
-    ZSS::Protocol::Point
+    ZSS::New::Debug_Line* line = msg->mutable_line();
+    ZSS::New::Point
 		*pos1 = line->mutable_start(),
 		*pos2 = line->mutable_end();
 	if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT ){
@@ -74,17 +74,17 @@ void CGDebugEngine::gui_debug_line(const CGeoPoint& p1, const CGeoPoint& p2, int
 }
 void CGDebugEngine::gui_debug_arc(const CGeoPoint& p, double r, double start_angle, double span_angle, int debug_color,int RGB_value){
     debugMutex.lock();
-    ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_ARC);
-    msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
+    ZSS::New::Debug_Msg* msg = guiDebugMsgs.add_msgs();
+    msg->set_type(ZSS::New::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_ARC);
+    msg->set_color(ZSS::New::Debug_Msg_Color(debug_color));
     if(debug_color == COLOR_USE_RGB) {
            msg->set_rgb_value(RGB_value);
        }
-    ZSS::Protocol::Debug_Arc* arc = msg->mutable_arc();
+    ZSS::New::Debug_Arc* arc = msg->mutable_arc();
 	arc->set_start(start_angle);
     arc->set_span(span_angle);
-    ZSS::Protocol::Rectangle* rec = arc->mutable_rect();
-    ZSS::Protocol::Point
+    ZSS::New::Rectangle* rec = arc->mutable_rect();
+    ZSS::New::Point
 		*p1 = rec->mutable_point1(),
 		*p2 = rec->mutable_point2();
 	PosT center;
@@ -104,16 +104,16 @@ void CGDebugEngine::gui_debug_arc(const CGeoPoint& p, double r, double start_ang
 }
 void CGDebugEngine::gui_debug_triangle(const CGeoPoint& p1, const CGeoPoint& p2, const CGeoPoint& p3, int debug_color,int RGB_value){
     debugMutex.lock();
-    ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_POLYGON);
-    msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
+    ZSS::New::Debug_Msg* msg = guiDebugMsgs.add_msgs();
+    msg->set_type(ZSS::New::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_POLYGON);
+    msg->set_color(ZSS::New::Debug_Msg_Color(debug_color));
     if(debug_color == COLOR_USE_RGB) {
            msg->set_rgb_value(RGB_value);
        }
-    ZSS::Protocol::Debug_Polygon* tri = msg->mutable_polygon();
-    ZSS::Protocol::Point* pos1 = tri->add_vertex();
-    ZSS::Protocol::Point* pos2 = tri->add_vertex();
-    ZSS::Protocol::Point* pos3 = tri->add_vertex();
+    ZSS::New::Debug_Polygon* tri = msg->mutable_polygon();
+    ZSS::New::Point* pos1 = tri->add_vertex();
+    ZSS::New::Point* pos2 = tri->add_vertex();
+    ZSS::New::Point* pos3 = tri->add_vertex();
 	if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT ){
 		pos1->set_x(-p1.x());
         pos1->set_y(-p1.y());
@@ -134,13 +134,13 @@ void CGDebugEngine::gui_debug_triangle(const CGeoPoint& p1, const CGeoPoint& p2,
 }
 void CGDebugEngine::gui_debug_robot(const CGeoPoint& p, double robot_dir, int debug_color,int RGB_value){
     debugMutex.lock();
-    ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_ROBOT);
-    msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
+    ZSS::New::Debug_Msg* msg = guiDebugMsgs.add_msgs();
+    msg->set_type(ZSS::New::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_ROBOT);
+    msg->set_color(ZSS::New::Debug_Msg_Color(debug_color));
     if(debug_color == COLOR_USE_RGB) {
            msg->set_rgb_value(RGB_value);
        }
-    ZSS::Protocol::Debug_Robot* robot = msg->mutable_robot();
+    ZSS::New::Debug_Robot* robot = msg->mutable_robot();
 
 	float rdir;
 	if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT ){
@@ -149,7 +149,7 @@ void CGDebugEngine::gui_debug_robot(const CGeoPoint& p, double robot_dir, int de
     rdir = robot_dir*180/PARAM::Math::PI; // 转成角度
 	robot->set_dir(rdir);
 
-    ZSS::Protocol::Point* robot_pos = robot->mutable_pos();
+    ZSS::New::Point* robot_pos = robot->mutable_pos();
 
 	if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT ){
 		robot_pos->set_x(-p.x());
@@ -164,14 +164,14 @@ void CGDebugEngine::gui_debug_robot(const CGeoPoint& p, double robot_dir, int de
 void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color,int RGB_value)
 {
     debugMutex.lock();
-    ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
-    msg->set_type(ZSS::Protocol::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_TEXT);
-    msg->set_color(ZSS::Protocol::Debug_Msg_Color(debug_color));
+    ZSS::New::Debug_Msg* msg = guiDebugMsgs.add_msgs();
+    msg->set_type(ZSS::New::Debug_Msg::Debug_Type::Debug_Msg_Debug_Type_TEXT);
+    msg->set_color(ZSS::New::Debug_Msg_Color(debug_color));
     if(debug_color == COLOR_USE_RGB) {
            msg->set_rgb_value(RGB_value);
        }
-    ZSS::Protocol::Debug_Text* text = msg->mutable_text();
-    ZSS::Protocol::Point* center = text->mutable_pos();
+    ZSS::New::Debug_Text* text = msg->mutable_text();
+    ZSS::New::Point* center = text->mutable_pos();
     if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT){
 		center->set_x(-p.x());
         center->set_y(-p.y());

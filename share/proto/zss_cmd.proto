@@ -1,70 +1,90 @@
-syntax = "proto2";
-//import "zss_cmd_type.proto";
-package ZSS.Protocol;
+syntax = "proto3";
+import "zss_cmd_type.proto";
+package ZSS.New;
 
 message Robots_Status{
-  repeated Robot_Status robots_status = 1;
+    repeated Robot_Status robots_status = 1;
 }
 enum Team{
     UNKNOWN = 0;
     BLUE = 1;
     YELLOW = 2;
 }
+// use to multicast in LAN
 message Multicast_Status{
-   required string ip = 1;
-   required string uuid = 2;
-   required Team team = 3;
-   required int32 robot_id = 4;
+    string ip = 1;
+    string uuid = 2;
+    Team team = 3;
+    int32 robot_id = 4;
     // battery voltage
-   required float battery = 5;
+    float battery = 5;
     // capacitance
-   required float capacitance = 6;
+    float capacitance = 6;
 }
 
 message Robot_Status {
-  required int32 robot_id  = 1;
-  required bool infrared   = 2;
-  required bool flat_kick  = 3;
-  required bool chip_kick  = 4;
+    int32 robot_id = 1;
+    // infrared sensor with elasped time , positive means infrared is detected
+    float infrared = 2;
+    // elasped time since last kick
+    float flat_kick = 3;
+    // elasped time since last chip
+    float chip_kick = 4;
+    // imu angle
+    float imu_theta = 5;
+    // battery voltage
+    float battery = 6;
+    // capacitance
+    float capacitance = 7;
+    // odom of imu
+    Odom odom = 8;
+    // wheel encoder value
+    repeated float wheel_encoder = 9;
+    // team
+    Team team = 10;
 }
-message Robots_Command {
-  repeated Robot_Command command = 1;
 
-  // delay * 0.1ms
-  optional int32 delay = 2;
+message Robots_Command {
+    repeated Robot_Command command = 1;
+    // delay * 0.1ms
+    optional int32 delay = 2;
 }
 
 message Robot_Command {
-  // The unique ID of the robot, as identified by SSL-Vision.
-  required int32 robot_id = 1;
-
-  // Desired forward drive velocity in mm/s .
-  required float velocity_x = 2;
-
-  // Desired sideways left drive velocity in mm/s .
-  required float velocity_y = 3;
-
-  // Desired counterclockwise angular velocity in 1/40 radians / second.
-  required float velocity_r = 4;
-
-  // 0 for flat kick , 1 for chip kick .
-  required bool kick = 5;
-  
-  // Desired flat kick speed, in cm/s.
-  // If this optional field is missing, then no flat kick command should be
-  // sent.
-  // Desired chip kick distance, in cm.
-  // If this optional field is missing, then no flat kick command should be
-  // sent. If this field is present along with the flat_kick field, the
-  // flat_kick command takes precedence.
-  required float power = 6;
-
-  required float dribbler_spin = 7;
-
-  // new protocol
-  optional float current_angle = 8;
-  optional float target_angle = 9;
-
-  required bool use_dir = 10;
-  required bool need_report = 11;
+    // The unique ID of the robot, as identified by SSL-Vision.
+    int32 robot_id = 1;
+    enum KickMode {
+        NONE = 0;
+        KICK = 1;
+        CHIP = 2;
+    }
+    KickMode kick_mode = 2;
+    // use for sim / just store for debug
+    // if kick_mode == KICK, power means kick speed m/s
+    // if kick_mode == CHIP, power means chip distance m
+    float desire_power = 3;
+    // use for real robot
+    float kick_discharge_time = 4; // us
+    // dribble PWM -1 ~ 1
+    float dribble_spin = 5;
+    bool need_report = 6;
+    enum CmdType {
+        STOP = 0;
+        CMD_WHEEL = 1;
+        CMD_VEL = 2;
+        CMD_POSE = 3;
+        CMD_CHASE = 4;
+    }
+    CmdType cmd_type = 7;
+    CmdVel cmd_vel = 8;
+    CmdPose cmd_pose = 9;
+    CmdChase cmd_chase = 10;
+    CmdWheel cmd_wheel = 11;
+    enum CommType {
+        DEFAULT = 0;
+        SERIAL = 1;
+        UDP_24L01 = 2;
+        UDP_WIFI = 3;
+    }
+    CommType comm_type = 12;
 }

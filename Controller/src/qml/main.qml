@@ -133,14 +133,14 @@ ApplicationWindow{
                             }
                             width:130;
                             Timer{
-                                interval:200;//200ms启动一次
-                                running:true;
-                                repeat:true;
+                                interval: 300;
+                                repeat: true;
+                                running: true;
                                 onTriggered: {
                                     udpwifi.updateInterfaces();
                                     if(settings.getCurrentComm() === "Serial_24L01"){
                                       parent.model = serial.getCrazySetting(0);
-                                      serial.sendCrazySetting(0,parent.currentIndex)
+                                      serial.sendCrazySetting(0,parent.currentIndex);
                                     }else if(settings.getCurrentComm() === "UDP_24L01"){
                                       parent.model = udp24l01.getCrazySetting(0);
                                       udp24l01.sendCrazySetting(0,parent.currentIndex);

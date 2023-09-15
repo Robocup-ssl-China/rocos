@@ -15,12 +15,26 @@
 #include <thread>
 CCommandInterface* CCommandInterface::_instance = 0;
 namespace {
+bool side;
 int SIM_PORT = 0;
 int SELF_PORT = 0;
 int CHIP_ANGLE = 1;
 int TEAM;
-ZSS::Protocol::Robots_Command robots_command;
+ZSS::New::Robots_Command robots_command;
 std::thread *_thread = nullptr;
+double Normalize(double angle)
+{
+    const double M_2PI = PARAM::Math::PI * 2;
+
+    while( angle > PARAM::Math::PI ) {
+        angle -= M_2PI;
+    }
+
+    while( angle <= -PARAM::Math::PI ) {
+        angle += M_2PI;
+    }
+    return angle;
+}
 }
 
 CCommandInterface::CCommandInterface(const COptionModule *pOption, QObject *parent)
@@ -31,6 +45,7 @@ CCommandInterface::CCommandInterface(const COptionModule *pOption, QObject *pare
     ZSS::ZParamManager::instance()->loadParam(SELF_PORT, "Ports/SimSelfPort", 30015);
     ZSS::ZParamManager::instance()->loadParam(CHIP_ANGLE, "Simulator/ChipAngle", 45);
     ZSS::ZParamManager::instance()->loadParam(isYellow, "ZAlert/IsYellow", false);
+    ZSS::ZParamManager::instance()->loadParam(side, "ZAlert/IsRight", false);
     TEAM = isYellow ? PARAM::YELLOW : PARAM::BLUE;
     command_socket = new QUdpSocket();
     receiveSocket = new QUdpSocket();
@@ -83,21 +98,45 @@ void CCommandInterface::sendCommands() {
         }
         auto robot_command = robots_command.add_command();
         robot_command->set_robot_id(i);
-        robot_command->set_velocity_x(commands[i].velocity_x);
-        robot_command->set_velocity_y(commands[i].velocity_y);
-        robot_command->set_velocity_r(commands[i].velocity_r);
-        robot_command->set_dribbler_spin(commands[i].dribble_spin);
-        robot_command->set_use_dir(commands[i].use_dir);
-        robot_command->set_need_report(commands[i].need_report);
+
+        robot_command->set_cmd_type(ZSS::New::Robot_Command::CmdType::Robot_Command_CmdType_CMD_VEL);
+        auto robot_cmd_vel = robot_command->mutable_cmd_vel();
+        robot_cmd_vel->set_velocity_x(commands[i].velocity_x);
+        robot_cmd_vel->set_velocity_y(commands[i].velocity_y);
+        robot_cmd_vel->set_velocity_r(commands[i].velocity_r);
+        robot_command->set_dribble_spin(commands[i].dribble_spin);
+        if(/*USEIMU && */commands[i].use_dir){
+            robot_cmd_vel->set_use_imu(true);
+            if(side){
+                robot_cmd_vel->set_imu_theta(Normalize(commands[i].velocity_r+PARAM::Math::PI));
+            }
+        }
+        else {
+            robot_cmd_vel->set_use_imu(false);
+            robot_cmd_vel->set_velocity_r(commands[i].velocity_r);
+        }
+        //robot_command->set_use_dir(commands[i].use_dir);
+        //robot_command->set_need_report(commands[i].need_report);
         if(commands[i].dribble_spin >=1){
             GDebugEngine::Instance()->gui_debug_arc(VisionModule::Instance()->ourPlayer(i).RawPos(),5,0,360,COLOR_BLACK);
         }
-        if(commands[i].chip_kick < 0.001) { //flat kick
-            robot_command->set_kick(false);
-            robot_command->set_power(commands[i].flat_kick);
-        } else {
-            robot_command->set_kick(true);
-            robot_command->set_power(commands[i].chip_kick);
+//        if(commands[i].chip_kick < 0.001) { //flat kick
+//            robot_command->set_kick(false);
+//            robot_command->set_power(commands[i].flat_kick);
+//        } else {
+//            robot_command->set_kick(true);
+//            robot_command->set_power(commands[i].chip_kick);
+//        }
+        if(commands[i].flat_kick > 0.001) { //flat kick
+            //qDebug()<<"id: "<<i<<commands[i].flat_kick;
+            robot_command->set_kick_mode(ZSS::New::Robot_Command::KickMode::Robot_Command_KickMode_KICK);
+            robot_command->set_desire_power(commands[i].flat_kick);
+        }
+        else if(commands[i].chip_kick > 0.001) {
+            robot_command->set_kick_mode(ZSS::New::Robot_Command::KickMode::Robot_Command_KickMode_CHIP);
+            robot_command->set_desire_power(commands[i].chip_kick);
+        }else{
+            robot_command->set_kick_mode(ZSS::New::Robot_Command::KickMode::Robot_Command_KickMode_NONE);
         }
     }
     int size = ::robots_command.ByteSize();
@@ -109,7 +148,7 @@ void CCommandInterface::sendCommands() {
 }
 
 void CCommandInterface::receiveInformation() {
-    ZSS::Protocol::Robot_Status robot_status;
+    ZSS::New::Robot_Status robot_status;
     QByteArray datagram;
     QHostAddress address;
     quint16 udp_port;

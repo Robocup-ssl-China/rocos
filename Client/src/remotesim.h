@@ -17,7 +17,7 @@ public:
     ~RemoteSim();
     bool connectSim(bool);
     bool disconnectSim(bool);
-    void sendSim(int t, ZSS::Protocol::Robots_Command& command);
+    void sendSim(int t, ZSS::New::Robots_Command& command);
 private slots:
     void readBlueData();
     void readYellowData();

@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package ZSS.Protocol;
+package ZSS.New;
 
 import "zss_debug.proto";
 

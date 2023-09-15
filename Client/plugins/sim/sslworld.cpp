@@ -522,7 +522,7 @@ void SSLWorld::recvActions()
         // send robot status
         for (int team = 0; team < 2; ++team)
         {
-            ZSS::Protocol::Robots_Status robotsPacket;
+            ZSS::New::Robots_Status robotsPacket;
             bool updateRobotStatus = false;
             for (int i = 0; i < this->cfg->Robots_Count(); ++i)
             {
@@ -552,9 +552,9 @@ void SSLWorld::recvActions()
         #endif
     }
 }
-void SSLWorld::addRobotStatus(ZSS::Protocol::Robots_Status& robotsPacket, int robotID, int team, bool infrared, KickStatus kickStatus)
+void SSLWorld::addRobotStatus(ZSS::New::Robots_Status& robotsPacket, int robotID, int team, bool infrared, KickStatus kickStatus)
 {
-    ZSS::Protocol::Robot_Status* robot_status = robotsPacket.add_robots_status();
+    ZSS::New::Robot_Status* robot_status = robotsPacket.add_robots_status();
     robot_status->set_robot_id(robotID);
 
     if (infrared)

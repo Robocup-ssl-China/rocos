@@ -44,6 +44,7 @@ set(PROTO_LIST
     ssl_game_controller_common
     vision_detection
     zss_cmd
+    zss_cmd_type
     zss_debug
     zss_geometry
 )

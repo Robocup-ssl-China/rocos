@@ -24,7 +24,7 @@ const double LOW_BATTERY = 196.0;
 const double FULL_CAPACITANCE = 254.0;
 const double LOW_CAPACITANCE = 29.0;
 auto zpm = ZSS::ZParamManager::instance();
-void encodeLegacy(const ZSS::Protocol::Robot_Command&, QByteArray&, int);
+void encodeLegacy(const ZSS::New::Robot_Command&, QByteArray&, int);
 void encodeWifiCmd( ZSS::New::Robot_Command& , int );
 quint8 kickStandardization(quint8, bool, quint16);
 const QStringList radioSendAddress2choose=  {"10.12.225.240", "10.12.225.241","10.12.225.109","10.12.225.78"};
@@ -353,7 +353,7 @@ void ActionModule::sendStartPacket(int t, int frequency) {
     qDebug() << "Frequency:" << frequency << " Send IP:" << radioSendAddress[t] << " Receive IP:" << radioReceiveAddress[t];
 }
 
-void ActionModule::sendLegacy(int t, const ZSS::Protocol::Robots_Command& commands) {
+void ActionModule::sendLegacy(int t, const ZSS::New::Robots_Command& commands) {
     // this 't' is color
     auto& socket = sendSocket;
     int id = -1;
@@ -383,15 +383,12 @@ void ActionModule::sendLegacy(int t, const ZSS::Protocol::Robots_Command& comman
             auto robot_id = commands.command(i).robot_id();
             if(_n_address[id][robot_id] != ""){
                 ZSS::New::Robot_Command cmd;
-                cmd.set_robot_id(robot_id);
-                cmd.set_cmd_type(ZSS::New::Robot_Command_CmdType::Robot_Command_CmdType_CMD_VEL);
+                cmd.CopyFrom(commands.command(i));
+//                cmd.set_cmd_type(ZSS::New::Robot_Command_CmdType::Robot_Command_CmdType_CMD_VEL);
                 auto cmd_vel = cmd.mutable_cmd_vel();
-                cmd_vel->set_velocity_x(commands.command(i).velocity_x()/1000.0);
-                cmd_vel->set_velocity_y(commands.command(i).velocity_y()/1000.0);
-                cmd_vel->set_velocity_r(commands.command(i).velocity_r());
-                cmd.set_kick_mode(commands.command(i).kick() ? ZSS::New::Robot_Command_KickMode::Robot_Command_KickMode_CHIP : ZSS::New::Robot_Command_KickMode::Robot_Command_KickMode_KICK);
-                cmd.set_desire_power(commands.command(i).power());
-                cmd.set_dribble_spin(commands.command(i).dribbler_spin());
+                cmd_vel->set_velocity_x(commands.command(i).cmd_vel().velocity_x()/1000.0);
+                cmd_vel->set_velocity_y(commands.command(i).cmd_vel().velocity_y()/1000.0);
+                cmd_vel->set_velocity_r(commands.command(i).cmd_vel().velocity_r());
                 encodeWifiCmd(cmd,id/*(team)*/);
                 std::string data = cmd.SerializeAsString();
                 //std::string ddd = "robot_id: 2\ncmd_type: CMD_VEL\ncmd_vel {\n  velocity_x: 1.09273016\n  velocity_y: -0.0264953151\n  velocity_r: -0.0687982\n}\ncomm_type: UDP_WIFI\n";
@@ -536,12 +533,12 @@ void ActionModuleSerialVersion::setMedusaSettings(bool color,bool side){
 bool ActionModuleSerialVersion::init(int team){
     _team = team;
     QSerialPort &serial = (team == 1) ? y_serial : b_serial;
-    if(serial.portName()==""){
+    //if(serial.portName()==""){
         serial.setBaudRate(QSerialPort::Baud115200);
         serial.setDataBits(QSerialPort::Data8);
         serial.setParity(QSerialPort::NoParity);
         serial.setStopBits(QSerialPort::OneStop);
-        qDebug() << serial.portName().size();
+        //qDebug() << serial.portName().size();
 
         connect(&serial, &QSerialPort::readyRead, this, &ActionModuleSerialVersion::readData);
         if(serial.isOpen()){
@@ -549,17 +546,15 @@ bool ActionModuleSerialVersion::init(int team){
         }
         if (serial.open(QIODevice::ReadWrite)) {
             qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected... : " << serial.portName();
-            sendStartPacket(team);
             qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connected OK : " << serial.portName();
-            return true;
+            return sendStartPacket(team);
         }
         qDebug() << ((team == 1) ? "Yellow" : "Blue") << "SerialPort connect failed... : " << serial.portName();
         return false;
-    }else{
+    }/*else{
         return false;
-    }
-}
-void ActionModuleSerialVersion::sendStartPacket(int team){
+    }*/
+bool ActionModuleSerialVersion::sendStartPacket(int team){
     int frequency = (team==1) ? yellow_frequency : blue_frequency;
     QSerialPort &serial = (team == 1) ? y_serial : b_serial;
     QByteArray startPacket1(SERIAL_TRANSMIT_PACKET_SIZE,0);
@@ -580,20 +575,20 @@ void ActionModuleSerialVersion::sendStartPacket(int team){
     startPacket2[TRANSMIT_PACKET_SIZE - 1] = CCrc8::calc((unsigned char*)(startPacket2.data()), TRANSMIT_PACKET_SIZE - 1);
 
 
-        serial.write(startPacket1);
+        serial.write(startPacket1,TRANSMIT_PACKET_SIZE);
         serial.flush();
         serial.readAll();
-//        if(y_serial.waitForBytesWritten(2000)){
-//            if(y_serial.waitForReadyRead(2000)){
-//                serial.readAll();
-//                while (y_serial.waitForReadyRead(10))
-//                    serial.readAll();
+//        if(serial.waitForBytesWritten(2000)){
+//            if(serial.waitForReadyRead(2000)){
+                //serial.readAll();
+                while (serial.waitForReadyRead(10))
+                    serial.readAll();
 //            }
 //        }else{
-//            qDebug() << "Yellow Start packet write timeout!";
+//            qDebug() << "Start packet write timeout!";
 //        }
-        serial.write(startPacket2);
-        serial.flush();
+        serial.write(startPacket2,TRANSMIT_PACKET_SIZE);
+        return serial.flush();
 }
 bool ActionModuleSerialVersion::changePorts(int portNum,int team){
     QSerialPort &serial = (team == 1) ? y_serial : b_serial;
@@ -612,7 +607,7 @@ bool ActionModuleSerialVersion::changeFrequency(int frequency,int team){
     }
     return false;
 }
-void ActionModuleSerialVersion::sendLegacy(int t,const ZSS::Protocol::Robots_Command& commands){
+void ActionModuleSerialVersion::sendLegacy(int t,const ZSS::New::Robots_Command& commands){
     int frequency = (t==1) ? this->yellow_frequency : this->blue_frequency;
     QSerialPort &serial = (t==1) ? y_serial : b_serial;
     int size = commands.command_size();
@@ -622,12 +617,12 @@ void ActionModuleSerialVersion::sendLegacy(int t,const ZSS::Protocol::Robots_Com
         if(id >= 0 && id < PARAM::ROBOTMAXID){
             NJ_CMDS[id].valid = true;
             NJ_CMDS[id].id = id;
-            NJ_CMDS[id].vx = command.velocity_x()/10.0;
-            NJ_CMDS[id].vy = -command.velocity_y()/10.0;
-            NJ_CMDS[id].vr = -command.velocity_r()*40;
-            NJ_CMDS[id].dribble = command.dribbler_spin();
-            NJ_CMDS[id].power = command.power()/100.0;
-            NJ_CMDS[id].kick_mode = command.kick();
+            NJ_CMDS[id].vx = command.cmd_vel().velocity_x()/10.0;
+            NJ_CMDS[id].vy = -command.cmd_vel().velocity_y()/10.0;
+            NJ_CMDS[id].vr = -command.cmd_vel().velocity_r()*40;
+            NJ_CMDS[id].dribble = command.dribble_spin();
+            NJ_CMDS[id].power = command.desire_power()/100.0;
+            NJ_CMDS[id].kick_mode = command.kick_mode() == ZSS::New::Robot_Command_KickMode_CHIP;
         }
     }
 
@@ -724,14 +719,14 @@ void ActionModuleSerialVersion::readData(){
 
 }
 namespace {
-void encodeLegacy(const ZSS::Protocol::Robot_Command& command, QByteArray& tx, int num) {
+void encodeLegacy(const ZSS::New::Robot_Command& command, QByteArray& tx, int num) {
     // send back to vision module
     // num 0 ~ 3
     // id  0 ~ 15
     quint8 id = (quint8)command.robot_id();
-    double origin_vx = command.velocity_x();
-    double origin_vy = command.velocity_y();
-    double origin_vr = command.velocity_r();
+    double origin_vx = command.cmd_vel().velocity_x();
+    double origin_vy = command.cmd_vel().velocity_y();
+    double origin_vr = command.cmd_vel().velocity_r();
     double dt = 1. / Athena::FRAME_RATE;
     double theta = - origin_vr * dt;
     CVector v(origin_vx, origin_vy);
@@ -754,15 +749,15 @@ void encodeLegacy(const ZSS::Protocol::Robot_Command& command, QByteArray& tx, i
     //if(abs(vx) > 0.1) qDebug() << "id: " << id<< "  "<<num*4 + 1<< "  "<<vx;
     // flat&chip m/s -> cm/s
     // kick   1 : chip   0 : flat`
-    bool kick = command.kick();
-    quint16 speed = command.power();
+    bool kick = command.kick_mode() == ZSS::New::Robot_Command_KickMode_CHIP;
+    quint16 speed = command.desire_power();
     quint8 power = 0;
     if(speed > 0.5) {
-        power = kickStandardization(id, kick, (quint16)(command.power()));
+        power = kickStandardization(id, kick, (quint16)(speed));
     }
 //    qDebug() << "id: " << id << "power: " << power << "speed: " << command.power();
     // dribble -1 ~ +1 -> -3 ~ +3
-    qint8 dribble = command.dribbler_spin() > 0.5 ? 3 : 0;
+    qint8 dribble = command.dribble_spin() > 0.5 ? 3 : 0;
     tx[0] = (tx[0]) | (1 << (3 - num));
     tx[num * 4 + 1] = ((quint8)kick << 6) | dribble << 4 | id;
     tx[num * 4 + 2] = (vx >> 8 & 0x80) | (abs_vx & 0x7f);

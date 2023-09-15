@@ -6,7 +6,7 @@
 #include <QIODevice>
 #include <QDataStream>
 #include <QTime>
-using namespace ZSS::Protocol;
+using namespace ZSS::New;
 namespace  {
 auto GS = GlobalSettings::instance();
 }
@@ -70,7 +70,7 @@ bool RecPlayer::good() {
 
 void RecPlayer::sendMessage(const QByteArray& packet) {
 //    qDebug() << "sendmessage is called" ;
-    ZSS::Protocol::RecMessage recMsg;
+    ZSS::New::RecMessage recMsg;
     recMsg.ParseFromArray(packet.data(), packet.size());
     //ctrlc
     GlobalData::instance()->ctrlCMutex.lock();

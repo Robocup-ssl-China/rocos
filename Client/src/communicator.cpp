@@ -82,13 +82,13 @@ void Communicator::receiveCommand(int t) {
             m_fps.unlock();
             datagram.resize(receiveSocket[t].pendingDatagramSize());
             receiveSocket[t].readDatagram(datagram.data(), datagram.size());
-            ZSS::Protocol::Robots_Command commands;
+            ZSS::New::Robots_Command commands;
             commands.ParseFromArray(datagram, datagram.size());
             commandBuffer[t].valid = true;
             for(int i = 0; i < commands.command_size(); i++) {
                 auto& command = commands.command(i);
-				auto vy = NoVelY ? 0.0f : command.velocity_y();
-                RobotSpeed rs(command.velocity_x(), vy, command.velocity_r());
+                auto vy = NoVelY ? 0.0f : command.cmd_vel().velocity_y();
+                RobotSpeed rs(command.cmd_vel().velocity_x(), vy, command.cmd_vel().velocity_r());
                 commandBuffer[t].robotSpeed[command.robot_id()] = rs;
             }
             if(isSimulation) {
@@ -112,7 +112,7 @@ void Communicator::sendCommand(int team, int id) {
     bool flat = GlobalData::instance()->robotInformation[team][id].flat;
     bool chip = GlobalData::instance()->robotInformation[team][id].chip;
     GlobalData::instance()->robotInfoMutex.unlock();
-    ZSS::Protocol::Robot_Status robot_status;
+    ZSS::New::Robot_Status robot_status;
     robot_status.set_robot_id(id);
     robot_status.set_infrared(infrared);
     robot_status.set_flat_kick(flat);

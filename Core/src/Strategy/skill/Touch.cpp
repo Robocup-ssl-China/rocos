@@ -46,7 +46,7 @@ void CTouch::plan(const CVisionModule* pVision){
     }
 
 
-    KickStatus::Instance()->setKick(runner,6000);
+    KickStatus::Instance()->setChipKick(runner,6000);
 
     TaskT newTask(task());
     newTask.player.pos = targetPos;

@@ -61,15 +61,15 @@ QStringList SerialObject::getCrazySetting(int itemIndex){
 }
 void SerialObject::sendCrazySetting(int itemIndex,int index){
     currentIndex[itemIndex] = index;
-    qDebug() << "---------------------";
-    qDebug() << "port name -- " << ports[currentIndex[0]];
-    qDebug() << "baud rate -- " << stringBaudRate[0];
-    qDebug() << "data bits -- " << stringDataBits[0];
-    qDebug() << "parity    -- " << stringParity[0];
-    qDebug() << "stop bits -- " << stringStopBits[0];
-    qDebug() << "---------------------";
-    qDebug() << "frequency -- " << stringFrequency[currentIndex[1]];
-    qDebug() << "---------------------" << endl;
+//    qDebug() << "---------------------";
+//    qDebug() << "port name -- " << (ports.size() > 0 ? ports[currentIndex[0]] : "");
+//    qDebug() << "baud rate -- " << stringBaudRate[0];
+//    qDebug() << "data bits -- " << stringDataBits[0];
+//    qDebug() << "parity    -- " << stringParity[0];
+//    qDebug() << "stop bits -- " << stringStopBits[0];
+//    qDebug() << "---------------------";
+//    qDebug() << "frequency -- " << stringFrequency[currentIndex[1]];
+//    qDebug() << "---------------------" << endl;
 }
 int SerialObject::getDefaultIndex(int itemIndex) const{
     return defaultIndex[itemIndex];

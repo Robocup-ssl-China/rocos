@@ -97,7 +97,7 @@ void SimModule::readBlueData() {
     ZSData datagram;
     while(true){
         std::this_thread::sleep_for(std::chrono::microseconds(500));
-        ZSS::Protocol::Robots_Status robotsPacket;
+        ZSS::New::Robots_Status robotsPacket;
         receive("blue_status",datagram);
         robotsPacket.ParseFromArray(datagram.ptr(), datagram.size());
 
@@ -123,7 +123,7 @@ void SimModule::readYellowData() {
     ZSData datagram;
     while(true){
         std::this_thread::sleep_for(std::chrono::microseconds(500));
-        ZSS::Protocol::Robots_Status robotsPacket;
+        ZSS::New::Robots_Status robotsPacket;
         receive("yellow_status",datagram);
         robotsPacket.ParseFromArray(datagram.ptr(), datagram.size());
         for (int i = 0; i < robotsPacket.robots_status_size(); ++i) {
@@ -142,7 +142,7 @@ void SimModule::readYellowData() {
     }
 }
 
-void SimModule::sendSim(int t, ZSS::Protocol::Robots_Command& command) {
+void SimModule::sendSim(int t, ZSS::New::Robots_Command& command) {
     static ZSData data;
     grsim_commands->set_timestamp(0);
     if (t == 0) {
@@ -159,20 +159,20 @@ void SimModule::sendSim(int t, ZSS::Protocol::Robots_Command& command) {
         grsim_robots[id]->set_id(id);
         grsim_robots[id]->set_wheelsspeed(false);
         //set flatkick or chipk    ick
-        if (!commands.kick()) {
+        if (commands.kick_mode() == ZSS::New::Robot_Command_KickMode_CHIP) {
             grsim_robots[id]->set_kickspeedz(0);
-            grsim_robots[id]->set_kickspeedx(trans_length(commands.power()));
+            grsim_robots[id]->set_kickspeedx(trans_length(commands.desire_power()));
         } else {
             double radian = ZSS::Sim::CHIP_ANGLE * ZSS::Sim::PI / 180.0;
-            double vx = sqrt(trans_length(commands.power()) * ZSS::Sim::G / 2.0 / tan(radian));
+            double vx = sqrt(trans_length(commands.desire_power()) * ZSS::Sim::G / 2.0 / tan(radian));
             double vz = vx * tan(radian);
             grsim_robots[id]->set_kickspeedz(vx);
             grsim_robots[id]->set_kickspeedx(vz);
         }
         //set velocity and dribble
-        double vx = commands.velocity_x();
-        double vy = NoVelY ? 0.0f : commands.velocity_y();
-        double vr = commands.velocity_r();
+        double vx = commands.cmd_vel().velocity_x();
+        double vy = NoVelY ? 0.0f : commands.cmd_vel().velocity_y();
+        double vr = commands.cmd_vel().velocity_r();
         double dt = 1. / Athena::FRAME_RATE;
         double theta = - vr * dt;
         CVector v(vx, vy);
@@ -188,7 +188,7 @@ void SimModule::sendSim(int t, ZSS::Protocol::Robots_Command& command) {
         grsim_robots[id]->set_veltangent(trans_length(vx));
         grsim_robots[id]->set_velnormal(trans_length(vy));
         grsim_robots[id]->set_velangular(trans_vr(vr));
-        grsim_robots[id]->set_spinner(trans_dribble(commands.dribbler_spin()));
+        grsim_robots[id]->set_spinner(trans_dribble(commands.dribble_spin()));
     }
     int size = grsim_packet.ByteSize();
     data.resize(size);

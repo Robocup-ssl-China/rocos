@@ -61,16 +61,16 @@ bool RadioPacket::sendStartPacketSerial(){
         //send startPacket1，第一次握手
         serialPtr->write((startPacket1.data()),TRANSMIT_PACKET_SIZE);
         serialPtr->flush();
-        if (serialPtr->waitForBytesWritten(2000)) {
-            if (serialPtr->waitForReadyRead(2000)) {
+        //if (serialPtr->waitForBytesWritten(2000)) {
+            //if (serialPtr->waitForReadyRead(2000)) {
                 //收到包，第二次握手
                 QByteArray responseData = serialPtr->readAll();
                 while (serialPtr->waitForReadyRead(10))
                     responseData += serialPtr->readAll();
-            }
-        } else {
-            qDebug() << "Start packet write timeout!";
-        }
+            //}
+//        } else {
+//            qDebug() << "Start packet write timeout!";
+//        }
         //send startPacket2，第三次握手
         serialPtr->write((startPacket2.data()),TRANSMIT_PACKET_SIZE);
         serialPtr->flush();
@@ -226,7 +226,7 @@ void RadioPacket::sendStartPacketUdp24L01(int frequency) {
 void RadioPacket::updateAddress(const QHostAddress& sendaddress,const QHostAddress& receiveAddress){
     this->sendaddress = sendaddress;
     this->receiveAddress = receiveAddress;
-    qDebug() << "get address : " << sendaddress << receiveAddress;
+    //qDebug() << "get address : " << sendaddress << receiveAddress;
 }
 
 namespace{

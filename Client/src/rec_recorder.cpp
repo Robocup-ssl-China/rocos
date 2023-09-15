@@ -8,7 +8,7 @@
 #include <QFileInfo>
 #include "parammanager.h"
 #include <cmath>
-using namespace ZSS::Protocol;
+using namespace ZSS::New;
 namespace  {
 auto GS = GlobalSettings::instance();
 //RecMsg recMsg;

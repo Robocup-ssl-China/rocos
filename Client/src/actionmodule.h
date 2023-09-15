@@ -6,7 +6,6 @@
 #include <QSerialPort>
 #include "singleton.hpp"
 #include "zss_cmd.pb.h"
-#include "zss_cmd_new.pb.h"
 #include "staticparams.h"
 namespace ZSS {
 using __callback_type = std::function<void(const void*,const size_t)>;
@@ -70,7 +69,7 @@ class ActionModule : public QObject {
   public:
     ActionModule(QObject *parent = 0);
     ~ActionModule();
-    void sendLegacy(int t, const ZSS::Protocol::Robots_Command&);
+    void sendLegacy(int t, const ZSS::New::Robots_Command&);
     bool connectRadio(int, int);
     bool disconnectRadio(int);
     void setSimulation(bool);
@@ -122,7 +121,7 @@ class ActionModuleSerialVersion : public QObject
      ~ActionModuleSerialVersion();
      bool init(int team);
      void setMedusaSettings(bool,bool);
-     void sendLegacy(int t,const ZSS::Protocol::Robots_Command&);
+     void sendLegacy(int t,const ZSS::New::Robots_Command&);
      QStringList& updatePortsList();
      int getFrequency(int team){ return team ? yellow_frequency:blue_frequency;}
      bool changePorts(int,int);
@@ -135,7 +134,7 @@ class ActionModuleSerialVersion : public QObject
  private slots:
      void readData();
  private:
-     void sendStartPacket(int team);
+     bool sendStartPacket(int team);
  private:
      QSerialPort b_serial;
      QSerialPort y_serial;
