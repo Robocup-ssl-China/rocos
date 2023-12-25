@@ -1,5 +1,5 @@
 ﻿#include "radiopacket.h"
-#include "lib/crc/crc.h"
+#include "crc.h"
 #include <QSerialPort>
 #include <QElapsedTimer>
 #include <cstdio>

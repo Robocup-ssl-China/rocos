@@ -6,7 +6,7 @@ QT += qml quick serialport
 
 TARGET = CrazyNaN
 
-RESOURCES += qml.qrc
+RESOURCES += Controller.qrc
 
 HEADERS += \
     $$PWD/src/radiopacket.h \
