@@ -144,7 +144,7 @@ void encodeLegacy(const NJ_Command& command,QByteArray& tx,int num){
     qint16 vr = abs(ivr)> 511 ? (ivr > 0 ? 1 : -1)*(511) : (ivr);
     qint16 power = (qint16)(command.power);
     bool kick_mode = command.kick_mode;
-    qint16 dribble = (qint16)(command.dribble*3+0.4);
+    qint16 dribble = (qint16)(command.dribble+0.1);
     // vx
     unsigned int vx_value_uint = (unsigned int)abs(vx);
     // vy

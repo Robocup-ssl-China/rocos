@@ -29,7 +29,7 @@ function OpenSpeed(task)
 			mspeedY = task.mod * math.sin(mdir)
 		end
 		
-		return COpenSpeed(runner, mspeedX, mspeedY, mspeedW, needReport)
+		return COpenSpeed(runner, mspeedX, mspeedY, mspeedW, mflag)
 	end
 
 	matchPos = function()
