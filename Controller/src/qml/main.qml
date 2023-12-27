@@ -56,6 +56,7 @@ ApplicationWindow{
                     title :qsTr("Sender Setting") + translator.emptyString;
                     Grid{
                         height:parent.height;
+                        width:parent.width;
                         id : crazyListView;
                         verticalItemAlignment: Grid.AlignVCenter;
                         horizontalItemAlignment: Grid.AlignLeft;
@@ -64,7 +65,7 @@ ApplicationWindow{
                         rowSpacing: 5;
                         columns:4;
                         enabled: !crazyConnect.ifConnected;
-                        property int itemWidth : 90;
+                        property int itemWidth : (width-columnSpacing*(columns-1))/columns;
                         ZText{
                             text: qsTr("Control Mode");
                         }
@@ -137,6 +138,7 @@ ApplicationWindow{
                     Grid{
                         id : crazyShow;
                         columns: 6;//6列
+                        width:parent.width;
                         verticalItemAlignment: Grid.AlignVCenter;
                         horizontalItemAlignment: Grid.AlignLeft;
                         anchors.horizontalCenter: parent.horizontalCenter;
@@ -165,7 +167,7 @@ ApplicationWindow{
                         property int velocityMax : 511;//最大速度
                         property int dribbleMaxLevel : 3;//吸球最大等级
                         property int kickPowerMax: 127;//最大踢球力量
-                        property int itemWidth : 70;
+                        property int itemWidth : (width-columnSpacing*(columns-1))/columns;
 
                         ZText{ text:qsTr("Robot") + translator.emptyString }
                         //最多12辆车
