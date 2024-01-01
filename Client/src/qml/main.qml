@@ -109,12 +109,12 @@ Window {
                x:parent.width - 70;
                y:5;
                color:"white";
-               font.pointSize: 10;
+               font.pointSize: 11;
                font.weight:  Font.Bold;
             }
             Text{
                id : fps;
-               text : "0"
+               text : "0\n0\n0"
                x:parent.width - 30;
                y:5;
                color:"#0077ff";

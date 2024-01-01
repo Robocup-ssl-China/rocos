@@ -221,7 +221,7 @@ Page{
                 }
             }
             ZGroupBox{
-                title: qsTr("Medusa")
+                title: qsTr("Core")
                 Grid{
                     width:parent.width;
                     verticalItemAlignment: Grid.AlignVCenter;
@@ -264,81 +264,82 @@ Page{
                         rowSpacing: 0;
                         columns:2;
                         property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
-                        SpinBox{
-                            id:medusaFrq1;
-                            width:parent.itemWidth;
-                            from:0;to:15;
-                            wrap:true;
-                            value:8
-                        }
-                        SpinBox{
-                            id:medusaFrq2;
-                            width:parent.itemWidth;
-                            from:0;to:15;
-                            wrap:true;
-                            value:6
-                        }
-                        ZComboBox{
-                            enabled: !control.autoIMUBlue;
-                            id:buleAdderss;
-                            model:interaction.getAllAddress();
-                            contentItem: Text {
-                                          id:blueText
-                                          text: interaction.getRealAddress(0)
-                                          color: enabled ? "#ffffff" : "#888"
-                                          font: buleAdderss.font
-                                          elide: Text.ElideNone
-                                          wrapMode: Text.WordWrap
-                                          verticalAlignment: Text.AlignVCenter
-                                          horizontalAlignment: Text.AlignHCenter
-                                      }
-                            onActivated:{
-                                interaction.changeAddress(0,currentIndex);
-                                blueText.text = interaction.getRealAddress(0);
-                            }
-                            function updateModel(){
-                                model = interaction.getAllAddress();
-                                if(currentIndex >= 0){
-                                    interaction.changeAddress(0,currentIndex);
-                                    blueText.text = interaction.getRealAddress(0);
-                                }
-                            }
-                            Component.onCompleted: {
-                                interaction.getAllAddress();
-                                blueText.text = interaction.getRealAddress(0);
-                            }
-                        }
-                        ZComboBox{
-                            enabled: !control.autoIMUYellow;
-                            id:yellowAdderss;
-                            model:interaction.getAllAddress();
-                            contentItem: Text {
-                                          id:yellowText
-                                          text: interaction.getRealAddress(1)
-                                          color: enabled ? "#ffffff" : "#888"
-                                          font: yellowAdderss.font
-                                          elide: Text.ElideNone
-                                          wrapMode: Text.WordWrap
-                                          verticalAlignment: Text.AlignVCenter
-                                          horizontalAlignment: Text.AlignHCenter
-                                      }
-                            onActivated:{
-                                interaction.changeAddress(1,currentIndex);
-                                yellowText.text = interaction.getRealAddress(1);
-                            }
-                            function updateModel(){
-                                model = interaction.getAllAddress();
-                                if(currentIndex >= 0){
-                                    interaction.changeAddress(1,currentIndex);
-                                    yellowText.text = interaction.getRealAddress(1);
-                                }
-                            }
-                            Component.onCompleted: {
-                                model = interaction.getAllAddress();
-                                yellowText.text = interaction.getRealAddress(1);
-                            }
-                        }
+                        // SpinBox{
+                        //     id:medusaFrq1;
+                        //     width:parent.itemWidth;
+                        //     from:0;to:15;
+                        //     wrap:true;
+                        //     value:8
+                        // }
+                        // SpinBox{
+                        //     id:medusaFrq2;
+                        //     width:parent.itemWidth;
+                        //     from:0;to:15;
+                        //     wrap:true;
+                        //     value:6
+                        // }
+                        // ZComboBox{
+                        //     enabled: !control.autoIMUBlue;
+                        //     id:buleAdderss;
+                        //     model:interaction.getAllAddress();
+                        //     contentItem: Text {
+                        //                   id:blueText
+                        //                   text: interaction.getRealAddress(0)
+                        //                   color: enabled ? "#ffffff" : "#888"
+                        //                   font: buleAdderss.font
+                        //                   elide: Text.ElideNone
+                        //                   wrapMode: Text.WordWrap
+                        //                   verticalAlignment: Text.AlignVCenter
+                        //                   horizontalAlignment: Text.AlignHCenter
+                        //               }
+                        //     onActivated:{
+                        //         interaction.changeAddress(0,currentIndex);
+                        //         blueText.text = interaction.getRealAddress(0);
+                        //     }
+                        //     function updateModel(){
+                        //         model = interaction.getAllAddress();
+                        //         if(currentIndex >= 0){
+                        //             interaction.changeAddress(0,currentIndex);
+                        //             blueText.text = interaction.getRealAddress(0);
+                        //         }
+                        //     }
+                        //     Component.onCompleted: {
+                        //         interaction.getAllAddress();
+                        //         blueText.text = interaction.getRealAddress(0);
+                        //     }
+                        // }
+                        // ZComboBox{
+                        //     enabled: !control.autoIMUYellow;
+                        //     id:yellowAdderss;
+                        //     model:interaction.getAllAddress();
+                        //     contentItem: Text {
+                        //                   id:yellowText
+                        //                   text: interaction.getRealAddress(1)
+                        //                   color: enabled ? "#ffffff" : "#888"
+                        //                   font: yellowAdderss.font
+                        //                   elide: Text.ElideNone
+                        //                   wrapMode: Text.WordWrap
+                        //                   verticalAlignment: Text.AlignVCenter
+                        //                   horizontalAlignment: Text.AlignHCenter
+                        //               }
+                        //     onActivated:{
+                        //         interaction.changeAddress(1,currentIndex);
+                        //         yellowText.text = interaction.getRealAddress(1);
+                        //     }
+                        //     function updateModel(){
+                        //         model = interaction.getAllAddress();
+                        //         if(currentIndex >= 0){
+                        //             interaction.changeAddress(1,currentIndex);
+                        //             yellowText.text = interaction.getRealAddress(1);
+                        //         }
+                        //     }
+                        //     Component.onCompleted: {
+                        //         model = interaction.getAllAddress();
+                        //         yellowText.text = interaction.getRealAddress(1);
+                        //     }
+                        // }
                         ZButton{
+                            text: "<font color='#2976ca'>" + (medusaSide.checked ? "to Left" : "to Right") + "</font>";
                             icon.source:control.medusaConnect ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#2976ca";
                             onClicked: {
@@ -353,6 +354,7 @@ Page{
                             }
                         }
                         ZButton{
+                            text: "<font color='#ebdb7c'>" + (!medusaSide.checked ? "to Left" : "to Right") + "</font>";
                             icon.source:control.medusaConnect2 ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#ebdb7c";
                             onClicked: {
