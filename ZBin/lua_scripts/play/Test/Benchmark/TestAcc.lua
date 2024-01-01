@@ -1,9 +1,9 @@
 local p = {
     CGeoPoint:new_local(3000,2000),
-    CGeoPoint:new_local(-3000,-2000)
+    CGeoPoint:new_local(3000,-2000)
 }
-local TEST_X = false
-local FAIL_DEGREE = TEST_X and 10.0 or 20.0
+local TEST_X = true
+local FAIL_DEGREE = 30.0
 
 local p_dir = (p[2]-p[1]):dir()
 local task_dir = TEST_X and p_dir or p_dir+math.pi/2
@@ -14,8 +14,9 @@ local task_flag = nil
 
 local det_max_vel = 0
 local det_rot_err = 0.0
-    
-local result_list = { -- {task_max_acc, task_max_vel, det_max_vel, det_rot_err} - {3000,2000,3000,0.0}
+local trigger_cycle = 0
+
+local result_list = { -- {task_max_acc, task_max_vel, det_max_vel, det_rot_err, time(s)} - {3000,2000,3000,0.0}
 }
 local MAX_TEST_ACC_STEP = 1000
 local MIN_TEST_ACC_STEP = 300
@@ -40,7 +41,8 @@ end
 
 local state_reset = function(store)
     if store then
-        local result = {task_max_acc, task_max_vel, det_max_vel, det_rot_err}
+        local times = (vision:getCycle() - trigger_cycle)*1.0/(1.0*param.frameRate)
+        local result = {task_max_acc, task_max_vel, det_max_vel, det_rot_err, times}
         table.insert(result_list,result)
         set_new_task_param()
         -- store only the last 10
@@ -50,6 +52,7 @@ local state_reset = function(store)
     end
     det_max_vel = 0
     det_rot_err = 0.0
+    trigger_cycle = vision:getCycle()
 end
 
 local debug_F = function()
@@ -76,10 +79,10 @@ local debug_F = function()
     local span = 85
     local rp = CGeoPoint:new_local(rx,ry)
     local rv = CVector:new_local(0,-span)
-    debugEngine:gui_debug_msg(rp+rv*0,                  " N,  ACC, DetV, RotE",param.ORANGE,0,80)
+    debugEngine:gui_debug_msg(rp+rv*0,                  " N,  ACC, DetV, RotE, Time",param.ORANGE,0,80)
     for i=1,#result_list do
         local res = result_list[i]
-        debugEngine:gui_debug_msg(rp+rv*i,string.format("%2d, %4.0f, %4.0f, %4.1f",i,res[1],res[3],res[4]),res[4] < FAIL_DEGREE and param.GREEN or param.RED, 0, 80)
+        debugEngine:gui_debug_msg(rp+rv*i,string.format("%2d, %4.0f, %4.0f, %4.1f, %4.1fs",i,res[1],res[3],res[4],res[5]),res[4] < FAIL_DEGREE and param.GREEN or param.RED, 0, 80)
     end
 end
 
