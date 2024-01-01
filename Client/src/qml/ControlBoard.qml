@@ -348,7 +348,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
-                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
+//                                    interaction.connectRadio(control.medusaConnect,0,medusaFrq1.value);
                                 }
                                 interaction.controlMedusa(control.medusaConnect)
                             }
@@ -363,7 +363,7 @@ Page{
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
-                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
+//                                    interaction.connectRadio(control.medusaConnect2,1,medusaFrq2.value);
                                 }
                                 interaction.controlMedusa2(control.medusaConnect2)
                             }
