@@ -1,5 +1,5 @@
 local p = {
-    CGeoPoint:new_local(3000,2000),
+    CGeoPoint:new_local(-3000,2000),
     CGeoPoint:new_local(3000,-2000)
 }
 local TEST_X = true
@@ -8,9 +8,11 @@ local FAIL_DEGREE = 30.0
 local p_dir = (p[2]-p[1]):dir()
 local task_dir = TEST_X and p_dir or p_dir+math.pi/2
 
+local ROBOT_OFFSET = Utils.Polar2Vector(400,p_dir+math.pi/2)
+
 local task_max_acc = 1000
-local task_max_vel = 3000
-local task_flag = nil
+local task_max_vel = 3500
+local task_flag = flag.not_avoid_our_vehicle
 
 local det_max_vel = 0
 local det_rot_err = 0.0
@@ -106,7 +108,8 @@ firstState = "start",
         end
     end,
     Leader = task.goCmuRush(p[2],task_dir),
-    match = "(L)"
+    a = task.goCmuRush(p[2]+ROBOT_OFFSET,task_dir),
+    match = "(L)(a)"
 },
 ["run1"] = {
     switch = function()
@@ -117,7 +120,8 @@ firstState = "start",
         end
     end,
     Leader = task.goCmuRush(p[1],task_dir,F_task_max_acc,task_flag,nil,nil,F_task_max_vel,true),
-    match = "{L}"
+    a = task.goCmuRush(p[1]+ROBOT_OFFSET,task_dir,F_task_max_acc,task_flag,nil,nil,F_task_max_vel,true),
+    match = ""
 },
 ["run2"] = {
     switch = function()
@@ -128,7 +132,8 @@ firstState = "start",
         end
     end,
     Leader = task.goCmuRush(p[2],task_dir,F_task_max_acc,task_flag,nil,nil,F_task_max_vel,true),
-    match = "{L}"
+    a = task.goCmuRush(p[2]+ROBOT_OFFSET,task_dir,F_task_max_acc,task_flag,nil,nil,F_task_max_vel,true),
+    match = ""
 },
 
 

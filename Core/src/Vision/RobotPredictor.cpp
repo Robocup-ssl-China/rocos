@@ -60,8 +60,8 @@ void CRobotPredictor::updateVision(int cycle, const VehicleInfoT& player, const 
         dirVel = 0;
         rawDirVel = 0;
     } else {
-        dirVel = invert ? Utils::Normalize(-player.dirvel) : Utils::Normalize(player.dirvel);
-        rawDirVel = invert ? Utils::Normalize(-player.raw_dirVel) : Utils::Normalize(player.raw_dirVel);
+        dirVel = player.dirvel;
+        rawDirVel = player.raw_dirVel;
     }
 
     _collisionSimulator.reset(ball.RawPos(), ball.Vel()); // 初始化球的信息(对手没有朝向信息)
