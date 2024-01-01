@@ -200,7 +200,7 @@ void RemoteSim::sendSim(int t, ZSS::Protocol::Robots_Command& command) {
         grsim_robots[id]->set_velangular(trans_vr(vr));
         grsim_robots[id]->set_spinner(trans_dribble(commands.dribbler_spin()));
     }
-    int size = grsim_packet.ByteSize();
+    int size = grsim_packet.ByteSizeLong();
     QByteArray data(size, 0);
     grsim_packet.SerializeToArray(data.data(), data.size());
     command_socket.writeDatagram(data, size, QHostAddress(RemoteAddress), ZSS::Athena::SIM_SEND);

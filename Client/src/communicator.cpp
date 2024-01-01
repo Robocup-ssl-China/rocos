@@ -118,7 +118,7 @@ void Communicator::sendCommand(int team, int id) {
     robot_status.set_infrared(infrared);
     robot_status.set_flat_kick(flat);
     robot_status.set_chip_kick(chip);
-    int size = robot_status.ByteSize();
+    int size = robot_status.ByteSizeLong();
     QByteArray datagram(size, 0);
     robot_status.SerializeToArray(datagram.data(), size);
     sendSockets.writeDatagram(datagram.data(), size, QHostAddress(ZSS::LOCAL_ADDRESS), ZSS::Athena::CONTROL_BACK_RECEIVE[team]);

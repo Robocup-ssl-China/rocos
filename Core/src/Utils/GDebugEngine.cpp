@@ -161,7 +161,7 @@ void CGDebugEngine::gui_debug_robot(const CGeoPoint& p, double robot_dir, int de
     }
     debugMutex.unlock();
 }
-void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color,int RGB_value)
+void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color,int RGB_value, const double size, const int weight)
 {
     debugMutex.lock();
     ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
@@ -171,6 +171,8 @@ void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int de
            msg->set_rgb_value(RGB_value);
        }
     ZSS::Protocol::Debug_Text* text = msg->mutable_text();
+    text->set_size(size);
+    text->set_weight(weight);
     ZSS::Protocol::Point* center = text->mutable_pos();
     if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT){
 		center->set_x(-p.x());
@@ -186,7 +188,7 @@ void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int de
 void CGDebugEngine::send(bool teamIsBlue){
     static QByteArray data;
     debugMutex.lock();
-    int size = guiDebugMsgs.ByteSize();
+    int size = guiDebugMsgs.ByteSizeLong();
     data.resize(size);
     guiDebugMsgs.SerializeToArray(data.data(),size);
     int sent_size = 0;

@@ -538,7 +538,7 @@ void SSLWorld::recvActions()
                 }
             }
             if (updateRobotStatus){
-                int size = robotsPacket.ByteSize();
+                int size = robotsPacket.ByteSizeLong();
                 robot_status.resize(size);
                 robotsPacket.SerializeToArray(robot_status.ptr(),size);
                     publish(team==0?"blue_status":"yellow_status",robot_status);
@@ -699,7 +699,7 @@ void SSLWorld::publishPacket(int cam_id){
         }
     }
     QByteArray data;
-    int size = packet.ByteSize();
+    int size = packet.ByteSizeLong();
     data.resize(size);
     packet.SerializeToArray(data.data(),size);
     publish("ssl_vision",data.data(),size);

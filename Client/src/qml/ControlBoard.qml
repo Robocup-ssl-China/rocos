@@ -339,7 +339,7 @@ Page{
                         //     }
                         // }
                         ZButton{
-                            text: "<font color='#2976ca'>" + (medusaSide.checked ? "to Left" : "to Right") + "</font>";
+                            text: "<font color='#2976ca'>" + (medusaSide.checked ? "Right → Left" : "Left → Right") + "</font>";
                             icon.source:control.medusaConnect ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#2976ca";
                             onClicked: {
@@ -354,7 +354,7 @@ Page{
                             }
                         }
                         ZButton{
-                            text: "<font color='#ebdb7c'>" + (!medusaSide.checked ? "to Left" : "to Right") + "</font>";
+                            text: "<font color='#ebdb7c'>" + (!medusaSide.checked ? "Right → Left" : "Left → Right") + "</font>";
                             icon.source:control.medusaConnect2 ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#ebdb7c";
                             onClicked: {

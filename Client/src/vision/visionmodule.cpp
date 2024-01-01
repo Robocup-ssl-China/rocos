@@ -309,7 +309,7 @@ void  CVisionModule::udpSend() {
             robot->set_raw_rotate_vel(result.robot[team][i].rawRotateVel);
         }
     }
-    int size = detectionFrame.ByteSize();
+    int size = detectionFrame.ByteSizeLong();
     QByteArray buffer(size, 0);
     detectionFrame.SerializeToArray(buffer.data(), buffer.size());
     GlobalData::instance()->ctrlCMutex.lock();

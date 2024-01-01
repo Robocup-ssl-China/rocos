@@ -614,7 +614,7 @@ void Field::drawOriginVision(int index) {
             pixmapPainter.drawRect(QRect(QPoint(::x(GlobalData::instance()->cameraMatrix[i].leftedge.min), ::y(GlobalData::instance()->cameraMatrix[i].downedge.min)), QPoint(::x(GlobalData::instance()->cameraMatrix[i].rightedge.min), ::y(GlobalData::instance()->cameraMatrix[i].upedge.min))));
             pixmapPainter.setPen(COLOR_RED);
             pixmapPainter.drawRect(QRect(QPoint(::x(GlobalData::instance()->cameraMatrix[i].leftedge.max), ::y(GlobalData::instance()->cameraMatrix[i].downedge.max)), QPoint(::x(GlobalData::instance()->cameraMatrix[i].rightedge.max), ::y(GlobalData::instance()->cameraMatrix[i].upedge.max))));
-            pixmapPainter.setFont(QFont("Helvetica [Cronyx]", 13, QFont::Bold));
+            pixmapPainter.setFont(QFont("Ubuntu Mono", 13, QFont::Bold));
             pixmapPainter.drawText(::x(GlobalData::instance()->cameraMatrix[i].campos.x() - 100), ::y(GlobalData::instance()->cameraMatrix[i].campos.y()), "Camera" + QString::number(i));
         }
     }
@@ -740,14 +740,14 @@ void Field::drawVision(const OriginMessage &vision, bool shadow) {
 
 }
 void Field::drawCtrlC() {
-    pixmapPainter.setFont(QFont("Helvetica [Cronyx]", 300, QFont::Bold));
+    pixmapPainter.setFont(QFont("Ubuntu Mono", 300, QFont::Bold));
     GlobalData::instance()->ctrlCMutex.lock();
     bool ctrlC = GlobalData::instance()->ctrlC;
     GlobalData::instance()->ctrlCMutex.unlock();
     if(ctrlC) {
         pixmapPainter.drawText(QPointF(0, 300), "CTRL_C");
     }
-    pixmapPainter.setFont(QFont("Helvetica [Cronyx]", 13, QFont::Bold));
+    pixmapPainter.setFont(QFont("Ubuntu Mono", 13, QFont::Bold));
 }
 void Field::drawSelectedArea() {
     pixmapPainter.setBrush(QBrush(COLOR_LIGHTWHITE));
@@ -767,7 +767,8 @@ void Field::drawDebugMessages(int team) {
         msgs.ParseFromArray(GlobalData::instance()->debugYellowMessages.data(), GlobalData::instance()->debugYellowMessages.size());
     }
     GlobalData::instance()->debugMutex.unlock();
-    pixmapPainter.setFont(QFont("Helvetica [Cronyx]", ::w(130), QFont::Normal));
+    QFont font("Ubuntu Mono", ::w(200), QFont::Normal);
+    pixmapPainter.setFont(font);
     pixmapPainter.setBrush(QBrush(DEBUG_BRUSH_COLOR));
     for(int i = 0; i < msgs.msgs_size(); i++) {
         auto& msg = msgs.msgs(i);
@@ -805,6 +806,9 @@ void Field::drawDebugMessages(int team) {
             break;
         }
         case Debug_Msg_Debug_Type_TEXT:
+            font.setPointSizeF(::w(msg.text().size()));
+            font.setWeight(msg.text().weight());
+            pixmapPainter.setFont(font);
             pixmapPainter.drawText(QPointF(::x(msg.text().pos().x()), ::y(msg.text().pos().y())), QString::fromStdString(msg.text().text()));
             break;
         case Debug_Msg_Debug_Type_ROBOT:

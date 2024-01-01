@@ -305,20 +305,27 @@ PlayerCapabilityT CGotoPositionV2::setCapability(const CVisionModule *pVision) {
         capability.maxAngularDec = MAX_ROTATION_ACC;
     }
 
-
-
     if (task().player.max_acceleration > 1e-8) {
-        capability.maxAccel = task().player.max_acceleration > TRANSLATION_ACC_LIMIT ? TRANSLATION_ACC_LIMIT : task().player.max_acceleration;
+        if(!task().player.force_manual_set_running_param)
+            capability.maxAccel = task().player.max_acceleration > TRANSLATION_ACC_LIMIT ? TRANSLATION_ACC_LIMIT : task().player.max_acceleration;
+        else
+            capability.maxAccel = task().player.max_acceleration;
         if(isGoalie || isBack)
             capability.maxAccel = task().player.max_acceleration;
         capability.maxDec = capability.maxAccel;
     }
     if (task().player.max_speed > 1e-8) {
-        capability.maxSpeed = task().player.max_speed > TRANSLATION_SPEED_LIMIT ? TRANSLATION_SPEED_LIMIT : task().player.max_speed;
+        if(!task().player.force_manual_set_running_param)
+            capability.maxSpeed = task().player.max_speed > TRANSLATION_SPEED_LIMIT ? TRANSLATION_SPEED_LIMIT : task().player.max_speed;
+        else
+            capability.maxSpeed = task().player.max_speed;
     }
 
     if (task().player.max_rot_acceleration > 1e-8) {
-        capability.maxAngularAccel = task().player.max_rot_acceleration > TRANSLATION_ROTATE_ACC_LIMIT ? TRANSLATION_ROTATE_ACC_LIMIT : task().player.max_rot_acceleration;
+        if(!task().player.force_manual_set_running_param)
+            capability.maxAngularAccel = task().player.max_rot_acceleration > TRANSLATION_ROTATE_ACC_LIMIT ? TRANSLATION_ROTATE_ACC_LIMIT : task().player.max_rot_acceleration;
+        else
+            capability.maxAngularAccel = task().player.max_rot_acceleration;
         capability.maxAngularDec = capability.maxAngularAccel;
     }
 

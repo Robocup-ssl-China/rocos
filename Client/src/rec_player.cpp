@@ -123,7 +123,7 @@ void RecPlayer::sendMessage(const QByteArray& packet) {
     Debug_Msgs debugMsgs;
     for (int team = PARAM::BLUE; team <= PARAM::YELLOW; team++) {
         debugMsgs = recMsg.debugmsgs(team);
-        int size = debugMsgs.ByteSize();
+        int size = debugMsgs.ByteSizeLong();
         if (team == 0) {
             GlobalData::instance()->debugBlueMessages.resize(size);
             debugMsgs.SerializeToArray(GlobalData::instance()->debugBlueMessages.data(), size);
@@ -131,7 +131,7 @@ void RecPlayer::sendMessage(const QByteArray& packet) {
             GlobalData::instance()->debugYellowMessages.resize(size);
             debugMsgs.SerializeToArray(GlobalData::instance()->debugYellowMessages.data(), size);
         }
-//        qDebug() << "FUCK DEBUG MESSAGE SIZE" <<  debugMsgs.ByteSize() << GlobalData::instance()->debugBlueMessages.size();
+//        qDebug() << "FUCK DEBUG MESSAGE SIZE" <<  debugMsgs.ByteSizeLong() << GlobalData::instance()->debugBlueMessages.size();
     }
     GlobalData::instance()->debugMutex.unlock();
 }
