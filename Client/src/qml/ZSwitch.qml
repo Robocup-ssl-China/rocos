@@ -1,7 +1,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
-
+import QtQuick.Controls.Material 2.12
 Grid{
     id:root;
     width:parent.itemWidth || 100;
@@ -44,7 +44,7 @@ Grid{
             width:parent.width;
             height:parent.height;
             radius: parent.parent.radius;
-            color: parent.checked ? "#80CBC4" : "#80CBC4"
+            color: parent.checked ? Material.accent : Material.accent
         }
         checked : root.checked
         onCheckedChanged: {

@@ -190,7 +190,7 @@ void SimModule::sendSim(int t, ZSS::Protocol::Robots_Command& command) {
         grsim_robots[id]->set_velangular(trans_vr(vr));
         grsim_robots[id]->set_spinner(trans_dribble(commands.dribbler_spin()));
     }
-    int size = grsim_packet.ByteSize();
+    int size = grsim_packet.ByteSizeLong();
     data.resize(size);
     grsim_packet.SerializeToArray(data.ptr(), size);
     publish("sim_packet",data);

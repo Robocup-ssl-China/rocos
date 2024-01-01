@@ -54,6 +54,14 @@ function velMod(role)
 	return vel(role):mod()
 end
 
+function rawVel(role)
+	return instance(role):RawVel()
+end
+
+function rawVelMod(role)
+	return rawVel(role):mod()
+end
+
 function rotVel(role)
 	return instance(role):RotVel()
 end

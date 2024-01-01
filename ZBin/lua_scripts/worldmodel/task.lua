@@ -78,15 +78,21 @@ function runMultiPos(p, c, d, idir, a)
 	return {mexe, mpos}
 end
 
---~ p为要走的点,d默认为射门朝向
-function goCmuRush(p, d, a, f, r, v)
+function goCmuRush(p, d, a, f, r, v, s, force_manual)
+	-- p : CGeoPoint, pos
+	-- d : double, dir
+	-- a : double, max_acc
+	-- f : int, flag
+	-- v : CVector, target_vel
+	-- s : double, max_speed
+	-- force_manual : bool, force_manual
 	local idir
 	if d ~= nil then
 		idir = d
 	else
 		idir = dir.shoot()
 	end
-	local mexe, mpos = GoCmuRush{pos = p, dir = idir, acc = a, flag = f,rec = r,vel = v}
+	local mexe, mpos = GoCmuRush{pos = p, dir = idir, acc = a, flag = f,rec = r,vel = v, speed = s, force_manual = force_manual}
 	return {mexe, mpos}
 end
 

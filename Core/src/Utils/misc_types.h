@@ -44,6 +44,7 @@ struct PlayerStatus{
     double max_rot_acceleration;
     double max_speed;
     double max_rot_speed;
+	bool force_manual_set_running_param = false;					// 是否强制手动设置运动参数
 
 	/// 控制方法 ： 用于底层运动控制 ，指定控制方法
 	bool is_specify_ctrl_method;									// 是否指定运动控制方法

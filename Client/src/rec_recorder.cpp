@@ -96,7 +96,7 @@ void RecRecorder::store() {
             debugMsgs = recMsg.add_debugmsgs();
             if (team == PARAM::BLUE) {
                 debugMsgs->ParseFromArray(GlobalData::instance()->debugBlueMessages.data(), GlobalData::instance()->debugBlueMessages.size());
-//                qDebug() << "before : " << recMsg.ByteSize();
+//                qDebug() << "before : " << recMsg.ByteSizeLong();
                 if(DRAW_VELOCITY){
                     auto vision = maintainMsg;
                     auto robot = vision.robot[PARAM::BLUE][0];
@@ -139,18 +139,18 @@ void RecRecorder::store() {
                         }
                     }
                 }
-//                qDebug() << "after : " << recMsg.ByteSize();
+//                qDebug() << "after : " << recMsg.ByteSizeLong();
             } else {
                 debugMsgs->ParseFromArray(GlobalData::instance()->debugYellowMessages.data(), GlobalData::instance()->debugYellowMessages.size());
             }
-            //        qDebug() << "FUCK DEBUG MESSAGE SIZE" <<  debugMsgs->ByteSize();
-            //        qDebug() << "FUCK DEBUG MESSAGE SIZE" <<  recMsg.debugmsgs(0).ByteSize();
+            //        qDebug() << "FUCK DEBUG MESSAGE SIZE" <<  debugMsgs->ByteSizeLong();
+            //        qDebug() << "FUCK DEBUG MESSAGE SIZE" <<  recMsg.debugmsgs(0).ByteSizeLong();
         }
 
         GlobalData::instance()->debugMutex.unlock();
         //    Field::repaintUnlock();
 
-        int size = recMsg.ByteSize();
+        int size = recMsg.ByteSizeLong();
         QByteArray buffer(size, 0);
         recMsg.SerializeToArray(buffer.data(), buffer.size());
         QDataStream stream(recIO);

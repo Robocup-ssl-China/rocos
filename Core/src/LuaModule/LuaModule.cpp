@@ -274,6 +274,8 @@ extern "C" int Skill_GoCmuRush(lua_State *L)
     playerTask.player.needdribble = int(LuaModule::Instance()->GetNumberArgument(8,0));
     double vx = LuaModule::Instance()->GetNumberArgument(9,0.0);
     double vy = LuaModule::Instance()->GetNumberArgument(10,0.0);
+	playerTask.player.max_speed = LuaModule::Instance()->GetNumberArgument(11,0.0);
+	playerTask.player.force_manual_set_running_param = LuaModule::Instance()->GetBoolArgument(12);
     playerTask.player.vel = CVector(vx,vy);
 
 	CPlayerTask* pTask = TaskFactoryV2::Instance()->SmartGotoPosition(playerTask);

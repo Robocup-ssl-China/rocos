@@ -37,7 +37,7 @@ public:
     void gui_debug_arc(const CGeoPoint& p, double r, double start_angle, double span_angle, int debug_color = 1, int RGB_value=0);
     void gui_debug_triangle(const CGeoPoint& p1, const CGeoPoint& p2, const CGeoPoint& p3, int debug_color = 1,int RGB_value=0);
     void gui_debug_robot(const CGeoPoint& p, double robot_dir, int debug_color = 1,int RGB_value=0);
-    void gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0);
+    void gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
     void send(bool);
 private:
     QUdpSocket sendSocket;

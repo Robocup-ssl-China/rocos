@@ -65,7 +65,7 @@ void CSimulator::controlRobot(int num,bool team){
 }
 void CSimulator::send(grSim_Packet* packet){
     static ZSData data;
-    int size = packet->ByteSize();
+    int size = packet->ByteSizeLong();
     data.resize(size);
     packet->SerializeToArray(data.ptr(), size);
     publish("sim_packet",data);

@@ -55,7 +55,7 @@ void RefereeBox::multicastCommand(){
     point->set_y(GlobalSettings::instance()->ballPlacementY);
     // add test for next_command
     ssl_referee.set_next_command(Referee_Command(nextCommand));
-    int size = ssl_referee.ByteSize();
+    int size = ssl_referee.ByteSizeLong();
     QByteArray buffer(size,0);
     ssl_referee.SerializeToArray(buffer.data(), buffer.size());
     sendSocket.writeDatagram(buffer.data(), buffer.size(),

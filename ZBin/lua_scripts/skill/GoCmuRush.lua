@@ -7,6 +7,8 @@ function GoCmuRush(task)
 	local macc    = task.acc or 0
 	local mrec    = task.rec or 0 --mrec判断是否吸球  gty 2016-6-15
 	local mvel
+	local mspeed  = task.speed or 0
+	local mforce_maunal_set_running_param = task.force_manual or false
 	matchPos = function()
 		if type(task.pos) == "function" then
 			mpos = task.pos()
@@ -49,7 +51,23 @@ function GoCmuRush(task)
 			mvel = CVector:new_local(0,0)
 		end
 
-		return CGoCmuRush(runner, mpos:x(), mpos:y(), mdir, mflag, msender, macc, mrec, mvel:x(), mvel:y())
+		if type(task.acc) == "function" then
+			macc = task.acc()
+		elseif task.acc ~= nil then
+			macc = task.acc
+		else
+			macc = 0
+		end
+
+		if type(task.speed) == "function" then
+			mspeed = task.speed()
+		elseif task.speed ~= nil then
+			mspeed = task.speed
+		else
+			mspeed = 0
+		end
+
+		return CGoCmuRush(runner, mpos:x(), mpos:y(), mdir, mflag, msender, macc, mrec, mvel:x(), mvel:y(), mspeed, mforce_maunal_set_running_param)
 	end
 
 	return execute, matchPos

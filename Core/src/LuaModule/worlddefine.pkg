@@ -11,6 +11,7 @@ class ObjectPoseT{
 	void SetVel(double x,double y);
 	void SetVel(const CVector& vel);
 	const CVector& Vel() const;
+	const CVector& RawVel() const;
 	double VelX() const;
 	double VelY() const;
 	void SetValid(bool v);

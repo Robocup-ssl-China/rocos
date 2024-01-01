@@ -100,7 +100,7 @@ void CCommandInterface::sendCommands() {
             robot_command->set_power(commands[i].chip_kick);
         }
     }
-    int size = ::robots_command.ByteSize();
+    int size = ::robots_command.ByteSizeLong();
     QByteArray data(size, 0);
     ::robots_command.SerializeToArray(data.data(), size);
     command_socket->writeDatagram(data.data(), size, QHostAddress(ZSS::LOCAL_ADDRESS), ZSS::Athena::CONTROL_SEND[TEAM]);
