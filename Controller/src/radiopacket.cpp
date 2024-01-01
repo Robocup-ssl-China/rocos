@@ -106,8 +106,6 @@ bool RadioPacket::encode(){
 
     encodeLegacy(NJ_CMD,tx,0);
 
-    qDebug() << tx.toHex();
-
 //    transmitPacket[0] = packageType | gameStatus;
 //    //RobotID
 //    transmitPacket[1] = (robotID) & 0x0f;
