@@ -10,7 +10,7 @@ local task_dir = TEST_X and p_dir or p_dir+math.pi/2
 
 local ROBOT_OFFSET = Utils.Polar2Vector(400,p_dir+math.pi/2)
 
-local task_max_acc = 1000
+local task_max_acc = 2000
 local task_max_vel = 3500
 local task_flag = flag.not_avoid_our_vehicle
 
@@ -20,7 +20,7 @@ local trigger_cycle = 0
 
 local result_list = { -- {task_max_acc, task_max_vel, det_max_vel, det_rot_err, time(s)} - {3000,2000,3000,0.0}
 }
-local MAX_TEST_ACC_STEP = 1000
+local MAX_TEST_ACC_STEP = 800
 local MIN_TEST_ACC_STEP = 300
 -- default test acc
 local set_new_task_param = function()
@@ -38,7 +38,7 @@ local set_new_task_param = function()
     end
     local success_rate = total_success_cnt / total_testing_cnt
     local step = MAX_TEST_ACC_STEP*success_rate - (1-success_rate)*MAX_TEST_ACC_STEP + (last_success and MIN_TEST_ACC_STEP or -MIN_TEST_ACC_STEP)
-    task_max_acc = math.max(1000,math.min(9999,task_max_acc+step))
+    task_max_acc = math.max(2000,math.min(9999,task_max_acc+step))
 end
 
 local state_reset = function(store)
