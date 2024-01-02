@@ -387,6 +387,13 @@ extern "C" int Skill_OpenSpeed(lua_State *L)
     TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
     return 0;
 }
+//extern "C" int Skill_PlaceBall(lua_State *L){
+//	int runner = LuaModule::Instance()->GetNumberArgument(1,0);
+//	double x = LuaModule::Instance()->GetNumberArgument(2,0.0);
+//	double y = LuaModule::Instance()->GetNumberArgument(3,0.0);
+//	int flag = LuaModule::Instance()->GetNumberArgument(4,0);
+//	CPlayerTask* pTask = PlayerRole::makeItPlaceBall(runner, );
+//}
 
 extern "C" int FUNC_TimeOut(lua_State* L)
 {
@@ -472,5 +479,6 @@ luaDef GUIGlue[] =
     {"CTouch",              Skill_Touch},
     {"CNoneZeroGoCmuRush",	Skill_NoneZeroGoCmuRush},
     {"CSpeedInRobot",		Skill_SpeedInRobot},
+//	{"CPlaceBall",			Skill_PlaceBall},
 	{NULL, NULL}
 };
