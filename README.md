@@ -22,7 +22,7 @@
 
 跳转
 
-* [编译](INSTALL.md)
+* [编译](INSTALL.md) （已更新Ubuntu编译指令）
 
 * [已知问题](ISSUE.md)
 
