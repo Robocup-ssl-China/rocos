@@ -161,6 +161,9 @@ void CGDebugEngine::gui_debug_robot(const CGeoPoint& p, double robot_dir, int de
     }
     debugMutex.unlock();
 }
+void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const std::string& msgstr, int debug_color,int RGB_value, const double size, const int weight){
+    gui_debug_msg(p,msgstr.c_str(),debug_color,RGB_value,size,weight);
+}
 void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color,int RGB_value, const double size, const int weight)
 {
     debugMutex.lock();

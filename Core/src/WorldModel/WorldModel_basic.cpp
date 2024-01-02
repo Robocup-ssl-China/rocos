@@ -74,10 +74,10 @@ bool CWorldModel::IsInfraredOn(int num){
     return (RobotSensor::Instance()->IsInfraredOn(num));
 }
 int CWorldModel::InfraredOnCount(int num){
-    return (RobotSensor::Instance()->fraredOn(num));
+    return (RobotSensor::Instance()->infraredOn(num));
 }
 int CWorldModel::InfraredOffCount(int num){
-    return (RobotSensor::Instance()->fraredOff(num));
+    return (RobotSensor::Instance()->infraredOff(num));
 }
 bool CWorldModel::KickDirArrived(int current_cycle, double kickdir, double kickdirprecision, int myNum){
     const PlayerVisionT& me = this->_pVision->ourPlayer(myNum);

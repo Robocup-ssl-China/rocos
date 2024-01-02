@@ -137,7 +137,7 @@ firstState = "start",
 },
 
 
-name = "TestAcc",
+name = "TestBenchmark_Acc",
 applicable ={
 	exp = "a",
 	a = true
