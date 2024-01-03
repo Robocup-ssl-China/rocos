@@ -582,6 +582,12 @@ quint8 kickStandardization(quint8 id, bool mode, quint16 power) {
     new_power = std::max(10.0, std::min(new_power, 127.0));
     return (quint8)new_power;
 }
+double velRegulation(const int num,const double v){
+    QString key = QString("Robot%1/vel").arg(num);
+    double ratio = 1.0;
+    KParamManager::instance()->loadParam(ratio, key, 1.0);
+    return v*ratio;
+}
 void encodeNJLegacy(const NJ_Command& command,QByteArray& tx,int num){
 
     auto& TXBuff = tx;
@@ -591,6 +597,11 @@ void encodeNJLegacy(const NJ_Command& command,QByteArray& tx,int num){
     qint16 vy = (qint16)(command.vy);
     qint16 ivr = (qint16)(command.vr);
     qint16 vr = abs(ivr)> 511 ? (ivr > 0 ? 1 : -1)*(511) : (ivr);
+
+    vx = velRegulation(real_num,vx);
+    vy = velRegulation(real_num,vy);
+    vr = velRegulation(real_num,vr);
+
     qint16 power = (qint16)(command.power);
     bool kick_mode = command.kick_mode;
     qint16 dribble = (qint16)(command.dribble*3+0.4);
