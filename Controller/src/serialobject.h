@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE void updateCommandParams(int robotID,int velX,int velY,int velR,bool dribble,int dribbleLevel,bool mode,bool shoot,int power){
         radioPacket.updateCommandParams(robotID,velX,velY,velR,dribble,dribbleLevel,mode,shoot,power);
     }
+    void readData();
 private:
     QStringList ports;
     QStringList settingsName;

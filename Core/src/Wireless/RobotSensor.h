@@ -27,73 +27,31 @@
 struct RobotMsg{
     std::mutex _mutex;
     bool infrared;
-    int fraredOn;
-    int fraredOff;
+    int infraredOn;
+    int infraredOff;
     unsigned char flat_kick;
     unsigned char chip_kick;
     CGeoPoint dribblePoint;
-    RobotMsg():infrared(false),fraredOn(0),fraredOff(0),flat_kick(0),chip_kick(0){}
+    RobotMsg():infrared(false),infraredOn(0),infraredOff(0),flat_kick(0),chip_kick(0){}
 };
 
 /// 机器人本体感知信息
 class CRobotSensor{
 public:
 	// 构造函数
-    CRobotSensor() {
-        ZSS::ZParamManager::instance()->loadParam(DEBUG_DEVICE,"Debug/DeviceMsg",false);
-    }
+    CRobotSensor();
 	// 析构函数
 	~CRobotSensor() {}
 
     // 全局更新接口
-    void Update(const CVisionModule* pVision){
-        static const int MAX_FRARED = 999;
-        static const double DEBUG_X = -PARAM::Field::PITCH_LENGTH / 12;
-        static const double DEBUG_TEXT_LENGTH = 500.0;
-        static const double DEBUG_X_STEP = PARAM::Field::PITCH_LENGTH / 30;
-        static const double DEBUG_Y = -PARAM::Field::PITCH_WIDTH * 4 / 10;
-        static const double DEBUG_Y_STEP = PARAM::Field::PITCH_WIDTH / 45;
-        if(DEBUG_DEVICE){
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * 0),"INFRARED : ",COLOR_YELLOW);
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * 1),"FLATKICK : ",COLOR_YELLOW);
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * 2),"CHIPKICK : ",COLOR_YELLOW);
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * 3),"FRAREDON : ",COLOR_YELLOW);
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * 4),"FRAREDOFF: ",COLOR_YELLOW);
-            for(int i=0;i<PARAM::Field::MAX_PLAYER;i++){
-                robotMsg[i]._mutex.lock();
-                GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_TEXT_LENGTH + DEBUG_X_STEP * i, DEBUG_Y + DEBUG_Y_STEP * 0),robotMsg[i].infrared  ? "1" : "0",COLOR_YELLOW);
-                GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_TEXT_LENGTH + DEBUG_X_STEP * i, DEBUG_Y + DEBUG_Y_STEP * 1),robotMsg[i].flat_kick ? "1" : "0",COLOR_YELLOW);
-                GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_TEXT_LENGTH + DEBUG_X_STEP * i, DEBUG_Y + DEBUG_Y_STEP * 2),robotMsg[i].chip_kick ? "1" : "0",COLOR_YELLOW);
-                GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_TEXT_LENGTH + DEBUG_X_STEP * i, DEBUG_Y + DEBUG_Y_STEP * 3),QString::number(robotMsg[i].fraredOn).toLatin1(),COLOR_YELLOW);
-                GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_TEXT_LENGTH + DEBUG_X_STEP * i, DEBUG_Y + DEBUG_Y_STEP * 4),QString::number(robotMsg[i].fraredOff).toLatin1(),COLOR_YELLOW);
-                robotMsg[i]._mutex.unlock();
-            }
-        }
-        for(int i=0;i<PARAM::Field::MAX_PLAYER;i++){
-            robotMsg[i]._mutex.lock();
-            if(robotMsg[i].chip_kick > 0)
-                robotMsg[i].chip_kick--;
-            if(robotMsg[i].flat_kick > 0)
-                robotMsg[i].flat_kick--;
-            if(robotMsg[i].infrared){
-                if(robotMsg[i].fraredOff != 0) robotMsg[i].dribblePoint = pVision->ourPlayer(i).Pos();
-                robotMsg[i].fraredOn = robotMsg[i].fraredOn >= MAX_FRARED ? MAX_FRARED : robotMsg[i].fraredOn + 1;
-                robotMsg[i].fraredOff = 0;
-            }
-            else{
-                robotMsg[i].fraredOn = 0;
-                robotMsg[i].fraredOff = robotMsg[i].fraredOff >= MAX_FRARED ? MAX_FRARED : robotMsg[i].fraredOff + 1;
-            }
-            robotMsg[i]._mutex.unlock();
-        }
-    }
+    void Update(const CVisionModule* pVision);
 
 	// 小车是否产生红外信号，一般表示球在嘴前方
     bool IsInfraredOn(int num)              { return robotMsg[num].infrared; }
 
-    int fraredOn(int num) { return robotMsg[num].fraredOn; }
+    int infraredOn(int num) { return robotMsg[num].infraredOn; }
 
-    int fraredOff(int num) { return robotMsg[num].fraredOff; }
+    int infraredOff(int num) { return robotMsg[num].infraredOff; }
 
     CGeoPoint dribblePoint(int num) { return robotMsg[num].dribblePoint; }
 

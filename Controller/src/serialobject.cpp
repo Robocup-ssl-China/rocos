@@ -31,6 +31,7 @@ SerialObject::SerialObject(QObject *parent):QObject(parent),radioPacket(&serial)
     frequency.append(7);                        stringFrequency.append("7");
     frequency.append(8);                        stringFrequency.append("8");
     frequency.append(9);                        stringFrequency.append("9");
+    connect(&serial, &QSerialPort::readyRead, this, &SerialObject::readData);
 }
 QString SerialObject::getName(int itemIndex) const{
     return settingsName[itemIndex];
@@ -85,4 +86,24 @@ void SerialObject::sendStartPacket(){
     qDebug() << "Set Frequency... : " << frequency[currentIndex[1]];
     radioPacket.updateFrequency(frequency[currentIndex[1]]);
     radioPacket.sendStartPacket();
+}
+void SerialObject::readData(){
+    QByteArray rx = serial.readAll();
+    qDebug() << rx.toHex();
+    auto& data = rx;
+    int id = 0;
+    bool infrared = false;
+    bool flat = false;
+    bool chip = false;
+    int battery = 0;
+    int capacitance = 0;
+    if(data[0] == (char)0xff){
+        if(data[1] == (char)0x02){
+            id       = (quint8)data[2] - 1;
+            infrared = (quint8)data[3] & 0x40;
+            flat     = (quint8)data[3] & 0x20;
+            chip     = (quint8)data[3] & 0x10;
+            qDebug() << id << ' ' << infrared << ' ' << flat << ' ' << chip << ' ' << battery << ' ' << capacitance;
+        }
+    }
 }

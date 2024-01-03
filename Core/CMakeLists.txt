@@ -24,7 +24,10 @@ EXECUTE_PROCESS(
 ## Eigen
 find_package(Eigen3 REQUIRED)
 list(APPEND incs ${EIGEN3_INCLUDE_DIR})
-
+## fmt
+find_package(fmt REQUIRED)
+list(APPEND incs ${fmt_INCLUDE_DIRS})
+list(APPEND libs fmt::fmt)
 
 set(PROTO_LIST
     game_event
