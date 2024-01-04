@@ -479,7 +479,15 @@ bool ActionModuleSerialVersion::closeSerialPort(){
     return false;
 }
 void ActionModuleSerialVersion::readData(){
-    rx = serial.readAll();
+    QByteArray pack = serial.readAll();
+    if(pack.length() > 0 && int(pack[0]) == 0xff){
+        rx = pack;
+    }else{
+        rx += pack;
+    }
+    if(rx.length() < 25){
+        return;
+    }
     auto& data = rx;
     int id = 0;
     bool infrared = false;
@@ -507,7 +515,7 @@ void ActionModuleSerialVersion::readData(){
         //            capacitance = (quint8)data[4];
         //        }
     }
-
+    rx = "";
 }
 
 namespace {

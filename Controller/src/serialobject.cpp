@@ -88,8 +88,16 @@ void SerialObject::sendStartPacket(){
     radioPacket.sendStartPacket();
 }
 void SerialObject::readData(){
-    QByteArray rx = serial.readAll();
-    qDebug() << rx.toHex();
+    QByteArray pack = serial.readAll();
+    if(pack.length() > 0 && int(pack[0]) == 0xff){
+        rx = pack;
+    }else{
+        rx += pack;
+    }
+    if(rx.length() < 25){
+        return;
+    }
+    qDebug() << "recv : " << rx.toHex();
     auto& data = rx;
     int id = 0;
     bool infrared = false;
@@ -106,4 +114,5 @@ void SerialObject::readData(){
             qDebug() << id << ' ' << infrared << ' ' << flat << ' ' << chip << ' ' << battery << ' ' << capacitance;
         }
     }
+    rx = "";
 }

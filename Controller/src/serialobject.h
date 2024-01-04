@@ -41,6 +41,7 @@ private:
     QByteArray defaultIndex;
     QSerialPort serial;
     RadioPacket radioPacket;
+    QByteArray rx;
 };
 
 #endif // SERIALOBJECT_H
