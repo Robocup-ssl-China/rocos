@@ -61,7 +61,7 @@ function goSimplePos(p, d, f)
 	return {mexe, mpos}
 end
 
-function runMultiPos(p, c, d, idir, a)
+function runMultiPos(p, c, d, idir, a, f)
 	if c == nil then
 		c = false
 	end
@@ -74,7 +74,7 @@ function runMultiPos(p, c, d, idir, a)
 		idir = dir.shoot()
 	end
 
-	local mexe, mpos = RunMultiPos{ pos = p, close = c, dir = idir, flag = flag.not_avoid_our_vehicle, dist = d, acc = a}
+	local mexe, mpos = RunMultiPos{ pos = p, close = c, dir = idir, flag = f, dist = d, acc = a}
 	return {mexe, mpos}
 end
 

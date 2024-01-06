@@ -10,6 +10,14 @@ function RunMultiPos(task)
  	local lastCycle = 0
 
 	execute = function(runner)
+		for i = 1, table.getn(task.pos) do
+			if type(task.pos[i]) == "function" then
+				mpos[i] = task.pos[i]()
+			else
+				mpos[i] = task.pos[i]
+			end
+		end
+
 		if player.pos(runner):dist(mpos[curIndex]) < mdist then
 			local nextIndex = (curIndex) % table.getn(mpos) + 1
 			if mclose == nil or mclose then

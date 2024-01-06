@@ -1,18 +1,39 @@
 local START_POS = CGeoPoint:new_local(1000,1000)
 
-local VW_MAX = 12.8
-local AW = 4
+local VW_MAX = 12.7
+local AW = 16
 
 local vw = 0.0
+local w = 0.0
 local F_vw = function()
     return vw
 end
--- local DEBUG_MSG = function()
---     debugEngine:
--- end
+local F_w = function()
+    return w
+end
+
+local result_list = {} -- {acc,vw_max}
+
+local poses = {
+    CGeoPoint:new_local(2500,2500),
+    CGeoPoint:new_local(2500,500),
+    CGeoPoint:new_local(500,500),
+    CGeoPoint:new_local(500,2500),
+}
+
+local DEBUG_MSG = function()
+    local sx,sy = 200,-1000
+    local span = 140
+    local sp = CGeoPoint:new_local(sx,sy)
+    local v = CVector:new_local(0,-span)
+    debugEngine:gui_debug_msg(sp + v*0,string.format("Acc : %4.1f",AW),param.BLUE)
+    debugEngine:gui_debug_msg(sp + v*1,string.format("Vw  : %4.1f",vw),param.BLUE)
+    debugEngine:gui_debug_msg(sp + v*2,string.format("INF : %4d",player.infraredCount(9)),param.BLUE)
+    debugEngine:gui_debug_msg(sp + v*3,string.format("INF : %4d",player.infraredOn(9) and 1 or 0),param.BLUE)
+end
 
 local update = function()
-    vw = vw + AW/param.frameRate
+    vw = vw + AW / param.frameRate
     if vw > VW_MAX then
         vw = VW_MAX
         AW = -AW
@@ -20,7 +41,9 @@ local update = function()
         vw = -VW_MAX
         AW = -AW
     end
-    -- DEBUG_MSG()
+    w = (w + vw*param.frameRate)
+    w = math.modf(w,math.pi*2)
+    DEBUG_MSG()
 end
 
 local reset = function()
@@ -32,7 +55,8 @@ gPlayTable.CreatePlay{
 firstState = "start",
 ["start"] = {
     switch = function()
-        if bufcnt(player.toTargetDist("Leader") < 20 and player.infraredCount("Leader")>20 ,param.frameRate*1) then
+        DEBUG_MSG()
+        if bufcnt(player.toTargetDist("Leader") < 100 and player.infraredCount("Leader")>20 ,param.frameRate*1) then
             return "run"
         end
     end,
@@ -49,7 +73,8 @@ firstState = "start",
             return "start"
         end
     end,
-    Leader = task.openSpeed(0,0,F_vw,flag.dribbling),
+    -- Leader = task.openSpeed(0,0,F_vw,flag.dribbling),
+    Leader = task.runMultiPos(poses, true, 100, 0.0, 2000, flag.dribbling),
     match = "{L}"
 },
 
