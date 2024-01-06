@@ -488,6 +488,7 @@ void ActionModuleSerialVersion::readData(){
     if(rx.length() < 25){
         return;
     }
+    qDebug() << "recv : 0x" << rx;
     auto& data = rx;
     int id = 0;
     bool infrared = false;
@@ -497,7 +498,7 @@ void ActionModuleSerialVersion::readData(){
     int capacitance = 0;
     if(data[0] == (char)0xff){
         if(data[1] == (char)0x02){
-            id       = (quint8)data[2] - 1;//old protocal
+            id       = (quint8)data[2] + (int(data[23]) == 0?0:-1); // if old protocol data[23] should not be zero, 23 in new protocol is zero
             infrared = (quint8)data[3] & 0x40;
             flat     = (quint8)data[3] & 0x20;
             chip     = (quint8)data[3] & 0x10;
@@ -613,6 +614,8 @@ void encodeNJLegacy(const NJ_Command& command,QByteArray& tx,int num){
     qint16 power = (qint16)(command.power);
     bool kick_mode = command.kick_mode;
     qint16 dribble = (qint16)(command.dribble*3+0.4);
+    if(dribble > 3) dribble = 3;
+    if(dribble < 0) dribble = 0;
     // vx
     unsigned int vx_value_uint = (unsigned int)abs(vx);
     // vy

@@ -107,7 +107,7 @@ void SerialObject::readData(){
     int capacitance = 0;
     if(data[0] == (char)0xff){
         if(data[1] == (char)0x02){
-            id       = (quint8)data[2] - 1;
+            id       = (quint8)data[2] + (int(data[23]) == 0?0:-1);// ???????
             infrared = (quint8)data[3] & 0x40;
             flat     = (quint8)data[3] & 0x20;
             chip     = (quint8)data[3] & 0x10;

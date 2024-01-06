@@ -1,4 +1,3 @@
-#include <fmt/core.h>
 #include "RobotSensor.h"
 CRobotSensor::CRobotSensor(){
     ZSS::ZParamManager::instance()->loadParam(DEBUG_DEVICE,"Debug/DeviceMsg",false);

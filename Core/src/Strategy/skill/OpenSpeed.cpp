@@ -19,7 +19,7 @@ CPlayerCommand* COpenSpeed::execute(const CVisionModule* pVision) {
 	double dribblePower = DribbleStatus::Instance()->getDribbleCommand(num);
 	int flag = task().player.flag;
 	if (flag & PlayerStatus::DRIBBLING && dribblePower < 0.5){
-		dribblePower = 1.0;
+        dribblePower = 3.0;
 	}
 	bool needReport = task().player.needReport;
 	return CmdFactory::Instance()->newCommand(CPlayerSpeedV2(num, speedX, speedY, speedR, dribblePower, flag, needReport));
