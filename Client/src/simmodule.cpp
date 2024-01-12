@@ -16,7 +16,7 @@ namespace ZSS {
 namespace {
 bool NoVelY = false;
 bool trans_dribble(double dribble) {
-    return dribble>1;
+    return dribble>0.5;
 }
 double trans_length(double v) {
     return v / 1000.0;

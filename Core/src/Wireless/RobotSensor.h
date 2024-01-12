@@ -2,6 +2,7 @@
 #define _ROBOT_FILTERED_INFO_H_
 
 //#include <CommControl.h>
+#include <fmt/core.h>
 #include <singleton.h>
 #include "staticparams.h"
 

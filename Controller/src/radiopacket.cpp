@@ -75,7 +75,7 @@ bool RadioPacket::sendCommand(){
     if(times == 0) timer.start();
     if(serialPtr != NULL){
         encode();
-        qDebug() << "0x" << transmitPacket.toHex();
+//        qDebug() << "0x" << transmitPacket.toHex();
         //transmitPacket是包含命令的包
         transmitPacket.data();
         serialPtr->write((transmitPacket.data()),TRANSMIT_PACKET_SIZE);
