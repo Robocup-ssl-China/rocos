@@ -1,6 +1,26 @@
 ## 更新
 * latest
-  * 统一编译方式，去除脚本，更名Medusa->Core
+  * 统一编译方式为cmake，使用root下CMakeLists.txt合并为一个工程，代替原本的三个工程
+  * 更新主题色！（Teal - #279BE6）
+  * 更名CrazyNaN - Controller，Medusa - Core
+  * 修正Controller的布局，适配不同宽度
+  * 更新部分接口
+    * OpenSpeed
+    * GoCmuRush的加速度/速度限定
+  * 添加Benchmark脚本用于测试
+    * TestBenchmark_Acc
+    * TestBenchmark_Dribble
+  * 添加用于Debug的接口（gui_debug_msg支持不同字体样式-字号，加粗）
+  * 修复部分bug
+    * 修复旋转速度的在left或right时的错误问题
+    * 修复吸球力度不正确的bug
+    * 修复TZ-S01与旧机器人回报机器人号码不一致的问题
+    * 修复RunMultiPos与“保持”匹配规则不适配的问题
+  * 添加更直观的RobotSensor可视化
+  * wiki中添加Ubuntu的安装依赖
+  * 支持TZ-S01机型，适配旧版本发射机
+  * Controller支持机器人回包输出
+  * 添加机器人速度的补偿接口（velRegulation）
 * [**v0.0.1**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.1) (2022.10.25)
   * 稳定版本
     * Client使用cmake构建的客户端，内嵌sim模块（修改自开源grSim）
