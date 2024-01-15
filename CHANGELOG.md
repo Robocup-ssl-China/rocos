@@ -1,5 +1,6 @@
 ## 更新
 * latest
+* [**v0.0.2**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.2)（2024.1.15）
   * 统一编译方式为cmake，使用root下CMakeLists.txt合并为一个工程，代替原本的三个工程
   * 更新主题色！（Teal - #279BE6）
   * 更名CrazyNaN - Controller，Medusa - Core
