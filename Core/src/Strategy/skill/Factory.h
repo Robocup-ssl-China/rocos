@@ -18,6 +18,7 @@ public:
     CPlayerTask* OpenSpeed(const TaskT& task);
     CPlayerTask* Goalie(const TaskT& task);
     CPlayerTask* Touch(const TaskT& task);
+    CPlayerTask* GetBall(const TaskT& task);
 protected:
 	template < class CTaskType >
 	CPlayerTask* MakeTask( const TaskT& task );
@@ -43,6 +44,7 @@ namespace PlayerRole{
 
     extern CPlayerTask* makeItRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags = 0);
     extern CPlayerTask* makeItOpenRun(const int num, const double speedX, const double speedY, const double rotSpeed, int flags = 0, bool needReport = false);
+    extern CPlayerTask* makeItGetBall(const int num, const CGeoPoint& pos, const double power, const double precision, const int flag = 0, const int skill_flag = 0);
 }
 
 #endif // _TASK_FACTORY_V2_H_
