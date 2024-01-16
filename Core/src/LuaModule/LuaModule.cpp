@@ -395,6 +395,21 @@ extern "C" int Skill_OpenSpeed(lua_State *L)
 //	CPlayerTask* pTask = PlayerRole::makeItPlaceBall(runner, );
 //}
 
+// extern "C" int Skill_GetBall(lua_State *L){
+// 	int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
+// 	double x = LuaModule::Instance()->GetNumberArgument(2, 0);
+// 	double y = LuaModule::Instance()->GetNumberArgument(3, 0);
+// 	double power = LuaModule::Instance()->GetNumberArgument(4, 0);
+// 	double precision = LuaModule::Instance()->GetNumberArgument(5, 0);
+// 	int flag = int(LuaModule::Instance()->GetNumberArgument(6, 0));
+// 	int kick_flag = int(LuaModule::Instance()->GetNumberArgument(7, 0));
+// 	CPlayerTask* pTask = PlayerRole::makeItGetBall(runner, CGeoPoint(x, y), power, precision, flag, kick_flag);
+// 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+
+// 	return 0;
+// }
+
+
 extern "C" int FUNC_TimeOut(lua_State* L)
 {
 	bool cond = LuaModule::Instance()->GetBoolArgument(1);
@@ -479,6 +494,7 @@ luaDef GUIGlue[] =
     {"CTouch",              Skill_Touch},
     {"CNoneZeroGoCmuRush",	Skill_NoneZeroGoCmuRush},
     {"CSpeedInRobot",		Skill_SpeedInRobot},
-//	{"CPlaceBall",			Skill_PlaceBall},
+	// {"CPlaceBall",			Skill_PlaceBall},
+	// {"CGetBall",			Skill_GetBall},
 	{NULL, NULL}
 };

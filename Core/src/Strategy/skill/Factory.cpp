@@ -20,6 +20,7 @@
 // test
 #include "Goalie.h"
 #include "Touch.h"
+#include "GetBall.h"
 /************************************************************************/
 /*                      TaskFactoryV2									*/
 /* 请注意:																*/
@@ -66,7 +67,9 @@ CPlayerTask	* CTaskFactoryV2::Speed(const TaskT& task) {
 CPlayerTask	* CTaskFactoryV2::OpenSpeed(const TaskT& task) {
 	return MakeTask< COpenSpeed >(task);
 }
-
+CPlayerTask * CTaskFactoryV2::GetBall(const TaskT& task){
+    return MakeTask< CGetBall >(task);
+}
 //////////////////////////////////////////////////////////////////////////
 // define the namespace used to provide interface for task calling
 namespace PlayerRole {
@@ -122,7 +125,7 @@ namespace PlayerRole {
 	CPlayerTask* makeItSimpleGoto(const int num, const CGeoPoint& target, const double dir, const int flags)
 	{
 		static TaskT playerTask;
-		playerTask.executor = num;
+        playerTask.executor = num;
 		playerTask.player.pos = target;
 		playerTask.player.vel = CVector(0.0,0.0);
 		playerTask.player.rotvel = 0;
@@ -218,6 +221,16 @@ namespace PlayerRole {
         playerTask.player.flag = flags;
         playerTask.player.needReport = needReport;
         return TaskFactoryV2::Instance()->OpenSpeed(playerTask);
+    }
+    CPlayerTask* makeItGetBall(const int num, const CGeoPoint& pos, const double power, const double precision, const int flag, const int kick_flag){
+        static TaskT playerTask;
+        playerTask.executor = num;
+        playerTask.player.pos = pos;
+        playerTask.player.kickpower = power;
+        playerTask.player.kickprecision = precision;
+        playerTask.player.flag = flag;
+        playerTask.player.kick_flag = kick_flag;
+        return TaskFactoryV2::Instance()->GetBall(playerTask);
     }
 
 }

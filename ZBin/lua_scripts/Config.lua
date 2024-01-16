@@ -76,6 +76,7 @@ gBayesPlayTable = {
 gTestPlayTable = {
         "Test/TestRun",
         "Test/TestSkill",
+        "Test/TestPassAndKick",
         "Test/TestDribbleAndKick",
         "Test/RunMilitaryBoxing",
         "Test/TestTuningPID",
