@@ -1,6 +1,8 @@
-# ChinaOpen SSL Code
+# Rocos - **RO**bo**C**up **O**pen **S**ource small size league framework
 
-> RoboCup中国公开赛 小型组开源代码
+![Rocos](img/rocos.png)
+
+> RoboCup小型组开源框架
 
 * [编译](INSTALL.md) （已更新Ubuntu编译指令）
 

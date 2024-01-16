@@ -19,7 +19,7 @@ end
 function touchKick(p,ifInter)
 	local ipos = p or pos.theirGoal()
 	local idir = function(runner)
-		return (ipos - player.pos(runner)):dir()
+		return (_(ipos) - player.pos(runner)):dir()
 	end
 	local mexe, mpos = Touch{pos = ipos, useInter = ifInter}
 	return {mexe, mpos, kick.flat, idir, pre.low, cp.full, cp.full, flag.nothing}
@@ -75,6 +75,20 @@ function runMultiPos(p, c, d, idir, a, f)
 	end
 
 	local mexe, mpos = RunMultiPos{ pos = p, close = c, dir = idir, flag = f, dist = d, acc = a}
+	return {mexe, mpos}
+end
+
+function staticGetBall(target_pos, dist)
+	local idist = dist or 100
+	local p = function()
+		local target = _(target_pos) or pos.theirGoal()
+		return ball.pos() + Utils.Polar2Vector(idist,(ball.pos()-target):dir())
+	end
+	local idir = function()
+		local target = _(target_pos) or pos.theirGoal()
+		return (target - ball.pos()):dir()
+	end
+	local mexe, mpos = GoCmuRush{pos = p, dir = idir, flag = flag.dodge_ball}
 	return {mexe, mpos}
 end
 

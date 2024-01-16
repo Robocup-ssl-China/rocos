@@ -11,7 +11,6 @@ function Touch(task)
 		else
 			mpos = task.pos
 		end
-		debugEngine:gui_debug_msg(CGeoPoint:new_local(1000,1000),"useInter : " .. (useInter and "T" or "F"))
 		return CTouch(runner, mpos:x(), mpos:y(), useInter)
 	end
 
