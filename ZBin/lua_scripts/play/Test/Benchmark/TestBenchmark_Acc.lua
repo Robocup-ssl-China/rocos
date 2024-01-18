@@ -1,8 +1,8 @@
 local p = {
-    CGeoPoint:new_local(-3000,2000),
-    CGeoPoint:new_local(3000,-2000)
+    CGeoPoint:new_local(-3000,-1000),
+    CGeoPoint:new_local(3000,-1000)
 }
-local TEST_X = true
+local TEST_X = false
 local FAIL_DEGREE = 30.0
 
 local p_dir = (p[2]-p[1]):dir()

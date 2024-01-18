@@ -16,13 +16,16 @@ function touch()
 	local mexe, mpos = Touch{pos = ipos}
 	return {mexe, mpos}
 end
-function touchKick(p,ifInter)
+function touchKick(p,ifInter,power,mode)
 	local ipos = p or pos.theirGoal()
 	local idir = function(runner)
 		return (_(ipos) - player.pos(runner)):dir()
 	end
 	local mexe, mpos = Touch{pos = ipos, useInter = ifInter}
-	return {mexe, mpos, kick.flat, idir, pre.low, cp.full, cp.full, flag.nothing}
+	local ipower = function()
+		return power or 127
+	end
+	return {mexe, mpos, mode and kick.flat or kick.chip, idir, pre.low, ipower, cp.full, flag.nothing}
 end
 function goSpeciPos(p, d, f, a) -- 2014-03-26 增加a(加速度参数)
 	local idir
@@ -79,7 +82,7 @@ function runMultiPos(p, c, d, idir, a, f)
 end
 
 function staticGetBall(target_pos, dist)
-	local idist = dist or 100
+	local idist = dist or 140
 	local p = function()
 		local target = _(target_pos) or pos.theirGoal()
 		return ball.pos() + Utils.Polar2Vector(idist,(ball.pos()-target):dir())
