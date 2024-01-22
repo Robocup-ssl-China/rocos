@@ -70,7 +70,7 @@ int runLoop() {
     RefereeBoxInterface::Instance();
     while (true) {
         vision->setNewVision();
-        decision->DoDecision(false);
+        decision->DoDecision();
         if (! wireless_off) {
             action->sendAction();
         } else {
