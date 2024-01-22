@@ -37,22 +37,4 @@ protected:
 private:	
 	CPlayerTask* _pSubTask; // 子任务
 };
-/************************************************************************/
-/*                         StatedTask                                   */
-/************************************************************************/
-class CStatedTask : public CPlayerTask{ // 有状态的task,维持一个状态机
-public:	
-	CStatedTask() : _state(BEGINNING){ }
-	static const int BEGINNING = 0; // 开始状态
-	static const int ABORT = 98; //skill执行失败跳出
-	static const int ABOUT_TO_FINISH = 99;//进行着，还未完成added by shizhy 2009.1.9
-	static const int FINISHED = 100; // 结束状态
-	int state() const { return _state; }
-	void setState(int state);
-	bool isAborted() const { return _state == ABORT; }
-	bool isFinished() const { return _state == FINISHED; }
-	int getState() const { return _state; }
-private:
-	int _state; // 当前状态  
-};
 #endif // _PLAYER_TASK_H_

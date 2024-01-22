@@ -70,7 +70,6 @@ struct PlayerStatus{
     double path_plan_circle_radius;
 
     bool specify_path_plan_area;
-    static const bool IS_RECTANGLE_PENALTY			= true;		  // 选择矩形/类椭圆禁区 added by Wang in 2018/3/21
 
 	/// 标签常量
 	// 默认的flags
@@ -131,11 +130,5 @@ struct TaskT{
 	PlayerStatus player;		// 队员的状态
 	stBallStatus ball;			// 球的状态
 };
-
-/// 指令枚举
-enum CommandTypeT{ CTStop, CTDash, CTTurn, CTArc, CTSpeed, CTKick };
-
-/// 优先级
-enum PriorityType{ LowestPriority, LowPriority, NormalPriority, HighPriority, HighestPriority };
 
 #endif	// ～_MISC_TYPES_H_

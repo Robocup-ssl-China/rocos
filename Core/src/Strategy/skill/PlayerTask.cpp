@@ -27,12 +27,3 @@ bool CPlayerTask::isEmpty() const
 	}
 	return true;
 }
-
-/************************************************************************/
-/*                       CStatedTask                                    */
-/************************************************************************/
-void CStatedTask::setState(int state)
-{
-	const int vecNumber = task().executor;
-	_state = state;
-}
