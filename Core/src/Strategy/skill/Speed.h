@@ -1,7 +1,7 @@
 #ifndef Speed_h__
 #define Speed_h__
 
-#include <skill/PlayerTask.h>
+#include <PlayerTask.h>
 /************************************************************************/
 /*                     CSpeed  直接发速度指令,平动和转动          */
 /*			last edited by zc(eshock@zju.edu.cn) 2008-12-28				*/
@@ -14,4 +14,6 @@ public:
 	virtual bool isEmpty() const { return false; }
 protected:
 };
+
+// REGISTER_SKILL(Speed, create<CSpeed>);
 #endif // Speed_h__

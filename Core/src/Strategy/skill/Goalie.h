@@ -1,6 +1,5 @@
-#ifndef GOALIE_H
-#define GOALIE_H
-#include <skill/PlayerTask.h>
+#pragma once
+#include "registry.h"
 
 class CGoalie : public CPlayerTask{
 public:
@@ -19,4 +18,5 @@ private:
     STATE _state;
     std::string debug_state;
 };
-#endif // GOALIE_H
+
+// REGISTER_SKILL(Goalie,CGoalie::create);

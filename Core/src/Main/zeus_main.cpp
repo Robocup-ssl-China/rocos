@@ -45,7 +45,6 @@ using PARAM::Latency::TOTAL_LATED_FRAME;
 
 bool VERBOSE_MODE = true;
 bool IS_SIMULATION = false;
-bool wireless_off = false;
 bool record_run_pos_on = false;
 namespace {
 COptionModule *option;
@@ -70,11 +69,7 @@ int runLoop() {
     while (true) {
         vision->setNewVision();
         decision->DoDecision();
-        if (! wireless_off) {
-            action->sendAction();
-        } else {
-            action->sendNoAction();
-        }
+        action->sendAction();
         GDebugEngine::Instance()->send(option->MyColor() == PARAM::BLUE); //Show two teams debug messages
     }
 }

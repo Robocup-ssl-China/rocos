@@ -14,8 +14,8 @@
 class CVisionModule; // 这里只用到CVisionModule的指针,不用include其头文件,防止依赖过多
 class CPlayerTask{
 public:
-	CPlayerTask() : _pSubTask(0){ }
-	virtual ~CPlayerTask() { }
+	CPlayerTask() = default;
+	virtual ~CPlayerTask() = default;
 	virtual void plan(const CVisionModule* pVision); ///<规划
 	virtual CPlayerCommand* execute(const CVisionModule* pVision); ///<执行
 	virtual bool isEmpty() const; // 是否空任务
@@ -35,6 +35,6 @@ protected:
 	const TaskT& task() const { return _task; }
 	TaskT _task; //　任务的具体内容
 private:	
-	CPlayerTask* _pSubTask; // 子任务
+	CPlayerTask* _pSubTask = nullptr; // 子任务
 };
 #endif // _PLAYER_TASK_H_

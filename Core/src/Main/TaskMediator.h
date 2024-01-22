@@ -4,7 +4,7 @@
 #include <singleton.h>
 #include <geometry.h>
 #include "staticparams.h"
-#include <skill/PlayerTask.h>
+#include <PlayerTask.h>
 #include "utils.h"
 #include "Global.h"
 #include <PlayInterface.h>

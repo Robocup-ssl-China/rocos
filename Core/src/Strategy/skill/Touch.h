@@ -1,7 +1,7 @@
 #ifndef CTOUCH_H
 #define CTOUCH_H
 
-#include <skill/PlayerTask.h>
+#include <PlayerTask.h>
 
 class CTouch : public CPlayerTask{
 public:

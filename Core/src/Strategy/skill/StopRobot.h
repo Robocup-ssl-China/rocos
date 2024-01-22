@@ -1,6 +1,6 @@
 #ifndef _STOP_ROBOT_V2_H
 #define _STOP_ROBOT_V2_H
-#include <skill/PlayerTask.h>
+#include <PlayerTask.h>
 class CStopRobotV2 : public CPlayerTask{
 public:
 	CStopRobotV2();

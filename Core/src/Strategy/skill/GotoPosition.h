@@ -1,6 +1,6 @@
 ﻿#ifndef _GOTO_POSITION_V2_H_
 #define _GOTO_POSITION_V2_H_
-#include <skill/PlayerTask.h>
+#include "registry.h"
 #include <geometry.h>
 /************************************************************************/
 /*                     CGotoPositionV2 / 跑位                           */
@@ -25,4 +25,5 @@ private:
     int playerFlag;
 };
 
+// REGISTER_SKILL("Goto",create<CGotoPositionV2>);
 #endif
