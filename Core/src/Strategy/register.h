@@ -13,3 +13,7 @@ REGISTER_SKILL(SmartGoto, create<CSmartGotoPositionV2>);
 REGISTER_SKILL(Speed, create<CSpeed>);
 REGISTER_SKILL(Stop, create<CStopRobotV2>);
 REGISTER_SKILL(Touch, create<CTouch>);
+
+bool runSkill(const std::string& name, const TaskT& task){
+    auto pSkill = SkillRegistry<Skill>::create(name);
+}

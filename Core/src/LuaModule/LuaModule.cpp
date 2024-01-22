@@ -480,13 +480,13 @@ extern "C" int Skill_SpeedInRobot(lua_State* L){
 
 luaDef GUIGlue[] = 
 {
-    {"SmartGotoPos",		Skill_SmartGotoPoint},
-	{"SimpleGotoPos",		Skill_SimpleGotoPoint},
-    {"StopRobot",			Skill_Stop},
     {"CRegisterRole",		Register_Role},
     {"CTimeOut",			FUNC_TimeOut},
 	{"CGetIsSimulation",	FUNC_GetIsSimulation},
     {"CGetSettings",        FUNC_GetSettings},
+    {"SmartGotoPos",		Skill_SmartGotoPoint},
+	{"SimpleGotoPos",		Skill_SimpleGotoPoint},
+    {"StopRobot",			Skill_Stop},
     {"CSpeed",				Skill_Speed},
     {"COpenSpeed",			Skill_OpenSpeed},
     {"CGoCmuRush",			Skill_GoCmuRush},
@@ -494,7 +494,5 @@ luaDef GUIGlue[] =
     {"CTouch",              Skill_Touch},
     {"CNoneZeroGoCmuRush",	Skill_NoneZeroGoCmuRush},
     {"CSpeedInRobot",		Skill_SpeedInRobot},
-	// {"CPlaceBall",			Skill_PlaceBall},
-	// {"CGetBall",			Skill_GetBall},
 	{NULL, NULL}
 };

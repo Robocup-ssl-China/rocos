@@ -4,11 +4,12 @@
 #include <functional>
 #include <unordered_map>
 #include "PlayerTask.h"
+
 #define REGISTER_SKILL(name,create_func) \
-    bool name##_entry = SkillRegistry<CPlayerTask>::add(#name,(create_func))
+    bool name##_entry = SkillRegistry<Skill>::add(#name,(create_func))
 
 template <typename T>
-CPlayerTask* create(){
+Skill* create(){
     return new T;
 }
 

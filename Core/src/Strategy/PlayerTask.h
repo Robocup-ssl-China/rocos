@@ -37,4 +37,5 @@ protected:
 private:	
 	CPlayerTask* _pSubTask = nullptr; // 子任务
 };
+using Skill = CPlayerTask;
 #endif // _PLAYER_TASK_H_
