@@ -3,7 +3,6 @@
 
 #include <WorldModel.h>
 #include <ServerInterface.h>
-#include <weerror.h>
 #include "DecisionModule.h"
 #include <VisionReceiver.h>
 
