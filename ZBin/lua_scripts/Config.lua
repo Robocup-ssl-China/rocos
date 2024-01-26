@@ -27,16 +27,13 @@ gOurIndirectTable = {
 }
 
 gSkill = {
-        "SmartGoto",
         "SimpleGoto",
         "RunMultiPos",
         "Stop",
         "Goalie",
         "Touch",
         "OpenSpeed",
-        "Speed",
         "GoCmuRush",
-        "SpeedInRobot"
 }
 
 gRefPlayTable = {

@@ -44,3 +44,8 @@ for _, value in ipairs(gPlay) do
 	print("Init : ",filename)
 	dofile(filename)
 end
+
+print("Registry Skill Size : ",skillapi:get_size())
+for i=0,skillapi:get_size()-1 do
+	print("" .. i .. " SkillName :  " .. skillapi:get_name(i))
+end

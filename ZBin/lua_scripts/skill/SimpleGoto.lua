@@ -4,28 +4,20 @@ function SimpleGoto(task)
 	local mflag = task.flag or 0
 
 	execute = function(runner)
-		if type(task.pos) == "function" then
-			mpos = task.pos()
-		else
-			mpos = task.pos
-		end
+		mpos = _c(task.pos,runner)
+		mdir = _c(task.dir,runner)
 
-		if type(task.dir) == "function" then
-			mdir = task.dir(runner)
-		else
-			mdir = task.dir
-		end
-
-		return SimpleGotoPos(runner, mpos:x(), mpos:y(), mdir, mflag)
+		task_param = TaskT:new_local()
+		task_param.executor = runner
+		task_param.player.pos = mpos
+		task_param.player.angle = mdir
+		task_param.player.flag = mflag
+		-- return SimpleGotoPos(runner, mpos:x(), mpos:y(), mdir, mflag)
+		return skillapi:run("Goto", task_param)
 	end
 
 	matchPos = function()
-		if type(task.pos) == "function" then
-			mpos = task.pos()
-		else
-			mpos = task.pos
-		end
-		return mpos
+		return _c(task.pos)
 	end
 
 	return execute, matchPos

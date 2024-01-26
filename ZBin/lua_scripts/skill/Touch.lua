@@ -6,12 +6,13 @@ function Touch(task)
 	end
 
 	execute = function(runner)
-		if type(task.pos) == "function" then
-			mpos = task.pos(runner)
-		else
-			mpos = task.pos
-		end
-		return CTouch(runner, mpos:x(), mpos:y(), useInter)
+		mpos = _c(task.pos,runner)
+		task_param = TaskT:new_local()
+		task_param.executor = runner
+		task_param.player.pos = mpos
+		task_param.is_specify_ctrl_method = useInter
+		-- return CTouch(runner, mpos:x(), mpos:y(), useInter)
+		return skillapi:run("Touch", task_param)
 	end
 
 	return execute, matchPos

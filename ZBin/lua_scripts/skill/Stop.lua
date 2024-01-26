@@ -1,6 +1,7 @@
 function Stop(task)	
 	execute = function(runner)
-		return StopRobot(runner)
+		-- return StopRobot(runner)
+		return skillapi:run("Stop", TaskT:new_local())
 	end
 
 	matchPos = function(runner)

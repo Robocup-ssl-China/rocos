@@ -234,127 +234,127 @@ void CLuaModule::PushBool(bool value)
 	lua_pushboolean(m_pScriptContext, value);
 }
 
-extern "C" int Skill_SmartGotoPoint(lua_State *L)
-{
-	TaskT playerTask;
-	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
-	playerTask.executor = runner;
-	double x = LuaModule::Instance()->GetNumberArgument(2, NULL);
-	double y = LuaModule::Instance()->GetNumberArgument(3, NULL);
-	playerTask.player.pos = CGeoPoint(x,y);
-	playerTask.player.rotvel = 0;
-	playerTask.player.angle = LuaModule::Instance()->GetNumberArgument(4, NULL);
-	playerTask.player.flag = LuaModule::Instance()->GetNumberArgument(5, NULL);
-	playerTask.ball.Sender = LuaModule::Instance()->GetNumberArgument(6,NULL);
-	playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7,NULL);
-    double vx = LuaModule::Instance()->GetNumberArgument(8, 0.0);
-    double vy = LuaModule::Instance()->GetNumberArgument(9, 0.0);
-    playerTask.player.vel = CVector(vx,vy);
+// extern "C" int Skill_SmartGotoPoint(lua_State *L)
+// {
+// 	TaskT playerTask;
+// 	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
+// 	playerTask.executor = runner;
+// 	double x = LuaModule::Instance()->GetNumberArgument(2, NULL);
+// 	double y = LuaModule::Instance()->GetNumberArgument(3, NULL);
+// 	playerTask.player.pos = CGeoPoint(x,y);
+// 	playerTask.player.rotvel = 0;
+// 	playerTask.player.angle = LuaModule::Instance()->GetNumberArgument(4, NULL);
+// 	playerTask.player.flag = LuaModule::Instance()->GetNumberArgument(5, NULL);
+// 	playerTask.ball.Sender = LuaModule::Instance()->GetNumberArgument(6,NULL);
+// 	playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7,NULL);
+//     double vx = LuaModule::Instance()->GetNumberArgument(8, 0.0);
+//     double vy = LuaModule::Instance()->GetNumberArgument(9, 0.0);
+//     playerTask.player.vel = CVector(vx,vy);
 
-	CPlayerTask* pTask = TaskFactoryV2::Instance()->SmartGotoPosition(playerTask);
-	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+// 	CPlayerTask* pTask = TaskFactoryV2::Instance()->SmartGotoPosition(playerTask);
+// 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
 	
-	return 0;
-}
+// 	return 0;
+// }
 
-extern "C" int Skill_GoCmuRush(lua_State *L)
-{
-	TaskT playerTask;
-	playerTask.player.is_specify_ctrl_method = true;
-    playerTask.player.specified_ctrl_method = CMU_TRAJ;
-    int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
-	playerTask.executor = runner;
-    double x = LuaModule::Instance()->GetNumberArgument(2, 0);
-    double y = LuaModule::Instance()->GetNumberArgument(3, 0);
-	playerTask.player.pos = CGeoPoint(x,y);
-    playerTask.player.angle = LuaModule::Instance()->GetNumberArgument(4, 0);
-    playerTask.player.flag = int(LuaModule::Instance()->GetNumberArgument(5, 0));
-    playerTask.ball.Sender = int(LuaModule::Instance()->GetNumberArgument(6,0));
-    playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7,0);
-    double vx = LuaModule::Instance()->GetNumberArgument(9,0.0);
-    double vy = LuaModule::Instance()->GetNumberArgument(10,0.0);
-	playerTask.player.max_speed = LuaModule::Instance()->GetNumberArgument(11,0.0);
-	playerTask.player.force_manual_set_running_param = LuaModule::Instance()->GetBoolArgument(12);
-    playerTask.player.vel = CVector(vx,vy);
+// extern "C" int Skill_GoCmuRush(lua_State *L)
+// {
+// 	TaskT playerTask;
+// 	playerTask.player.is_specify_ctrl_method = true;
+//     playerTask.player.specified_ctrl_method = CMU_TRAJ;
+//     int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
+// 	playerTask.executor = runner;
+//     double x = LuaModule::Instance()->GetNumberArgument(2, 0);
+//     double y = LuaModule::Instance()->GetNumberArgument(3, 0);
+// 	playerTask.player.pos = CGeoPoint(x,y);
+//     playerTask.player.angle = LuaModule::Instance()->GetNumberArgument(4, 0);
+//     playerTask.player.flag = int(LuaModule::Instance()->GetNumberArgument(5, 0));
+//     playerTask.ball.Sender = int(LuaModule::Instance()->GetNumberArgument(6,0));
+//     playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7,0);
+//     double vx = LuaModule::Instance()->GetNumberArgument(9,0.0);
+//     double vy = LuaModule::Instance()->GetNumberArgument(10,0.0);
+// 	playerTask.player.max_speed = LuaModule::Instance()->GetNumberArgument(11,0.0);
+// 	playerTask.player.force_manual_set_running_param = LuaModule::Instance()->GetBoolArgument(12);
+//     playerTask.player.vel = CVector(vx,vy);
 
-	CPlayerTask* pTask = TaskFactoryV2::Instance()->SmartGotoPosition(playerTask);
-	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+// 	CPlayerTask* pTask = TaskFactoryV2::Instance()->SmartGotoPosition(playerTask);
+// 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
 
-	return 0;
-}
+// 	return 0;
+// }
 
-extern "C" int Skill_Goalie(lua_State *L)
-{
-    TaskT playerTask;
-    int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
-    playerTask.executor = runner;
-    CPlayerTask* pTask = TaskFactoryV2::Instance()->Goalie(playerTask);
-    TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+// extern "C" int Skill_Goalie(lua_State *L)
+// {
+//     TaskT playerTask;
+//     int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
+//     playerTask.executor = runner;
+//     CPlayerTask* pTask = TaskFactoryV2::Instance()->Goalie(playerTask);
+//     TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
 
-    return 0;
-}
+//     return 0;
+// }
 
-extern "C" int Skill_Touch(lua_State *L)
-{
-    TaskT playerTask;
-    int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
-    playerTask.executor = runner;
-    double x = LuaModule::Instance()->GetNumberArgument(2, 0);
-    double y = LuaModule::Instance()->GetNumberArgument(3, 0);
-    playerTask.player.pos = CGeoPoint(x,y);
-    bool useInter = LuaModule::Instance()->GetBoolArgument(4);
-    playerTask.player.is_specify_ctrl_method = useInter;
-    CPlayerTask* pTask = TaskFactoryV2::Instance()->Touch(playerTask);
-    TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+// extern "C" int Skill_Touch(lua_State *L)
+// {
+//     TaskT playerTask;
+//     int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
+//     playerTask.executor = runner;
+//     double x = LuaModule::Instance()->GetNumberArgument(2, 0);
+//     double y = LuaModule::Instance()->GetNumberArgument(3, 0);
+//     playerTask.player.pos = CGeoPoint(x,y);
+//     bool useInter = LuaModule::Instance()->GetBoolArgument(4);
+//     playerTask.player.is_specify_ctrl_method = useInter;
+//     CPlayerTask* pTask = TaskFactoryV2::Instance()->Touch(playerTask);
+//     TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
 
-    return 0;
-}
+//     return 0;
+// }
 
-extern "C" int Skill_NoneZeroGoCmuRush(lua_State *L)
-{
-	TaskT playerTask;
-	playerTask.player.is_specify_ctrl_method = true;
-	playerTask.player.specified_ctrl_method = CMU_TRAJ;
-	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
-	playerTask.executor = runner;
-	double x = LuaModule::Instance()->GetNumberArgument(2, NULL);
-	double y = LuaModule::Instance()->GetNumberArgument(3, NULL);
-	playerTask.player.pos = CGeoPoint(x, y);
-	playerTask.player.angle = LuaModule::Instance()->GetNumberArgument(4, NULL);
-	playerTask.player.flag = LuaModule::Instance()->GetNumberArgument(5, NULL);
-	playerTask.ball.Sender = LuaModule::Instance()->GetNumberArgument(6, NULL);
-	playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7, NULL);
-	double velX = LuaModule::Instance()->GetNumberArgument(9, NULL);
-	double velY = LuaModule::Instance()->GetNumberArgument(10, NULL);
-    playerTask.player.vel = CVector(velX, velY);
+// extern "C" int Skill_NoneZeroGoCmuRush(lua_State *L)
+// {
+// 	TaskT playerTask;
+// 	playerTask.player.is_specify_ctrl_method = true;
+// 	playerTask.player.specified_ctrl_method = CMU_TRAJ;
+// 	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
+// 	playerTask.executor = runner;
+// 	double x = LuaModule::Instance()->GetNumberArgument(2, NULL);
+// 	double y = LuaModule::Instance()->GetNumberArgument(3, NULL);
+// 	playerTask.player.pos = CGeoPoint(x, y);
+// 	playerTask.player.angle = LuaModule::Instance()->GetNumberArgument(4, NULL);
+// 	playerTask.player.flag = LuaModule::Instance()->GetNumberArgument(5, NULL);
+// 	playerTask.ball.Sender = LuaModule::Instance()->GetNumberArgument(6, NULL);
+// 	playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7, NULL);
+// 	double velX = LuaModule::Instance()->GetNumberArgument(9, NULL);
+// 	double velY = LuaModule::Instance()->GetNumberArgument(10, NULL);
+//     playerTask.player.vel = CVector(velX, velY);
 
-    CPlayerTask* pTask = TaskFactoryV2::Instance()->SmartGotoPosition(playerTask);
-	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+//     CPlayerTask* pTask = TaskFactoryV2::Instance()->SmartGotoPosition(playerTask);
+// 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
 
-	return 0;
-}
+// 	return 0;
+// }
 
-extern "C" int Skill_SimpleGotoPoint(lua_State *L)
-{
-	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
-	double x = LuaModule::Instance()->GetNumberArgument(2, NULL);
-	double y = LuaModule::Instance()->GetNumberArgument(3, NULL);
-	double angle = LuaModule::Instance()->GetNumberArgument(4, NULL);
-	int flag = LuaModule::Instance()->GetNumberArgument(5, NULL);
-	CPlayerTask* pTask = PlayerRole::makeItSimpleGoto(runner, CGeoPoint(x, y), angle, flag);
-	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+// extern "C" int Skill_SimpleGotoPoint(lua_State *L)
+// {
+// 	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
+// 	double x = LuaModule::Instance()->GetNumberArgument(2, NULL);
+// 	double y = LuaModule::Instance()->GetNumberArgument(3, NULL);
+// 	double angle = LuaModule::Instance()->GetNumberArgument(4, NULL);
+// 	int flag = LuaModule::Instance()->GetNumberArgument(5, NULL);
+// 	CPlayerTask* pTask = PlayerRole::makeItSimpleGoto(runner, CGeoPoint(x, y), angle, flag);
+// 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
 
-	return 0;
-}
+// 	return 0;
+// }
 
-extern "C" int Skill_Stop(lua_State *L)
-{
-	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
-	CPlayerTask* pTask = PlayerRole::makeItStop(runner);
-	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+// extern "C" int Skill_Stop(lua_State *L)
+// {
+// 	int runner = LuaModule::Instance()->GetNumberArgument(1, NULL);
+// 	CPlayerTask* pTask = PlayerRole::makeItStop(runner);
+// 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
 
-	return 0;
-}
+// 	return 0;
+// }
 
 extern "C" int Register_Role(lua_State *L)
 {
@@ -364,49 +364,27 @@ extern "C" int Register_Role(lua_State *L)
 	return 0;
 }
 
-extern "C" int Skill_Speed(lua_State *L)
-{
-	int runner = LuaModule::Instance()->GetNumberArgument(1,NULL);
-	double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
-	double speedY = LuaModule::Instance()->GetNumberArgument(3,NULL);
-	double rotSpeed = LuaModule::Instance()->GetNumberArgument(4,NULL);
-	CPlayerTask* pTask = PlayerRole::makeItRun(runner, speedX, speedY, rotSpeed, 0);
-	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
-	return 0;
-}
-extern "C" int Skill_OpenSpeed(lua_State *L)
-{
-    int runner = LuaModule::Instance()->GetNumberArgument(1,NULL);
-    double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
-    double speedY = LuaModule::Instance()->GetNumberArgument(3,NULL);
-    double rotSpeed = LuaModule::Instance()->GetNumberArgument(4,NULL);
-	int flag = LuaModule::Instance()->GetNumberArgument(5,0);
-    CPlayerTask* pTask = PlayerRole::makeItOpenRun(runner, speedX, speedY, rotSpeed, flag);
-    TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
-    return 0;
-}
-//extern "C" int Skill_PlaceBall(lua_State *L){
-//	int runner = LuaModule::Instance()->GetNumberArgument(1,0);
-//	double x = LuaModule::Instance()->GetNumberArgument(2,0.0);
-//	double y = LuaModule::Instance()->GetNumberArgument(3,0.0);
-//	int flag = LuaModule::Instance()->GetNumberArgument(4,0);
-//	CPlayerTask* pTask = PlayerRole::makeItPlaceBall(runner, );
-//}
-
-// extern "C" int Skill_GetBall(lua_State *L){
-// 	int runner = int(LuaModule::Instance()->GetNumberArgument(1, 0));
-// 	double x = LuaModule::Instance()->GetNumberArgument(2, 0);
-// 	double y = LuaModule::Instance()->GetNumberArgument(3, 0);
-// 	double power = LuaModule::Instance()->GetNumberArgument(4, 0);
-// 	double precision = LuaModule::Instance()->GetNumberArgument(5, 0);
-// 	int flag = int(LuaModule::Instance()->GetNumberArgument(6, 0));
-// 	int kick_flag = int(LuaModule::Instance()->GetNumberArgument(7, 0));
-// 	CPlayerTask* pTask = PlayerRole::makeItGetBall(runner, CGeoPoint(x, y), power, precision, flag, kick_flag);
+// extern "C" int Skill_Speed(lua_State *L)
+// {
+// 	int runner = LuaModule::Instance()->GetNumberArgument(1,NULL);
+// 	double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
+// 	double speedY = LuaModule::Instance()->GetNumberArgument(3,NULL);
+// 	double rotSpeed = LuaModule::Instance()->GetNumberArgument(4,NULL);
+// 	CPlayerTask* pTask = PlayerRole::makeItRun(runner, speedX, speedY, rotSpeed, 0);
 // 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
-
 // 	return 0;
 // }
-
+// extern "C" int Skill_OpenSpeed(lua_State *L)
+// {
+//     int runner = LuaModule::Instance()->GetNumberArgument(1,NULL);
+//     double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
+//     double speedY = LuaModule::Instance()->GetNumberArgument(3,NULL);
+//     double rotSpeed = LuaModule::Instance()->GetNumberArgument(4,NULL);
+// 	int flag = LuaModule::Instance()->GetNumberArgument(5,0);
+//     CPlayerTask* pTask = PlayerRole::makeItOpenRun(runner, speedX, speedY, rotSpeed, flag);
+//     TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+//     return 0;
+// }
 
 extern "C" int FUNC_TimeOut(lua_State* L)
 {
@@ -463,18 +441,18 @@ extern "C" int FUNC_PrintString(lua_State* L) {
     fflush(stdout);
     return 0;
 }
-extern "C" int Skill_SpeedInRobot(lua_State* L){
-	int runner = LuaModule::Instance()->GetNumberArgument(1,NULL);
-	double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
-	double speedY = LuaModule::Instance()->GetNumberArgument(3,NULL);
-	double rotSpeed = LuaModule::Instance()->GetNumberArgument(4,NULL);
-	CVector localVel(speedX, speedY);
-	CVector globalVel = localVel.rotate(vision->ourPlayer(runner).Dir());
-	DribbleStatus::Instance()->setDribbleCommand(runner,3);
-	CPlayerTask* pTask = PlayerRole::makeItRun(runner, globalVel.x(), globalVel.y(), rotSpeed, 0);
-	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
-	return 0;
-}
+// extern "C" int Skill_SpeedInRobot(lua_State* L){
+// 	int runner = LuaModule::Instance()->GetNumberArgument(1,NULL);
+// 	double speedX = LuaModule::Instance()->GetNumberArgument(2,NULL);
+// 	double speedY = LuaModule::Instance()->GetNumberArgument(3,NULL);
+// 	double rotSpeed = LuaModule::Instance()->GetNumberArgument(4,NULL);
+// 	CVector localVel(speedX, speedY);
+// 	CVector globalVel = localVel.rotate(vision->ourPlayer(runner).Dir());
+// 	DribbleStatus::Instance()->setDribbleCommand(runner,3);
+// 	CPlayerTask* pTask = PlayerRole::makeItRun(runner, globalVel.x(), globalVel.y(), rotSpeed, 0);
+// 	TaskMediator::Instance()->setPlayerTask(runner, pTask, 1);
+// 	return 0;
+// }
 
 luaDef GUIGlue[] = 
 {
@@ -482,15 +460,15 @@ luaDef GUIGlue[] =
     {"CTimeOut",			FUNC_TimeOut},
 	{"CGetIsSimulation",	FUNC_GetIsSimulation},
     {"CGetSettings",        FUNC_GetSettings},
-    {"SmartGotoPos",		Skill_SmartGotoPoint},
-	{"SimpleGotoPos",		Skill_SimpleGotoPoint},
-    {"StopRobot",			Skill_Stop},
-    {"CSpeed",				Skill_Speed},
-    {"COpenSpeed",			Skill_OpenSpeed},
+    // {"SmartGotoPos",		Skill_SmartGotoPoint},
+	// {"SimpleGotoPos",		Skill_SimpleGotoPoint},
+    // {"StopRobot",			Skill_Stop},
+    // {"CSpeed",				Skill_Speed},
+    // {"COpenSpeed",			Skill_OpenSpeed},
     // {"CGoCmuRush",			Skill_GoCmuRush},
-    {"CGoalie",             Skill_Goalie},
-    {"CTouch",              Skill_Touch},
+    // {"CGoalie",             Skill_Goalie},
+    // {"CTouch",              Skill_Touch},
     // {"CNoneZeroGoCmuRush",	Skill_NoneZeroGoCmuRush},
-    {"CSpeedInRobot",		Skill_SpeedInRobot},
+    // {"CSpeedInRobot",		Skill_SpeedInRobot},
 	{NULL, NULL}
 };

@@ -10,7 +10,7 @@ function GoCmuRush(task)
 	local mspeed  = task.speed or 0
 	local mforce_maunal_set_running_param = task.force_manual or false
 	matchPos = function()
-		return _(task.pos)
+		return _c(task.pos)
 	end
 
 	execute = function(runner)
@@ -22,11 +22,11 @@ function GoCmuRush(task)
 			print("Error runner in GoCmuRush", runner)
 		end
 
-		mpos = _(task.pos,runner)
-		mdir = _(task.dir,runner)
-		mvel = _(task.vel) or CVector:new_local(0,0)
-		macc = _(task.acc) or 0
-		mspeed = _(task.speed) or 0
+		mpos = _c(task.pos,runner)
+		mdir = _c(task.dir,runner)
+		mvel = _c(task.vel) or CVector:new_local(0,0)
+		macc = _c(task.acc) or 0
+		mspeed = _c(task.speed) or 0
 		if type(task.sender) == "string" then
 			msender = player.num(task.sender)
 		end

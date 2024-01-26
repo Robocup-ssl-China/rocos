@@ -12,7 +12,9 @@ function Goalie(task)
 			print("Error runner in Goalie", runner)
 		end
 
-		return CGoalie(runner)
+		-- return CGoalie(runner)
+		task_param = TaskT:new_local()
+		return skillapi:run("Goalie",task_param)
 	end
 
 	return execute, matchPos

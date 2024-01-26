@@ -19,7 +19,7 @@ end
 function touchKick(p,ifInter)
 	local ipos = p or pos.theirGoal()
 	local idir = function(runner)
-		return (_(ipos) - player.pos(runner)):dir()
+		return (_c(ipos) - player.pos(runner)):dir()
 	end
 	local mexe, mpos = Touch{pos = ipos, useInter = ifInter}
 	return {mexe, mpos, kick.flat, idir, pre.low, cp.full, cp.full, flag.nothing}
@@ -38,8 +38,7 @@ function goSpeciPos(p, d, f, a) -- 2014-03-26 增加a(加速度参数)
 	else
 		iflag = 0
 	end
-
-	local mexe, mpos = SmartGoto{pos = p, dir = idir, flag = iflag, acc = a}
+	local mexe, mpos = GoCmuRush{pos = p, dir = idir, acc = a, flag = iflag}
 	return {mexe, mpos}
 end
 
@@ -81,11 +80,11 @@ end
 function staticGetBall(target_pos, dist)
 	local idist = dist or 100
 	local p = function()
-		local target = _(target_pos) or pos.theirGoal()
+		local target = _c(target_pos) or pos.theirGoal()
 		return ball.pos() + Utils.Polar2Vector(idist,(ball.pos()-target):dir())
 	end
 	local idir = function()
-		local target = _(target_pos) or pos.theirGoal()
+		local target = _c(target_pos) or pos.theirGoal()
 		return (target - ball.pos()):dir()
 	end
 	local mexe, mpos = GoCmuRush{pos = p, dir = idir, flag = flag.dodge_ball}
@@ -152,24 +151,7 @@ end
 
 ------------------------------------ 测试相关的skill ---------------------------------------
 
-function openSpeed(vx, vy, vdir, iflag)
-	local mexe, mpos = OpenSpeed{speedX = vx, speedY = vy, speedW = vdir, flag = iflag}
-	return {mexe, mpos}
-end
-
-function speed(vx, vy, vdir)
-	local spdX = function()
-		return vx
-	end
-
-	local spdY = function()
-		return vy
-	end
-	
-	local spdW = function()
-		return vdir
-	end
-
-	local mexe, mpos = Speed{speedX = spdX, speedY = spdY, speedW = spdW}
+function openSpeed(vx, vy, vw, iflag)
+	local mexe, mpos = OpenSpeed{speedX = vx, speedY = vy, speedW = vw, flag = iflag}
 	return {mexe, mpos}
 end
