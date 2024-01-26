@@ -1,7 +1,6 @@
-function _(f)
-	local res
+function _(f,...)
 	if type(f) == "function" then
-		return f()
+		return f(...)
 	end
 	return f
 end

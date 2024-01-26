@@ -10,12 +10,7 @@ function GoCmuRush(task)
 	local mspeed  = task.speed or 0
 	local mforce_maunal_set_running_param = task.force_manual or false
 	matchPos = function()
-		if type(task.pos) == "function" then
-			mpos = task.pos()
-		else
-			mpos = task.pos
-		end
-		return mpos
+		return _(task.pos)
 	end
 
 	execute = function(runner)
@@ -27,47 +22,26 @@ function GoCmuRush(task)
 			print("Error runner in GoCmuRush", runner)
 		end
 
-		if type(task.pos) == "function" then
-			mpos = task.pos(runner)
-		else
-			mpos = task.pos
-		end
-
-		if type(task.dir) == "function" then
-			mdir = task.dir(runner)
-		else
-			mdir = task.dir
-		end
-
+		mpos = _(task.pos,runner)
+		mdir = _(task.dir,runner)
+		mvel = _(task.vel) or CVector:new_local(0,0)
+		macc = _(task.acc) or 0
+		mspeed = _(task.speed) or 0
 		if type(task.sender) == "string" then
 			msender = player.num(task.sender)
 		end
-		
-		if type(task.vel) == "function" then
-			mvel = task.vel()
-		elseif task.vel ~= nil then
-			mvel = task.vel
-		else
-			mvel = CVector:new_local(0,0)
-		end
 
-		if type(task.acc) == "function" then
-			macc = task.acc()
-		elseif task.acc ~= nil then
-			macc = task.acc
-		else
-			macc = 0
-		end
-
-		if type(task.speed) == "function" then
-			mspeed = task.speed()
-		elseif task.speed ~= nil then
-			mspeed = task.speed
-		else
-			mspeed = 0
-		end
-
-		return CGoCmuRush(runner, mpos:x(), mpos:y(), mdir, mflag, msender, macc, mrec, mvel:x(), mvel:y(), mspeed, mforce_maunal_set_running_param)
+		task_param = TaskT:new_local()
+		task_param.executor = runner
+		task_param.player.pos = mpos
+		task_param.player.angle = mdir
+		task_param.player.flag = mflag
+		task_param.ball.Sender = msender or 0
+		task_param.player.max_acceleration = macc or 0
+		task_param.player.vel = mvel
+		task_param.player.force_manual_set_running_param = mforce_maunal_set_running_param
+		-- return CGoCmuRush(runner, mpos:x(), mpos:y(), mdir, mflag, msender, macc, mrec, mvel:x(), mvel:y(), mspeed, mforce_maunal_set_running_param)
+		return skillapi:run("SmartGoto", task_param)
 	end
 
 	return execute, matchPos

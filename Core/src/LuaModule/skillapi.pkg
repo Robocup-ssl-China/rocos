@@ -24,7 +24,6 @@ struct PlayerStatus{
 	
 	/// 踢球参数 ： 用于平射挑射控制 ，默认使用
 	bool needkick;													// 踢球动作执行开关
-	bool needdribble;												// 吸球动作执行开关  add by gty 16-6-15
 	bool ispass;													// 是否进行传球
 	bool ischipkick;												// 挑球还是平射
 	double kickprecision;											// 踢球朝向精度

@@ -35,9 +35,7 @@ gSkill = {
         "Touch",
         "OpenSpeed",
         "Speed",
-        "GotoMatchPos",
         "GoCmuRush",
-        "NoneZeroRush",
         "SpeedInRobot"
 }
 

@@ -271,7 +271,6 @@ extern "C" int Skill_GoCmuRush(lua_State *L)
     playerTask.player.flag = int(LuaModule::Instance()->GetNumberArgument(5, 0));
     playerTask.ball.Sender = int(LuaModule::Instance()->GetNumberArgument(6,0));
     playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7,0);
-    playerTask.player.needdribble = int(LuaModule::Instance()->GetNumberArgument(8,0));
     double vx = LuaModule::Instance()->GetNumberArgument(9,0.0);
     double vy = LuaModule::Instance()->GetNumberArgument(10,0.0);
 	playerTask.player.max_speed = LuaModule::Instance()->GetNumberArgument(11,0.0);
@@ -325,7 +324,6 @@ extern "C" int Skill_NoneZeroGoCmuRush(lua_State *L)
 	playerTask.player.flag = LuaModule::Instance()->GetNumberArgument(5, NULL);
 	playerTask.ball.Sender = LuaModule::Instance()->GetNumberArgument(6, NULL);
 	playerTask.player.max_acceleration = LuaModule::Instance()->GetNumberArgument(7, NULL);
-	playerTask.player.needdribble = LuaModule::Instance()->GetNumberArgument(8, NULL);
 	double velX = LuaModule::Instance()->GetNumberArgument(9, NULL);
 	double velY = LuaModule::Instance()->GetNumberArgument(10, NULL);
     playerTask.player.vel = CVector(velX, velY);
@@ -489,10 +487,10 @@ luaDef GUIGlue[] =
     {"StopRobot",			Skill_Stop},
     {"CSpeed",				Skill_Speed},
     {"COpenSpeed",			Skill_OpenSpeed},
-    {"CGoCmuRush",			Skill_GoCmuRush},
+    // {"CGoCmuRush",			Skill_GoCmuRush},
     {"CGoalie",             Skill_Goalie},
     {"CTouch",              Skill_Touch},
-    {"CNoneZeroGoCmuRush",	Skill_NoneZeroGoCmuRush},
+    // {"CNoneZeroGoCmuRush",	Skill_NoneZeroGoCmuRush},
     {"CSpeedInRobot",		Skill_SpeedInRobot},
 	{NULL, NULL}
 };

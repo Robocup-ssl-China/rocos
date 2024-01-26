@@ -1,22 +1,13 @@
 #pragma once
 #include <singleton.hpp>
 #include "registry.h"
+#include "staticparams.h"
 #include "VisionModule.h"
 class CSkillAPI{
 public:
     CSkillAPI() = default;
     inline void registerVision(CVisionModule* vision){this->vision = vision;}
-    inline bool run(const std::string& name, const TaskT& task){
-        auto pSkill = Registry<Skill>::create(name);
-        if(pSkill == nullptr){
-            std::cout << "Skill " << name << " not exist, please check again" << std::endl;
-            return false;
-        }
-        auto s = std::unique_ptr<Skill>(pSkill);
-        s->reset(task);
-        s->plan(vision);
-        return true;
-    }
+    bool run(const std::string& name, const TaskT& task);
     inline std::string get_name(int i){
         return Registry<Skill>::getList()[i];
     }
@@ -25,5 +16,6 @@ public:
     }
 private:
     CVisionModule* vision = nullptr;
+    std::array<std::pair<std::string,std::unique_ptr<Skill>> , PARAM::ROBOTNUM> skills;
 };
 typedef Singleton<CSkillAPI> SkillAPI;

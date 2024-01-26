@@ -102,6 +102,7 @@ CSmartGotoPositionV2::CSmartGotoPositionV2()
     ZSS::ZParamManager::instance()->loadParam(DRAW_TARGET,"Debug/SmartTargetPos",true);
     ZSS::ZParamManager::instance()->loadParam(DRAW_OBSTACLES, "Debug/DrawObst", false);
     ZSS::ZParamManager::instance()->loadParam(PATH_PLAN_TYPE,"CSmartGotoV2/PathPlanType",0);
+    // std::cout << "debug111 ctor of smartgoto" << std::endl;
 }
 
 /// 输出流 ： 调试显示
@@ -123,7 +124,6 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
     /*              任务参数解析                                             */
 	/************************************************************************/
 	playerFlag = task().player.flag;
-	const bool rec = task().player.needdribble;
 	const int vecNumber = task().executor;
 	const PlayerVisionT& self = pVision->ourPlayer(vecNumber);
 
@@ -237,7 +237,6 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
         middlePoint = dealPlanFail(self.Pos(), middlePoint, avoidLength);
     }
 
-    if (rec) DribbleStatus::Instance()->setDribbleCommand(vecNumber,2);
     newTask.player.pos = middlePoint;
     if(middlePoint.dist(task().player.pos) > 1e-8) {
         newTask.player.vel = CVector(0.0, 0.0);
