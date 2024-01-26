@@ -5,6 +5,7 @@ CKickStatus*    kickStatus;
 CDribbleStatus* dribbleStatus;
 CGDebugEngine*  debugEngine;
 CWorldModel* world;
+CSkillAPI* skillapi;
 void initializeSingleton()
 {
 	vision        = VisionModule::Instance();
@@ -12,4 +13,5 @@ void initializeSingleton()
 	dribbleStatus = DribbleStatus::Instance();
     debugEngine   = GDebugEngine::Instance();
     world         = WorldModel::Instance();
+	skillapi	  = SkillAPI::Instance();
 }

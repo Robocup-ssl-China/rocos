@@ -1,7 +1,7 @@
 #ifndef _COMMAND_FACTORY_H_
 #define _COMMAND_FACTORY_H_
 #include "PlayerCommandV2.h"
-#include <singleton.h>
+#include <singleton.hpp>
 /**
 * CCommandFactory类.
 * 用来存放各种Command的实例
@@ -20,5 +20,5 @@ public:
 		return pCmds[cmd.number()];
 	}
 };
-typedef NormalSingleton< CCommandFactory > CmdFactory;
+typedef Singleton< CCommandFactory > CmdFactory;
 #endif

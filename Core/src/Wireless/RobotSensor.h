@@ -3,7 +3,7 @@
 
 //#include <CommControl.h>
 #include <fmt/core.h>
-#include <singleton.h>
+#include <singleton.hpp>
 #include "staticparams.h"
 
 /*
@@ -73,5 +73,5 @@ public:
     bool DEBUG_DEVICE;
 };
 
-typedef NormalSingleton< CRobotSensor > RobotSensor;			// 全局访问接口
+typedef Singleton< CRobotSensor > RobotSensor;			// 全局访问接口
 #endif

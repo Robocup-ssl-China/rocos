@@ -7,7 +7,7 @@
 #include <math.h>
 #include <utils.h>
 #include <geometry.h>
-#include <singleton.h>
+#include <singleton.hpp>
 #include "QuadraticEquation.h"
 #include "CubicEquation.h"
 #include "QuarticEquation.h"
@@ -74,5 +74,5 @@ private:
 	int _CNum;            // 预测多少个周期后的事情
 	int _flag;
 };
-typedef NormalSingleton< CDynamicSafetySearch > DynamicSafetySearch;
+typedef Singleton< CDynamicSafetySearch > DynamicSafetySearch;
 #endif 

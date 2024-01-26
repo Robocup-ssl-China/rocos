@@ -5,16 +5,16 @@
 #include <unordered_map>
 #include "PlayerTask.h"
 
-#define REGISTER_SKILL(name,create_func) \
-    bool name##_entry = SkillRegistry<Skill>::add(#name,(create_func))
-
 template <typename T>
 Skill* create(){
     return new T;
 }
 
+#define REGISTER_SKILL(name,SKILL_TYPE) \
+    bool name##_entry = Registry<Skill>::add(#name,(create<SKILL_TYPE>))
+
 template <typename T>
-class SkillRegistry{
+class Registry{
 public:
     using FactoryFunction = std::function<T*()>;
     using FactoryMap = std::unordered_map<std::string, FactoryFunction>;
@@ -33,13 +33,13 @@ public:
         }
         return map[name]();
     }
-    static std::vector<std::string> getSkillList(){
+    static std::vector<std::string> getList(){
         auto&& map = getFactoryMap();
-        std::vector<std::string> skill_list;
-        for(auto& skill : map){
-            skill_list.push_back(skill.first);
+        std::vector<std::string> all_list;
+        for(auto& reg : map){
+            all_list.push_back(reg.first);
         }
-        return skill_list;
+        return all_list;
     }
 private:
     static FactoryMap& getFactoryMap() {

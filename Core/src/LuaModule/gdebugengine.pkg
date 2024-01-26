@@ -1,4 +1,4 @@
-$#include <singleton.h>
+$#include <singleton.hpp>
 $#include <geometry.h>
 $#include <queue>
 $#include "GDebugEngine.h"

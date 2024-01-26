@@ -1,7 +1,7 @@
 #ifndef _BUFFER_COUNTER_H_
 #define _BUFFER_COUNTER_H_
 
-#include "singleton.h"
+#include "singleton.hpp"
 #include <vector>
 
 using namespace std;
@@ -28,6 +28,6 @@ private:
 	bool _cleared;
 };
 
-typedef NormalSingleton<CBufferCounter> BufferCounter;
+typedef Singleton<CBufferCounter> BufferCounter;
 
 #endif // _BUFFER_COUNTER_H_

@@ -9,7 +9,7 @@ DATA: 2009.2.10
 EMAIL: qxzzju@gmail.com
 ***********************************************/
 
-#include <singleton.h>
+#include <singleton.hpp>
 #include <geometry.h>
 #include <QUdpSocket>
 #include <QMutex>
@@ -47,6 +47,6 @@ private:
     QString remote_address;
     int remote_port;
 };
-typedef NormalSingleton< CGDebugEngine > GDebugEngine;
+typedef Singleton< CGDebugEngine > GDebugEngine;
 
 #endif

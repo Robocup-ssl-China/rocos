@@ -6,7 +6,7 @@
 #include "KickStatus.h"
 #include "BufferCounter.h"
 #include "BallStatus.h"
-#include <singleton.h>
+#include <singleton.hpp>
 extern bool record_run_pos_on;
 ///
 /// @file   WoldModel.h
@@ -85,7 +85,7 @@ public:
 public:
 };
 
-typedef NormalSingleton< CWorldModel > WorldModel;
+typedef Singleton< CWorldModel > WorldModel;
 
 #define WORLD_MODEL WorldModel::Instance()
 

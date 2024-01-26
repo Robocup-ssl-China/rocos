@@ -6,14 +6,10 @@
 #include "skill/StopRobot.h"
 #include "skill/Touch.h"
 
-REGISTER_SKILL(Goalie, create<CGoalie>);
-REGISTER_SKILL(Goto, create<CGotoPositionV2>);
-REGISTER_SKILL(OpenSpeed, create<COpenSpeed>);
-REGISTER_SKILL(SmartGoto, create<CSmartGotoPositionV2>);
-REGISTER_SKILL(Speed, create<CSpeed>);
-REGISTER_SKILL(Stop, create<CStopRobotV2>);
-REGISTER_SKILL(Touch, create<CTouch>);
-
-bool runSkill(const std::string& name, const TaskT& task){
-    auto pSkill = SkillRegistry<Skill>::create(name);
-}
+REGISTER_SKILL(Goalie, CGoalie);
+REGISTER_SKILL(Goto, CGotoPositionV2);
+REGISTER_SKILL(OpenSpeed, COpenSpeed);
+REGISTER_SKILL(SmartGoto, CSmartGotoPositionV2);
+REGISTER_SKILL(Speed, CSpeed);
+REGISTER_SKILL(Stop, CStopRobotV2);
+REGISTER_SKILL(Touch, CTouch);

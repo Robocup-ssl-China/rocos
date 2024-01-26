@@ -1,7 +1,7 @@
 #ifndef _TASK_FACTORY_V2_H_
 #define _TASK_FACTORY_V2_H_
 
-#include <singleton.h>
+#include <singleton.hpp>
 #include <misc_types.h>
 #include "staticparams.h"
 /************************************************************************/
@@ -23,7 +23,7 @@ protected:
 	template < class CTaskType >
 	CPlayerTask* MakeTask( const TaskT& task );
 };
-typedef NormalSingleton<CTaskFactoryV2> TaskFactoryV2;
+typedef Singleton<CTaskFactoryV2> TaskFactoryV2;
 /************************************************************************/
 /*                 一些包裹(wrap)函数, 方便调用tasks                    */
 /************************************************************************/

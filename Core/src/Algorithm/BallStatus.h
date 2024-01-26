@@ -1,7 +1,7 @@
 #ifndef _BALL_STATUS_H_
 #define _BALL_STATUS_H_
 
-#include "singleton.h"
+#include "singleton.hpp"
 #include "VisionModule.h"
 #include "ContactChecker.h"
 
@@ -139,6 +139,6 @@ private:
 	int _ballStateCouter;
 };
 
-typedef NormalSingleton< CBallStatus > BallStatus;
+typedef Singleton< CBallStatus > BallStatus;
 
 #endif

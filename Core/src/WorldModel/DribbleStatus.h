@@ -19,7 +19,7 @@
 
 #include "staticparams.h"
 #include <geometry.h>
-#include <singleton.h>
+#include <singleton.hpp>
 
 /// <summary>	Dribble status, for dribble handling.  </summary>
 ///
@@ -334,6 +334,6 @@ private:
 	unsigned char _dribbleCommand[PARAM::Field::MAX_PLAYER];
 };
 
-typedef NormalSingleton< CDribbleStatus > DribbleStatus;
+typedef Singleton< CDribbleStatus > DribbleStatus;
 
 #endif // ~_DRIBBLE_STATUS_H_

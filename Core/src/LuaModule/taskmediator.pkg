@@ -1,4 +1,4 @@
-$#include <singleton.h>
+$#include <singleton.hpp>
 $#include <geometry.h>
 $#include "staticparams.h"
 $#include <PlayerTask.h>

@@ -38,6 +38,6 @@ private:
 //	double *_dist_data;
 //	int _num;
 };
-typedef NormalSingleton< CBallSpeedModel > BallSpeedModel;
+typedef Singleton< CBallSpeedModel > BallSpeedModel;
 #endif // _BALL_SPEED_MODEL_H_
 

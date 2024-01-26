@@ -1,6 +1,6 @@
 $#include "OptionModule.h"
 $#include "VisionModule.h"
-$#include <singleton.h>
+$#include <singleton.hpp>
 $#include "WorldModel.h"
 
 class CWorldModel{

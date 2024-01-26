@@ -17,6 +17,8 @@
 #include "ActionModule.h"
 #include <QCoreApplication>
 
+#include "register.h" // registers of skills
+
 /*! \mainpage Zeus - Run for number one
 *
 * \section Introduction
@@ -60,6 +62,7 @@ int runLoop() {
     CCommandInterface::instance(option);
     vision->registerOption(option);
     vision->startReceiveThread();
+    skillapi->registerVision(vision);
     decision = new CDecisionModule(vision);
     action = new CActionModule(vision, decision);
     WORLD_MODEL->registerVision(vision);

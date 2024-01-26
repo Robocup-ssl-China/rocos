@@ -1,5 +1,5 @@
 $#include "staticparams.h"
-$#include <singleton.h>
+$#include <singleton.hpp>
 $#include "KickStatus.h"
 
 class CKickStatus {
