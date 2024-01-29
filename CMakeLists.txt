@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.12)
 project(rocos LANGUAGES CXX)
 
+set(BUILD_DOC FALSE CACHE BOOL "Build documentation")
+
 set(VERSION "0.0.2")
-set(VENDOR "ZJUNlict")
-set(MAINTAINER "ZJUNlict <zjunlict.ssl@gmail.com>")
+set(VENDOR "Turing-zero")
+set(MAINTAINER "Turing-zero <turingzero.robot@gmail.com>")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -41,6 +43,19 @@ FOREACH(FIL ${PROTO_FILES})
 		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 ENDFOREACH()
+
+if(BUILD_DOC)
+	find_package(Sphinx)
+	if(Sphinx_FOUND)
+		sphinx_add_docs(
+			rocos-user-manual
+			BUILDER singlehtml
+			SOURCE_DIRECTORY doc)
+	else()
+		message(WARNING "Sphinx not found, not building documentation")
+		set(BUILD_DOC FALSE)
+	endif()
+endif()
 
 add_subdirectory(Client)
 add_subdirectory(Core)
