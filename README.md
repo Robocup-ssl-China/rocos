@@ -8,7 +8,7 @@
 
 * [更新记录](CHANGELOG.md)
 
-* [Wiki](https://rocos.readthedocs.io/zh_CN/latest/index.html)
+* [Wiki](https://rocos.readthedocs.io/zh-cn/latest)
 
 主要贡献名单：
 
