@@ -31,6 +31,7 @@ Rocos's Wiki!
    :maxdepth: 2
    :glob:
    :caption: 附录1-实验室搭建:
+
    posts/p1_*
 
 .. toctree::
