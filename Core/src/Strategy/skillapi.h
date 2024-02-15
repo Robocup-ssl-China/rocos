@@ -8,6 +8,7 @@ public:
     CSkillAPI() = default;
     inline void registerVision(CVisionModule* vision){this->vision = vision;}
     bool run(const std::string& name, const TaskT& task);
+    std::unique_ptr<Skill> createTask(const std::string& name, const TaskT& task);
     inline std::string get_name(int i){
         return Registry<Skill>::getList()[i];
     }
@@ -17,5 +18,6 @@ public:
 private:
     CVisionModule* vision = nullptr;
     std::array<std::pair<std::string,std::unique_ptr<Skill>> , PARAM::ROBOTNUM> skills;
+    std::map<std::string, std::array<std::unique_ptr<Skill>, PARAM::ROBOTNUM>> skillPool;
 };
 typedef Singleton<CSkillAPI> SkillAPI;

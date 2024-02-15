@@ -49,7 +49,8 @@ void CTouch::plan(const CVisionModule* pVision){
     newTask.player.pos = targetPos;
     newTask.player.angle = targetDir;
     newTask.player.flag = taskFlag;
-    setSubTask(TaskFactoryV2::Instance()->SmartGotoPosition(newTask));
+    // setSubTask(TaskFactoryV2::Instance()->SmartGotoPosition(newTask));
+    setSubTask("SmartGoto", newTask);
 
     if(DEBUG_SWITCH){
         auto endPos = ballPos + Utils::Polar2Vector(ballVelMod,ballVelDir);

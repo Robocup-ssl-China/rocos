@@ -1,5 +1,6 @@
 #include "PlayerTask.h"
 #include "TaskMediator.h"
+#include "skillapi.h"
 /************************************************************************/
 /*                 PlayerTask                                           */
 /************************************************************************/
@@ -17,6 +18,10 @@ CPlayerCommand* CPlayerTask::execute(const CVisionModule* pVision) ///<执行
 	}
 	return 0;
 } 
+
+void CPlayerTask::setSubTask(const std::string& name, const TaskT& task){
+	_pSubTask = SkillAPI::Instance()->createTask(name, task);
+}
 
 bool CPlayerTask::isEmpty() const
 {

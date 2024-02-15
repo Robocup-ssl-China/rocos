@@ -1,2 +1,2 @@
-sphinx_rtd_theme==2.0.0
+sphinx-material==0.0.36
 recommonmark==0.7.1

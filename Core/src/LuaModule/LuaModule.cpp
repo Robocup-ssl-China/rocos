@@ -358,7 +358,7 @@ void CLuaModule::PushBool(bool value)
 
 extern "C" int Register_Role(lua_State *L)
 {
-	int num = LuaModule::Instance()->GetNumberArgument(1, NULL);
+	int num = LuaModule::Instance()->GetNumberArgument(1, 0);
 	string role = LuaModule::Instance()->GetStringArgument(2, NULL);
 	TaskMediator::Instance()->setRoleInLua(num, role);
 	return 0;
@@ -389,7 +389,7 @@ extern "C" int Register_Role(lua_State *L)
 extern "C" int FUNC_TimeOut(lua_State* L)
 {
 	bool cond = LuaModule::Instance()->GetBoolArgument(1);
-	int buf = LuaModule::Instance()->GetNumberArgument(2, NULL);
+	int buf = LuaModule::Instance()->GetNumberArgument(2, 0);
 	int cnt = LuaModule::Instance()->GetNumberArgument(3, 9999);
 
 	if(BufferCounter::Instance()->isClear(vision->getCycle())){

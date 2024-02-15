@@ -30,12 +30,12 @@ public:
 	virtual void reset(const TaskT& task) { _task = task; }
 protected:
 	virtual void toStream(std::ostream& os) const { os << "Invalid task"; } ///<输出字符串形式信息
-    void setSubTask(CPlayerTask* pTask){ _pSubTask = pTask; } // 设置子任务
-	CPlayerTask* subTask() const{ return _pSubTask; }
+	void setSubTask(const std::string& name, const TaskT& task); // 设置子任务
+	CPlayerTask* subTask() const{ return _pSubTask.get(); }
 	const TaskT& task() const { return _task; }
 	TaskT _task; //　任务的具体内容
 private:	
-	CPlayerTask* _pSubTask = nullptr; // 子任务
+	std::unique_ptr<CPlayerTask> _pSubTask; // 子任务
 };
 using Skill = CPlayerTask;
 #endif // _PLAYER_TASK_H_

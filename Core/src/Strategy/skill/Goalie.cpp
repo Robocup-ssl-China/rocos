@@ -80,7 +80,8 @@ void CGoalie::plan(const CVisionModule* pVision){
 
     if(danger_to_our_goal){
         _state = SAVE;
-        setSubTask(TaskFactoryV2::Instance()->Touch(newTask));
+        // setSubTask(TaskFactoryV2::Instance()->Touch(newTask));
+        setSubTask("Touch",newTask);
     }
     else if(need_clear){
         _state = CLEAR;
@@ -88,12 +89,14 @@ void CGoalie::plan(const CVisionModule* pVision){
         newTask.player.angle = stand_dir;
         DribbleStatus::Instance()->setDribbleCommand(vecNumber, 3);
         KickStatus::Instance()->setKick(vecNumber,8000);
-        setSubTask(TaskFactoryV2::Instance()->SmartGotoPosition(newTask));
+        // setSubTask(TaskFactoryV2::Instance()->SmartGotoPosition(newTask));
+        setSubTask("SmartGoto", newTask);
     }else{
         _state = STAND;
         newTask.player.pos = stand_pos;
         newTask.player.angle = stand_dir;
-        setSubTask(TaskFactoryV2::Instance()->SmartGotoPosition(newTask));
+        // setSubTask(TaskFactoryV2::Instance()->SmartGotoPosition(newTask));
+        setSubTask("SmartGoto", newTask);
     }
 //    if(...)
 //        setSubTask(...)

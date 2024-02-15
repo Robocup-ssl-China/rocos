@@ -5,18 +5,13 @@
 #include <unordered_map>
 #include "PlayerTask.h"
 
-template <typename T>
-Skill* create(){
-    return new T;
-}
-
 #define REGISTER_SKILL(name,SKILL_TYPE) \
-    bool name##_entry = Registry<Skill>::add(#name,(create<SKILL_TYPE>))
+    bool name##_entry = Registry<Skill>::add(#name,(std::make_unique<SKILL_TYPE>))
 
 template <typename T>
 class Registry{
 public:
-    using FactoryFunction = std::function<T*()>;
+    using FactoryFunction = std::function<std::unique_ptr<T>()>;
     using FactoryMap = std::unordered_map<std::string, FactoryFunction>;
     static bool add(const std::string& name, FactoryFunction fac){
         auto&& map = getFactoryMap();
@@ -26,7 +21,7 @@ public:
         map[name] = fac;
         return true;
     }
-    static T* create(const std::string& name){
+    static std::unique_ptr<T> create(const std::string& name){
         auto&& map = getFactoryMap();
         if(map.find(name) == map.end()){
             return nullptr;

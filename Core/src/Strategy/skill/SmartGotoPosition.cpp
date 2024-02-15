@@ -245,7 +245,8 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
 
 
     if(USE_DEBUG) cout << "[SmartGotoPosition.cpp] GotoPosition" << endl;
-    setSubTask(TaskFactoryV2::Instance()->GotoPosition(newTask));
+    // setSubTask(TaskFactoryV2::Instance()->GotoPosition(newTask));
+    setSubTask("Goto", newTask);
 
     _lastCycle = pVision->getCycle();
     CPlayerTask::plan(pVision);
