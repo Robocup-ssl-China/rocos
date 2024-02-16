@@ -78,7 +78,6 @@ set(PROJECT_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/skill
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Vision/mediator/net
 )
-include_directories(${PROJECT_INCLUDE_DIRS})
 file(GLOB PROJECT_SOURCE
     "${CMAKE_SOURCE_DIR}/share/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Algorithm/*.cpp"
@@ -106,5 +105,26 @@ file(GLOB PROJECT_SOURCE
     ${PROTO_CPP}
     "${CMAKE_CURRENT_BINARY_DIR}/tolua_zeus.cpp"
 )
+
+subdir_list(TACTIC_PACKS ${CMAKE_CURRENT_SOURCE_DIR})
+
+# remove ignore directory from TACTIC_PACKS
+list(REMOVE_ITEM TACTIC_PACKS 
+    "src"
+)
+
+foreach(pack ${TACTIC_PACKS})
+    message(STATUS "rocos - tactics_package: '${pack}'")
+    file(GLOB TACTIC_SOURCE 
+        "${CMAKE_CURRENT_SOURCE_DIR}/${pack}/skill/*.cpp"
+    )
+    list(APPEND PROJECT_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/${pack}/skill
+    )
+    message(TACTIC_SOURCE ${TACTIC_SOURCE})
+    list(APPEND PROJECT_SOURCE ${TACTIC_SOURCE})
+endforeach()
+
+include_directories(${PROJECT_INCLUDE_DIRS})
 add_executable(${TARGET_NAME} ${PROJECT_SOURCE})
 target_link_libraries(${TARGET_NAME} PRIVATE ${libs})
