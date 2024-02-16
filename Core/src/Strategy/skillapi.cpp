@@ -9,11 +9,15 @@ bool CSkillAPI::run(const std::string& name, const TaskT& task){
     }
     auto&& skill_pair = skills[executor];
     if(skill_pair.first != name || skill_pair.second == nullptr){
+        // create and reset task pack
         auto&& pSkill = createTask(name, task);
         if(pSkill == nullptr){
             return false;
         }
         skills[executor] = std::make_pair(name, std::move(pSkill));
+    }else{
+        // simple reset task pack
+        skill_pair.second->reset(task);
     }
     auto&& s = skills[executor].second.get();
     TaskMediator::Instance()->setPlayerTask(task.executor, s, 1);
