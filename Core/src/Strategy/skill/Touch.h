@@ -1,7 +1,6 @@
 #ifndef CTOUCH_H
 #define CTOUCH_H
-
-#include <PlayerTask.h>
+#include "registry.h"
 
 class CTouch : public CPlayerTask{
 public:
@@ -12,4 +11,5 @@ public:
 private:
     int _lastCycle;
 };
+REGISTER_SKILL(Touch, CTouch);
 #endif // CTOUCH_H

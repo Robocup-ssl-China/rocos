@@ -1,5 +1,4 @@
 #include "Goalie.h"
-#include "skill/Factory.h"
 #include "TaskMediator.h"
 #include "WorldDefine.h"
 #include "VisionModule.h"

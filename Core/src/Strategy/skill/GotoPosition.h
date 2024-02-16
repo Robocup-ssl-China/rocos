@@ -25,5 +25,5 @@ private:
     int playerFlag;
 };
 
-// REGISTER_SKILL("Goto",create<CGotoPositionV2>);
+REGISTER_SKILL(Goto, CGotoPositionV2);
 #endif

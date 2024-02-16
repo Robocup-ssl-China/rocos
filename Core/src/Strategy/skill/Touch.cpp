@@ -1,5 +1,4 @@
 #include "Touch.h"
-#include "skill/Factory.h"
 #include "parammanager.h"
 #include "WorldDefine.h"
 #include "VisionModule.h"

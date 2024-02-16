@@ -1,6 +1,6 @@
 #ifndef Speed_h__
 #define Speed_h__
-
+#include "registry.h"
 #include <PlayerTask.h>
 /************************************************************************/
 /*                     CSpeed  直接发速度指令,平动和转动          */
@@ -15,5 +15,5 @@ public:
 protected:
 };
 
-// REGISTER_SKILL(Speed, create<CSpeed>);
+REGISTER_SKILL(Speed, CSpeed);
 #endif // Speed_h__

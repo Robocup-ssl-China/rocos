@@ -1,6 +1,6 @@
 #ifndef _STOP_ROBOT_V2_H
 #define _STOP_ROBOT_V2_H
-#include <PlayerTask.h>
+#include "registry.h"
 class CStopRobotV2 : public CPlayerTask{
 public:
 	CStopRobotV2();
@@ -9,4 +9,5 @@ public:
 protected:
 	virtual void toStream(std::ostream& os) const { os << "Stopping"; }
 };
+REGISTER_SKILL(Stop, CStopRobotV2);
 #endif // _STOP_ROBOT_V2_H

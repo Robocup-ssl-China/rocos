@@ -17,8 +17,6 @@
 #include "ActionModule.h"
 #include <QCoreApplication>
 
-#include "register.h" // registers of skills
-
 /*! \mainpage Zeus - Run for number one
 *
 * \section Introduction

@@ -14,5 +14,5 @@ public:
 	virtual bool isEmpty() const { return false; }
 };
 
-// REGISTER_SKILL(OpenSpeed, create<COpenSpeed>);
-#endif // Speed_h__
+REGISTER_SKILL(OpenSpeed, COpenSpeed);
+#endif // Open_Speed_h__

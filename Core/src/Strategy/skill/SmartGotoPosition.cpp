@@ -1,6 +1,5 @@
 #include "SmartGotoPosition.h"
 #include <PathPlanner.h>
-#include "skill/Factory.h"
 #include <utils.h>
 #include <TaskMediator.h>
 //#include <LeavePenaltyArea.h>

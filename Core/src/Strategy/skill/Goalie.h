@@ -19,4 +19,4 @@ private:
     std::string debug_state;
 };
 
-// REGISTER_SKILL(Goalie,CGoalie::create);
+REGISTER_SKILL(Goalie, CGoalie);

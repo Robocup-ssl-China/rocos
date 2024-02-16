@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
-#include "skill/Factory.h"
 #include "LuaModule.h"
 #include "geometry.h"
 #include "TaskMediator.h"
