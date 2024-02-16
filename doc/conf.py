@@ -6,6 +6,11 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import recommonmark
+from recommonmark.transform import AutoStructify
+
+source_suffix = ['.rst', '.md']
+
 project = 'Rocos'
 copyright = '2024, Turing-zero'
 author = 'Turing-zero'
@@ -64,3 +69,9 @@ html_sidebars = {
 
 
 html_static_path = ['_static']
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        'enable_eval_rst': True,
+    }, True)
+    app.add_transform(AutoStructify)

@@ -1,6 +1,6 @@
 #pragma once
 #include <singleton.hpp>
-#include "registry.h"
+#include "skill_registry.h"
 #include "staticparams.h"
 #include "VisionModule.h"
 class CSkillAPI{

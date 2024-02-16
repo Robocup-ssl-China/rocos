@@ -18,7 +18,6 @@ public:
 	virtual ~CPlayerTask() = default;
 	virtual void plan(const CVisionModule* pVision); ///<规划
 	virtual CPlayerCommand* execute(const CVisionModule* pVision); ///<执行
-	virtual bool isEmpty() const; // 是否空任务
 	friend std::ostream& operator << (std::ostream& os, const CPlayerTask& task)
 	{
 		task.toStream(os);

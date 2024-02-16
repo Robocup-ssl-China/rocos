@@ -1,18 +1,19 @@
 #pragma once
-#include <iostream>
 #include <string>
+#include <memory>
 #include <functional>
 #include <unordered_map>
-#include "PlayerTask.h"
-
-#define REGISTER_SKILL(name,SKILL_TYPE) \
-    bool name##_entry = Registry<Skill>::add(#name,(std::make_unique<SKILL_TYPE>))
 
 template <typename T>
 class Registry{
-public:
     using FactoryFunction = std::function<std::unique_ptr<T>()>;
     using FactoryMap = std::unordered_map<std::string, FactoryFunction>;
+    static FactoryMap& getFactoryMap() {
+        static FactoryMap map;
+        return map;
+    }
+public:
+
     static bool add(const std::string& name, FactoryFunction fac){
         auto&& map = getFactoryMap();
         if(map.find(name) != map.end()){
@@ -35,10 +36,5 @@ public:
             all_list.push_back(reg.first);
         }
         return all_list;
-    }
-private:
-    static FactoryMap& getFactoryMap() {
-        static FactoryMap map;
-        return map;
     }
 };

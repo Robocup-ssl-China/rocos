@@ -113,6 +113,9 @@ list(REMOVE_ITEM TACTIC_PACKS
     "src"
 )
 
+message("Write tactic_packages.txt to ${CMAKE_SOURCE_DIR}/ZBin/tactic_packages.txt")
+string (REPLACE ";" "\n" TACTIC_PACKS_OUTPUT "${TACTIC_PACKS}")
+file(WRITE ${CMAKE_SOURCE_DIR}/ZBin/tactic_packages.txt "${TACTIC_PACKS_OUTPUT}")
 foreach(pack ${TACTIC_PACKS})
     message(STATUS "rocos - tactics_package: '${pack}'")
     file(GLOB TACTIC_SOURCE 
@@ -121,7 +124,10 @@ foreach(pack ${TACTIC_PACKS})
     list(APPEND PROJECT_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/${pack}/skill
     )
-    message(TACTIC_SOURCE ${TACTIC_SOURCE})
+    foreach (TACTIC_SOURCE_FILE ${TACTIC_SOURCE})
+        get_filename_component(TACTIC_SOURCE_FILE_NAME ${TACTIC_SOURCE_FILE} NAME)
+        message(STATUS "rocos - tactics_package: '${pack}' - source: '${TACTIC_SOURCE_FILE_NAME}'")
+    endforeach()
     list(APPEND PROJECT_SOURCE ${TACTIC_SOURCE})
 endforeach()
 

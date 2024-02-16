@@ -22,13 +22,3 @@ CPlayerCommand* CPlayerTask::execute(const CVisionModule* pVision) ///<执行
 void CPlayerTask::setSubTask(const std::string& name, const TaskT& task){
 	_pSubTask = SkillAPI::Instance()->createTask(name, task);
 }
-
-bool CPlayerTask::isEmpty() const
-{
-	// 该函数用于表达: 当没有设置subTask时, isEmpty函数表示上层skill是否直接给指令directCommand.
-	// 若直接给指令,则重载isEmpty函数,并返回false; 否则不必重载;
-	if( subTask() ){
-		return subTask()->isEmpty();
-	}
-	return true;
-}

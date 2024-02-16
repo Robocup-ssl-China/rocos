@@ -1,6 +1,6 @@
 #ifndef Speed_h__
 #define Speed_h__
-#include "registry.h"
+#include "skill_registry.h"
 #include <PlayerTask.h>
 /************************************************************************/
 /*                     CSpeed  直接发速度指令,平动和转动          */
@@ -11,7 +11,6 @@ public:
 	CSpeed();
 	virtual void plan(const CVisionModule* pVision);
 	virtual CPlayerCommand* execute(const CVisionModule* pVision);
-	virtual bool isEmpty() const { return false; }
 protected:
 };
 

@@ -1,6 +1,6 @@
 ﻿#ifndef _GOTO_POSITION_V2_H_
 #define _GOTO_POSITION_V2_H_
-#include "registry.h"
+#include "skill_registry.h"
 #include <geometry.h>
 /************************************************************************/
 /*                     CGotoPositionV2 / 跑位                           */
@@ -13,7 +13,6 @@ public:
 	CGotoPositionV2();
 	virtual void plan(const CVisionModule* pVision);
 	virtual CPlayerCommand* execute(const CVisionModule* pVision);
-	virtual bool isEmpty() const { return false; }
 	const CGeoPoint& reTarget() const { return _target; }
 protected:
 	virtual void toStream(std::ostream& os) const;
