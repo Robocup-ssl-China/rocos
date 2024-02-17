@@ -18,7 +18,13 @@ author = 'Turing-zero'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['recommonmark']
+extensions = [
+    "myst_parser", 
+    "sphinx_design", 
+    'sphinx_copybutton',
+]
+myst_enable_extensions = ["colon_fence"]
+myst_footnote_transition = False
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

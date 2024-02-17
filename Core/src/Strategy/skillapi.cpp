@@ -1,5 +1,7 @@
+#include <fmt/format.h>
 #include "skillapi.h"
 #include "TaskMediator.h"
+#include "GDebugEngine.h"
 
 bool CSkillAPI::run(const std::string& name, const TaskT& task){
     int executor = task.executor;
@@ -28,6 +30,7 @@ std::unique_ptr<Skill> CSkillAPI::createTask(const std::string& name, const Task
     auto pSkill = Registry<Skill>::create(name);
     if(pSkill == nullptr){
         std::cout << "Skill " << name << " not exist, please check again" << std::endl;
+        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(0,1000-task.executor*200),fmt::format("BOT {} - Skill {} not exist",task.executor,name).c_str(),COLOR_RED);
         return nullptr;
     }
     pSkill->reset(task);
