@@ -6,9 +6,6 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import recommonmark
-from recommonmark.transform import AutoStructify
-
 source_suffix = ['.rst', '.md']
 
 project = 'Rocos'
@@ -63,7 +60,7 @@ html_theme_options = {
     'css_minify': True,
     'logo_icon': '&#xe869',
     # Visible levels of the global TOC; -1 means unlimited
-    'globaltoc_depth': 2,
+    'globaltoc_depth': 1,
     # If False, expand all TOC entries
     'globaltoc_collapse': True,
     # If True, show hidden TOC entries
@@ -75,9 +72,3 @@ html_sidebars = {
 
 
 html_static_path = ['_static']
-
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-        'enable_eval_rst': True,
-    }, True)
-    app.add_transform(AutoStructify)
