@@ -2,6 +2,7 @@
 
 ## [**dev**](https://github.com/Robocup-ssl-China/rocos/tree/dev)
   * 战术包：用户可以创建独立文件夹作为战术包，战术包可以在自动被识别
+  * 添加持续维护且可编译的文档
   * 简化了Skill创建流程
   * 删除无用的接口和类，简化调用流程
 ## [**v0.0.2**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.2)（2024.1.15）

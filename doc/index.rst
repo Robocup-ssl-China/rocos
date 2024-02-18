@@ -53,6 +53,12 @@ Rocos's Wiki!
    :caption: 其他:
 
    posts/z/CHANGELOG.md
+
+.. toctree::
+   :hidden:
+
+   posts/z/ISSUE.md
+   posts/z/INSTALL.md
    posts/z/TODO.md
 
 Indices and tables
