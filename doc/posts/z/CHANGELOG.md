@@ -1,7 +1,10 @@
-## 更新
-* latest
+# Rocos 更新记录
+
+## [**dev**](https://github.com/Robocup-ssl-China/rocos/tree/dev)
+  * 战术包：用户可以创建独立文件夹作为战术包，战术包可以在自动被识别
+  * 简化了Skill创建流程
   * 删除无用的接口和类，简化调用流程
-* [**v0.0.2**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.2)（2024.1.15）
+## [**v0.0.2**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.2)（2024.1.15）
   * 统一编译方式为cmake，使用root下CMakeLists.txt合并为一个工程，代替原本的三个工程
   * 更新主题色！（Teal - #279BE6）
   * 更名CrazyNaN - Controller，Medusa - Core
@@ -23,7 +26,7 @@
   * 支持TZ-S01机型，适配旧版本发射机
   * Controller支持机器人回包输出
   * 添加机器人速度的补偿接口（velRegulation）
-* [**v0.0.1**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.1) (2022.10.25)
+## [**v0.0.1**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.1) (2022.10.25)
   * 稳定版本
     * Client使用cmake构建的客户端，内嵌sim模块（修改自开源grSim）
     * Medusa策略核心代码
@@ -33,5 +36,5 @@
 - 连接远程仿真环境流程
   - 选择仿真环境所在服务器的IP
     - 127.0.0.1为本地仿真不支持联机
-    ![image](img/20221122-144438.jpg)
+    ![image](../img/chinaopen2022.jpg)
   - 根据实际比赛情况在AlertPort/vision4Remote里更改接收仿真图像的端口

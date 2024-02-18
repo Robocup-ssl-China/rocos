@@ -11,43 +11,49 @@ Rocos's Wiki!
    :glob:
    :caption: SSL系统介绍:
 
-   posts/0_*
+   posts/0_introduction/*
 
 .. toctree::
    :maxdepth: 1
    :glob:
    :caption: 使用Rocos SDK - 基础:
 
-   posts/1_*
+   posts/1_rocos_basic/*
 
 .. toctree::
    :maxdepth: 1
    :glob:
    :caption: 使用Rocos SDK - 进阶:
 
-   posts/2_*
+   posts/2_rocos_advanced/*
 
 .. toctree::
    :maxdepth: 1
    :glob:
    :caption: 附录1-实验室搭建:
 
-   posts/p1_*
+   posts/appendix/p1_*
 
 .. toctree::
    :maxdepth: 1
    :glob:
    :caption: 附录2-策略设计:
 
-   posts/p2_*
+   posts/appendix/p2_*
 
 .. toctree::
    :maxdepth: 1
    :glob:
    :caption: 附录3-关于机器人硬件:
 
-   posts/p3_*
+   posts/appendix/p3_*
 
+.. toctree::
+   :maxdepth: 1
+   :caption: 其他:
+
+   posts/z/CHANGELOG.md
+   posts/z/TODO.md
 
 Indices and tables
 ==================

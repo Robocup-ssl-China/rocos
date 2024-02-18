@@ -1,6 +1,6 @@
 # Rocos - **RO**bo**C**up **O**pen **S**ource small size league framework
 
-![Rocos](img/rocos.png)
+![Rocos](doc/posts/img/rocos.png)
 
 > RoboCup小型组开源框架
 
