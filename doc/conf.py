@@ -52,7 +52,7 @@ html_theme_options = {
     'nav_title': 'Rocos\'s Wiki!',
 
     # Set you GA account ID to enable tracking
-    # 'google_analytics_account': 'UA-XXXXX',
+    'google_analytics_account': 'G-XG5RNS0XG5',
 
     # Specify a base_url used to generate sitemap.xml. If not
     # specified, then no sitemap will be built.
