@@ -35,6 +35,6 @@
 ## 2022ChinaOpen线上赛更新
 - 连接远程仿真环境流程
   - 选择仿真环境所在服务器的IP
-    - 127.0.0.1为本地仿真不支持联机
-    ![image](../img/chinaopen2022.jpg)
+    - 127.0.0.1为本地仿真不支持联机 \
+    ![image](../img/chinaopen2022.jpg){w=600px}
   - 根据实际比赛情况在AlertPort/vision4Remote里更改接收仿真图像的端口

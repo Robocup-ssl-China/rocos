@@ -27,7 +27,10 @@ extensions = [
     'sphinxcontrib.youtube',
     'sphinxcontrib.images',
 ]
-myst_enable_extensions = ["colon_fence"]
+myst_enable_extensions = [
+    "colon_fence",
+    "attrs_inline",
+]
 myst_footnote_transition = False
 
 templates_path = ['_templates']
