@@ -3,6 +3,10 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import os, sys
+
+sys.path.append(os.path.abspath("./_ext"))
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -16,9 +20,12 @@ author = 'Turing-zero'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+    'bilibili',
     "myst_parser", 
     "sphinx_design", 
     'sphinx_copybutton',
+    'sphinxcontrib.youtube',
+    'sphinxcontrib.images',
 ]
 myst_enable_extensions = ["colon_fence"]
 myst_footnote_transition = False
