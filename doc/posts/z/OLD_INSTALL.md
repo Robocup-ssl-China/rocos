@@ -1,19 +1,4 @@
-# 编译使用教程
-
-## Ubuntu22.04 Compile
-* install deps
-```bash
-sudo apt install git cmake build-essential libgl1-mesa-dev libode-dev qtbase5-dev qtdeclarative5-dev libqt5serialport5-dev libtolua++5.1-dev libeigen3-dev protobuf-compiler libprotobuf-dev qml-module-qtquick* qml-module-qtgamepad libfmt-dev
-```
-* clone and build
-```bash
-git clone https://github.com/Robocup-ssl-China/rocos.git
-cd rocos
-mkdir -p build
-cd build
-cmake ..
-cmake --build . --config Release --parallel `nproc`
-```
+# 旧版本编译操作
 
 ## Windows VS2015-64bit Client与Sim编译
 
