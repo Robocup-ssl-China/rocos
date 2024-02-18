@@ -6,7 +6,7 @@ firstState = "t",
 ["t"] = {
 	switch = function()
 	end,
-	Leader = task.touchKick(p,false),
+	Leader = {MyTouch{}},
 	match = "[L]"
 },
 
