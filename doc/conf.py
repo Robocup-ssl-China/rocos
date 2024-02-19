@@ -26,7 +26,16 @@ extensions = [
     'sphinx_copybutton',
     'sphinxcontrib.youtube',
     'sphinxcontrib.images',
+    'comments', # fix sphinx-comments bug
 ]
+
+comments_config = {
+   "utterances": {
+      "repo": "Robocup-ssl-China/rocos",
+      "optional": "config",
+   }
+}
+
 myst_enable_extensions = [
     "colon_fence",
     "attrs_inline",
