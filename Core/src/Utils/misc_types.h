@@ -125,6 +125,7 @@ struct stBallStatus{
 /// 任务结构
 struct TaskT{
 	TaskT() : executor(0){ }
+	TaskT(const int executor) : executor(executor){ }
 	int executor;				// 执行任务的队员号码
 	PlayerStatus player;		// 队员的状态
 	stBallStatus ball;			// 球的状态
