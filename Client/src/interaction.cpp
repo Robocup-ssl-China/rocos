@@ -251,6 +251,26 @@ bool Interaction::changeMedusaSettings(bool color, bool side) {
     ZSS::NActionModule::instance()->setMedusaSettings(color,side);
     return true;
 }
+bool Interaction::changeTestSettings(bool color, bool test,int script_index){
+    QString team = color ? "Yellow" : "Blue";
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_IsTest", test);
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_TestScriptName", _test_script_show_name_list[script_index]);
+    return true;
+}
+bool Interaction::getTestSettings(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    bool res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_IsTest");
+    return res;
+}
+int Interaction::getTestScriptIndex(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    QString res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_TestScriptName");
+    qDebug() << "getTestScriptIndex : " << res;
+    int index = _test_script_show_name_list.indexOf(res);
+    return index > 0 ? index : 0;
+}
 void Interaction::medusaPrint() {
     emit GlobalSettings::instance()->addOutput(medusaProcess->readAllStandardOutput());
 }
@@ -313,3 +333,14 @@ QStringList Interaction::getAllAddress(){
 QString Interaction::getRealAddress(int index){
     return ZSS::ZActionModule::instance()->getRealAddress(index);
 };
+
+void Interaction::updateTestScriptList(){
+    QProcess process;
+    process.start("./tools/scan_scripts");
+    process.waitForFinished(-1);
+    QString stdout = process.readAllStandardOutput();
+    _test_script_show_name_list = (stdout).split('\n');
+    _test_script_show_name_list.removeAll(QString(""));
+
+    // _test_script_real_name_list = 
+}

@@ -227,7 +227,7 @@ Page{
                     verticalItemAlignment: Grid.AlignVCenter;
                     horizontalItemAlignment: Grid.AlignHCenter;
                     spacing: 0;
-                    rowSpacing: 5;
+                    rowSpacing: 0;
                     columns:1;
                     property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
                     ZButton{
@@ -256,6 +256,22 @@ Page{
                             }
                         }
                     }
+                    // Grid{
+                    //     width:parent.width;
+                    //     verticalItemAlignment: Grid.AlignVCenter;
+                    //     horizontalItemAlignment: Grid.AlignHCenter;
+                    //     spacing: 0;
+                    //     rowSpacing: 0;
+                    //     columns:4;
+                    //     property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
+                    //     CheckBox{
+                    //         width:
+                    //         text: "TEST"
+                    //     }
+                    //     ZButton{
+                    //         text: "test button"
+                    //     }
+                    // }
                     Grid{
                         width:parent.width;
                         verticalItemAlignment: Grid.AlignVCenter;
@@ -345,6 +361,7 @@ Page{
                             onClicked: {
                                 control.medusaConnect = !control.medusaConnect;
                                 interaction.changeMedusaSettings(false,medusaSide.checked)
+                                interaction.changeTestSettings(false,test_script_mode_blue.checked,test_script_blue.currentIndex)
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
@@ -360,6 +377,7 @@ Page{
                             onClicked: {
                                 control.medusaConnect2 = !control.medusaConnect2;
                                 interaction.changeMedusaSettings(true,!medusaSide.checked)
+                                interaction.changeTestSettings(true,test_script_mode_yellow.checked,test_script_yellow.currentIndex)
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
@@ -367,6 +385,57 @@ Page{
                                 }
                                 interaction.controlMedusa2(control.medusaConnect2)
                             }
+                        }
+                    }
+                    Grid{
+                        width:parent.width;
+                        height:44;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        spacing: 0;
+                        rowSpacing: 0;
+                        rows:1;
+                        // property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
+                        CheckBox{
+                            id:test_script_mode_blue;
+                            height:parent.height;
+                            text: "TEST"
+                        }
+                        ZComboBox{
+                            id:test_script_blue;
+                            width:parent.width/2 - test_script_mode_blue.width;
+                            height:parent.height;
+                        }
+                        CheckBox{
+                            id:test_script_mode_yellow;
+                            height:parent.height;
+                            text: "TEST"
+                        }
+                        ZComboBox{
+                            id:test_script_yellow;
+                            width:parent.width/2 - test_script_mode_yellow.width - test_script_refresh.width;
+                            height:parent.height;
+                        }
+                        Button{
+                            id:test_script_refresh;
+                            height:parent.height;
+                            icon.source: "/source/refresh.png";
+                            function trigger(){
+                                interaction.updateTestScriptList();
+                                test_script_blue.model = interaction.getTestScriptList();
+                                test_script_yellow.model = interaction.getTestScriptList();
+                            }
+                            onClicked: {
+                                trigger();
+                            }
+                        }
+                        Component.onCompleted: {
+                            test_script_refresh.trigger();
+                            console.log("test_script_refresh.trigger();",interaction.getTestSettings(false),interaction.getTestSettings(true),interaction.getTestScriptIndex(false),interaction.getTestScriptIndex(true));
+                            test_script_mode_blue.checked = interaction.getTestSettings(false);
+                            test_script_mode_yellow.checked = interaction.getTestSettings(true);
+                            test_script_blue.currentIndex = interaction.getTestScriptIndex(false);
+                            test_script_yellow.currentIndex = interaction.getTestScriptIndex(true);
                         }
                     }
                 }

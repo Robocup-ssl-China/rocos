@@ -39,8 +39,12 @@ end
 
 function gPlayTable.CreatePlay(spec)
 	assert(type(spec.name) == "string")
-	assert(spec.applicable ~= nil)
-	assert(spec.attribute ~= nil)
+	assert(spec.firstState ~= nil)
+	-- assert(spec.applicable ~= nil)
+	-- assert(spec.attribute ~= nil)
+	if spec.timeout == nil then
+		spec.timeout = 99999
+	end
 	assert(type(spec.timeout) == "number")
 	-- print("Init Play: "..spec.name)
 

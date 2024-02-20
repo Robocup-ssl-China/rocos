@@ -57,14 +57,23 @@ local scan_skill = function(tactic_dir)
     return t
 end
 
+local path_exists = function(file)
+	local ok, err, code = os.rename(file, file)
+	return ok, err
+end
+
 for _, value in ipairs(tactic_packages) do
 	local tactic_dir = "../Core/"..value.."/skill/"
-	local skill_files = scan_skill(tactic_dir)
-	-- print("Tactic Dir : ",tactic_dir)
-	-- print("Skill Files : ",table.concat(skill_files, ","))
-	for _, filename in ipairs(skill_files) do
-		print("Init TPs Skill : ",filename)
-		dofile(filename)
+	if path_exists(tactic_dir) then
+		local skill_files = scan_skill(tactic_dir)
+		-- print("Tactic Dir : ",tactic_dir)
+		-- print("Skill Files : ",table.concat(skill_files, ","))
+		for _, filename in ipairs(skill_files) do
+			print("Init TPs Skill : ",filename)
+			dofile(filename)
+		end
+	else
+		print("Tactic Dir Not Exists : ",tactic_dir)
 	end
 end
 
@@ -72,6 +81,22 @@ for _, value in ipairs(gPlay) do
 	local filename = "./lua_scripts/play/"..value..".lua"
 	print("Init : ",filename)
 	dofile(filename)
+end
+
+-- init play from tactic packages
+for _, value in ipairs(tactic_packages) do
+	local tactic_dir = "../Core/"..value.."/play/"
+	if path_exists(tactic_dir) then
+		local skill_files = scan_skill(tactic_dir)
+		-- print("Tactic Dir : ",tactic_dir)
+		-- print("Skill Files : ",table.concat(skill_files, ","))
+		for _, filename in ipairs(skill_files) do
+			print("Init TPs Play : ",filename)
+			dofile(filename)
+		end
+	else
+		print("Tactic Dir Not Exists : ",tactic_dir)
+	end
 end
 
 print("Registered Skill Size : ",skillapi:get_size())

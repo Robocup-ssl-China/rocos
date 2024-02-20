@@ -21,6 +21,9 @@ class Interaction : public QObject {
     Q_INVOKABLE bool connectRadio(bool,int,int);
     Q_INVOKABLE bool connectSim(bool,int,bool);
     Q_INVOKABLE bool changeMedusaSettings(bool, bool);
+    Q_INVOKABLE bool changeTestSettings(bool, bool, int);
+    Q_INVOKABLE bool getTestSettings(bool);
+    Q_INVOKABLE int getTestScriptIndex(bool);
     Q_INVOKABLE QStringList getInterfaces();
     Q_INVOKABLE QStringList getGrsimInterfaces();
     Q_INVOKABLE void updateInterfaces();
@@ -51,9 +54,16 @@ class Interaction : public QObject {
     Q_INVOKABLE QStringList getAllAddress();
     Q_INVOKABLE QString getRealAddress(int index);
     Q_INVOKABLE void changeAddress(int team, int index);
+    Q_INVOKABLE void updateTestScriptList();
+    Q_INVOKABLE QStringList getTestScriptList() {
+        return _test_script_show_name_list;
+    }
     ~Interaction();
 public slots:
     void medusaPrint();
+private:
+    QStringList _test_script_real_name_list;
+    QStringList _test_script_show_name_list;
 };
 
 #endif // __INTERACTION_H__
