@@ -31,8 +31,6 @@ gSkill = {
         "SimpleGoto",
         "RunMultiPos",
         "Stop",
-        "Goalie",
-        "Touch",
         "OpenSpeed",
         "GoCmuRush",
 }
