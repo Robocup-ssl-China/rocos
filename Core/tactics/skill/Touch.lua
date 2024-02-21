@@ -12,8 +12,7 @@ function Touch(task)
 		task_param.player.pos = mpos
 		task_param.is_specify_ctrl_method = useInter
 		-- return CTouch(runner, mpos:x(), mpos:y(), useInter)
-		local res = skillapi:run("Touch", task_param)
-		debugEngine:gui_debug_msg(CGeoPoint(0,2000), res and "True" or "False")
+		return skillapi:run("Touch", task_param)
 	end
 
 	return execute, matchPos

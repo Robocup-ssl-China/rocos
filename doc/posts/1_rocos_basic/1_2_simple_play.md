@@ -97,4 +97,23 @@ name = 'TestMyRun',
 
 在这个Play中，我们定义了两个状态`run1`和`run2`，在`run1`状态下，Leader角色执行`task.goCmuRush(CGeoPoint(1000,1000))`任务，向目标点移动。在`run2`状态下，Leader角色执行`task.goCmuRush(CGeoPoint(-1000,-1000))`任务，向目标点移动。当Leader角色到达目标点时，切换到另一个状态。
 
-## 运行&测试Play[TODO]
+(test_script)=
+## 运行&测试Play
+
+:::{admonition} 提示
+如果你熟悉最初的Rocos，那么你可能会发现，在`Rocos v0.1`之后，我们引入了战术包的概念以此来分离框架代码和策略代码来进一步简化策略的构建和测试流程。针对运行和测试Play而言，你不再需要在`Config.lua`中进行手动设置，而可以直接在`Client`中图形化的进行操作。
+:::
+
+在完成Play的编写之后，我们可以通过`Client`来运行和测试Play。
+
+::::{card} Client中针对Play测试的设置和按钮
+:text-align: center
+
+:::{thumbnail} ../../img/client_test_settings.png
+:::
+
+::::
+
+`Client`的每次重启都会加载最新的战术包，如果不重启也可以手动刷新。你可以通过勾选设置是否进入测试模式，并在下拉框中选择你想要测试的Play，然后点击按钮来运行。
+
+现在你可以通过界面配置并执行刚刚书写的`TestMyRun`了。
