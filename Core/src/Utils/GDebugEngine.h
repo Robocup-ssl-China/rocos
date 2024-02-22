@@ -39,6 +39,8 @@ public:
     void gui_debug_robot(const CGeoPoint& p, double robot_dir, int debug_color = 1,int RGB_value=0);
     void gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
     void gui_debug_msg(const CGeoPoint& p, const std::string& msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
+    void gui_debug_msg_fix(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
+    void gui_debug_msg_fix(const CGeoPoint& p, const std::string& msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
     void send(bool);
 private:
     QUdpSocket sendSocket;

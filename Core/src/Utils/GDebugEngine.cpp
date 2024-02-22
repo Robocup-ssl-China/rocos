@@ -164,7 +164,13 @@ void CGDebugEngine::gui_debug_robot(const CGeoPoint& p, double robot_dir, int de
 void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const std::string& msgstr, int debug_color,int RGB_value, const double size, const int weight){
     gui_debug_msg(p,msgstr.c_str(),debug_color,RGB_value,size,weight);
 }
-void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color,int RGB_value, const double size, const int weight)
+void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color,int RGB_value, const double size, const int weight){
+    gui_debug_msg_fix(p*(WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT?-1:1),msgstr,debug_color,RGB_value,size,weight);
+}
+void CGDebugEngine::gui_debug_msg_fix(const CGeoPoint& p, const std::string& msgstr, int debug_color,int RGB_value, const double size, const int weight){
+    gui_debug_msg_fix(p,msgstr.c_str(),debug_color,RGB_value,size,weight);
+}
+void CGDebugEngine::gui_debug_msg_fix(const CGeoPoint& p, const char* msgstr, int debug_color,int RGB_value, const double size, const int weight)
 {
     debugMutex.lock();
     ZSS::Protocol::Debug_Msg* msg = guiDebugMsgs.add_msgs();
@@ -177,14 +183,8 @@ void CGDebugEngine::gui_debug_msg(const CGeoPoint& p, const char* msgstr, int de
     text->set_size(size);
     text->set_weight(weight);
     ZSS::Protocol::Point* center = text->mutable_pos();
-    if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT){
-		center->set_x(-p.x());
-        center->set_y(-p.y());
-	}
-	else{
-		center->set_x(p.x());
-        center->set_y(p.y());
-	}
+    center->set_x(p.x());
+    center->set_y(p.y());
     text->set_text(msgstr);
     debugMutex.unlock();
 }

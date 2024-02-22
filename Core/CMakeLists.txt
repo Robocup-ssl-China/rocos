@@ -17,9 +17,14 @@ list(APPEND libs ${LUA_LIBRARIES})
 find_package(toluapp REQUIRED)
 list(APPEND incs ${TOLUAPP_INCLUDE_DIRS})
 list(APPEND libs ${TOLUAPP_LIBRARIES})
-EXECUTE_PROCESS(
+file(GLOB LUA_MODULE_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/LuaModule/*.pkg"
+)
+add_custom_command(
+    OUTPUT tolua_zeus.cpp
     COMMAND ${TOLUAPP_EXECUTABLE} -n zeus -o ${CMAKE_CURRENT_BINARY_DIR}/tolua_zeus.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaModule/zeus.pkg
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaModule
+    DEPENDS ${LUA_MODULE_SRC}
 )
 ## Eigen
 find_package(Eigen3 REQUIRED)
@@ -103,6 +108,9 @@ file(GLOB PROJECT_SOURCE
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Vision/mediator/net/*.cpp"
     ${PROTO_H}
     ${PROTO_CPP}
+    
+)
+list(APPEND PROJECT_SOURCE
     "${CMAKE_CURRENT_BINARY_DIR}/tolua_zeus.cpp"
 )
 

@@ -126,13 +126,15 @@ bool CLuaModule::RunScript(const char *pFname)
     std::string strFilename = findScript(pFname);
     const char *pFilename = strFilename.c_str();
 
-	if (0 != luaL_loadfile(m_pScriptContext, pFilename))
+	if (0 != luaL_loadfile(m_pScriptContext, pFilename) || 0 != lua_pcall(m_pScriptContext, 0, LUA_MULTRET, 0))
     {
-        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2);
+        double x = (-PARAM::Field::PITCH_LENGTH/2)+50;
+		double y = (PARAM::Field::PITCH_WIDTH/2);
+		double y_step = -150;
         qDebug() << QString("Lua Error - Script Run\nScript Name:%1\nError Message:%2\n").arg(pFilename).arg(luaL_checkstring(m_pScriptContext, -1));
-        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-200),QString("Lua Error - Script Load").toLatin1());
-        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-400),QString("Name:%1").arg(pFilename).toLatin1());
-        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-600),QString("Error Message:%1").arg(luaL_checkstring(m_pScriptContext, -1)).toLatin1());
+        GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(x,y+y_step*1),QString("Lua Error - Script Load").toLatin1(),COLOR_RED,0,100);
+        GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(x,y+y_step*2),QString("Name:%1").arg(pFilename).toLatin1(),COLOR_RED,0,100);
+        GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(x,y+y_step*3),QString("Error Message:%1").arg(luaL_checkstring(m_pScriptContext, -1)).toLatin1(),COLOR_RED,0,100);
         GDebugEngine::Instance()->send(!ZSS::ZParamManager::instance()->value("ZAlert/IsYellow").toBool());
         if(LUA_DEBUG){
             std::cout << "Press enter to continue ...";
@@ -140,22 +142,7 @@ bool CLuaModule::RunScript(const char *pFname)
         }
             return false;
     }
-	if (0 != lua_pcall(m_pScriptContext, 0, LUA_MULTRET, 0))
-    {
-        double x = (ZSS::ZParamManager::instance()->value("ZAlert/IsRight").toBool()?1:-1)*(PARAM::Field::PITCH_LENGTH/2+500);
-        qDebug() << QString("Lua Error - Script Run\nScript Name:%1\nError Message:%2\n").arg(pFilename).arg(luaL_checkstring(m_pScriptContext, -1));
-        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-200),QString("Lua Error - Script Load").toLatin1());
-        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-400),QString("Name:%1").arg(pFilename).toLatin1());
-        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(x,-600),QString("Error Message:%1").arg(luaL_checkstring(m_pScriptContext, -1)).toLatin1());
-        GDebugEngine::Instance()->send(!ZSS::ZParamManager::instance()->value("ZAlert/IsYellow").toBool());
-        if(LUA_DEBUG){
-            std::cout << "Press enter to continue ...";
-            std::cin.get();
-        }
-        return false;
-    }
 	return true;
-
 }
 
 bool CLuaModule::RunString(const char *pCommand)
