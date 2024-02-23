@@ -35,7 +35,6 @@ list(APPEND incs ${fmt_INCLUDE_DIRS})
 list(APPEND libs fmt::fmt)
 
 set(PROTO_LIST
-    game_event
     grSim_Commands
     grSimMessage
     grSim_Packet
@@ -59,6 +58,7 @@ get_pb_file(PROTO_H PROTO_CPP ${PROTO_LIST})
 
 set(PROJECT_INCLUDE_DIRS
     ${incs}
+    ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/proto
     ${CMAKE_SOURCE_DIR}/share
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -106,11 +106,10 @@ file(GLOB PROJECT_SOURCE
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/rolematch/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/skill/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Vision/mediator/net/*.cpp"
-    ${PROTO_H}
-    ${PROTO_CPP}
-    
 )
 list(APPEND PROJECT_SOURCE
+    ${PROTO_H}
+    ${PROTO_CPP}
     "${CMAKE_CURRENT_BINARY_DIR}/tolua_zeus.cpp"
 )
 
@@ -141,4 +140,5 @@ endforeach()
 
 include_directories(${PROJECT_INCLUDE_DIRS})
 add_executable(${TARGET_NAME} ${PROJECT_SOURCE})
+add_dependencies(${TARGET_NAME} proto_gen)
 target_link_libraries(${TARGET_NAME} PRIVATE ${libs})

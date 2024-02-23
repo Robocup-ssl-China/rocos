@@ -70,6 +70,7 @@ set(PROTO_LIST
 get_pb_file(PROTO_H PROTO_CPP ${PROTO_LIST})
 
 list(APPEND PROJECT_INCLUDE_DIRS
+    ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/proto
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/physics
@@ -109,6 +110,7 @@ if(BUILD_PYTHON_PLUGINS)
 endif()
 
 add_library(${target_lib} SHARED ${srcs})
+add_dependencies(${target_lib} proto_gen)
 
 set_target_properties(${target_lib} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(${target_lib} PUBLIC ${PROJECT_INCLUDE_DIRS})
