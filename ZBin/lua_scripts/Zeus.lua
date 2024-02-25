@@ -47,7 +47,7 @@ for line in io.lines("tactic_packages.txt") do
 end
 print("Tactic Packages : ",table.concat(tactic_packages, ","))
 
-local scan_skill = function(tactic_dir)
+local scan_scripts = function(tactic_dir)
     local t = {}
     local pfile = io.popen('find "'..tactic_dir..'" -name "*.lua" -type f -print')
     for filename in pfile:lines() do
@@ -65,7 +65,7 @@ end
 for _, value in ipairs(tactic_packages) do
 	local tactic_dir = "../Core/"..value.."/skill/"
 	if path_exists(tactic_dir) then
-		local skill_files = scan_skill(tactic_dir)
+		local skill_files = scan_scripts(tactic_dir)
 		-- print("Tactic Dir : ",tactic_dir)
 		-- print("Skill Files : ",table.concat(skill_files, ","))
 		for _, filename in ipairs(skill_files) do
@@ -87,15 +87,26 @@ end
 for _, value in ipairs(tactic_packages) do
 	local tactic_dir = "../Core/"..value.."/play/"
 	if path_exists(tactic_dir) then
-		local skill_files = scan_skill(tactic_dir)
+		local play_files = scan_scripts(tactic_dir)
 		-- print("Tactic Dir : ",tactic_dir)
-		-- print("Skill Files : ",table.concat(skill_files, ","))
-		for _, filename in ipairs(skill_files) do
+		-- print("Skill Files : ",table.concat(play_files, ","))
+		for _, filename in ipairs(play_files) do
 			print("Init TPs Play : ",filename)
 			dofile(filename)
 		end
 	else
 		print("Tactic Dir Not Exists : ",tactic_dir)
+	end
+end
+
+gRefConfigFiles = {}
+if USE_CUSTOM_REF_CONFIG then
+	local ref_config_file = "../Core/" .. REF_CONFIG_TACTIC_NAME .. "/PlayConfig.lua"
+	if path_exists(ref_config_file) then
+		print("Load Ref Config File : ",ref_config_file)
+		dofile(ref_config_file)
+	else
+		debugEngine:gui_debug_msg(CGeoPoint(0,0),"Ref Config File Not Exists : " .. ref_config_file)
 	end
 end
 

@@ -257,12 +257,25 @@ bool Interaction::changeTestSettings(bool color, bool test,int script_index){
     ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_TestScriptName", _test_script_show_name_list[script_index]);
     return true;
 }
+bool Interaction::changeRefConfigSettings(bool color, bool ref,int config_index){
+    QString team = color ? "Yellow" : "Blue";
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_UseRefConfig", ref);
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_RefConfigName", _ref_config_show_name_list[config_index]);
+    return true;
+}
 bool Interaction::getTestSettings(bool color){
     QString team = color ? "Yellow" : "Blue";
     bool res;
     ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_IsTest");
     return res;
 }
+bool Interaction::getRefConfigSetting(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    bool res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_UseRefConfig");
+    return res;
+}
+
 int Interaction::getTestScriptIndex(bool color){
     QString team = color ? "Yellow" : "Blue";
     QString res;
@@ -271,6 +284,15 @@ int Interaction::getTestScriptIndex(bool color){
     int index = _test_script_show_name_list.indexOf(res);
     return index > 0 ? index : 0;
 }
+int Interaction::getRefConfigIndex(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    QString res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_RefConfigName");
+    qDebug() << "getRefConfigIndex : " << res;
+    int index = _ref_config_show_name_list.indexOf(res);
+    return index > 0 ? index : 0;
+}
+
 void Interaction::medusaPrint() {
     emit GlobalSettings::instance()->addOutput(medusaProcess->readAllStandardOutput());
 }
@@ -341,6 +363,13 @@ void Interaction::updateTestScriptList(){
     QString stdout = process.readAllStandardOutput();
     _test_script_show_name_list = (stdout).split('\n');
     _test_script_show_name_list.removeAll(QString(""));
+}
 
-    // _test_script_real_name_list = 
+void Interaction::updateRefConfigList(){
+    QProcess process;
+    process.start("./tools/scan_ref_configs");
+    process.waitForFinished(-1);
+    QString stdout = process.readAllStandardOutput();
+    _ref_config_show_name_list = (stdout).split('\n');
+    _ref_config_show_name_list.removeAll(QString(""));
 }

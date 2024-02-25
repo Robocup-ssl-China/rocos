@@ -364,7 +364,6 @@ void CVisionModule::updateRefereeMsg() {
         _refereeMsg = "GameHalt";
     } else if( _gameState.gameOver()) {
         _refereeMsg = "GameOver";
-        //add by gty 16/6/11
     } else if( _gameState.isOurTimeout() || _gameState.isTheirTimeout()) {
         _refereeMsg = "OurTimeout";
     } else if(!_gameState.allowedNearBall()) {
@@ -396,7 +395,7 @@ void CVisionModule::updateRefereeMsg() {
         } else if(_gameState.ourDirectKick()) {
             _refereeMsg = "OurIndirectKick";
         }
-    } else if (_gameState.ourBallPlacement()) { //2018 Canada Ball Placement mession
+    } else if (_gameState.ourBallPlacement()) {
         if(_nextRefereeMsg == ""){
             _refereeMsg = "OurBallPlacement";
         }else{

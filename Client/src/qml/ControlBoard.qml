@@ -362,6 +362,7 @@ Page{
                                 control.medusaConnect = !control.medusaConnect;
                                 interaction.changeMedusaSettings(false,medusaSide.checked)
                                 interaction.changeTestSettings(false,test_script_mode_blue.checked,test_script_blue.currentIndex)
+                                interaction.changeRefConfigSettings(false,refconfig_mode_blue.checked,refconfig_blue.currentIndex)
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
@@ -378,6 +379,7 @@ Page{
                                 control.medusaConnect2 = !control.medusaConnect2;
                                 interaction.changeMedusaSettings(true,!medusaSide.checked)
                                 interaction.changeTestSettings(true,test_script_mode_yellow.checked,test_script_yellow.currentIndex)
+                                interaction.changeRefConfigSettings(true,refconfig_mode_yellow.checked,refconfig_yellow.currentIndex)
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
@@ -431,11 +433,60 @@ Page{
                         }
                         Component.onCompleted: {
                             test_script_refresh.trigger();
-                            console.log("test_script_refresh.trigger();",interaction.getTestSettings(false),interaction.getTestSettings(true),interaction.getTestScriptIndex(false),interaction.getTestScriptIndex(true));
                             test_script_mode_blue.checked = interaction.getTestSettings(false);
                             test_script_mode_yellow.checked = interaction.getTestSettings(true);
                             test_script_blue.currentIndex = interaction.getTestScriptIndex(false);
                             test_script_yellow.currentIndex = interaction.getTestScriptIndex(true);
+                        }
+                    }
+                    Grid{
+                        width:parent.width;
+                        height:44;
+                        verticalItemAlignment: Grid.AlignVCenter;
+                        horizontalItemAlignment: Grid.AlignHCenter;
+                        spacing: 0;
+                        rowSpacing: 0;
+                        rows:1;
+                        // property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
+                        CheckBox{
+                            id:refconfig_mode_blue;
+                            height:parent.height;
+                            text: "USE "
+                        }
+                        ZComboBox{
+                            id:refconfig_blue;
+                            width:parent.width/2 - refconfig_mode_blue.width;
+                            height:parent.height;
+                        }
+                        CheckBox{
+                            id:refconfig_mode_yellow;
+                            height:parent.height;
+                            text: "USE "
+                        }
+                        ZComboBox{
+                            id:refconfig_yellow;
+                            width:parent.width/2 - refconfig_mode_yellow.width - refconfig_refresh.width;
+                            height:parent.height;
+                        }
+                        Button{
+                            id:refconfig_refresh;
+                            height:parent.height;
+                            icon.source: "/source/refresh.png";
+                            function trigger(){
+                                interaction.updateRefConfigList();
+                                refconfig_blue.model = interaction.getRefConfigList();
+                                refconfig_yellow.model = interaction.getRefConfigList();
+                            }
+                            onClicked: {
+                                trigger();
+                            }
+                        }
+                        Component.onCompleted: {
+                            refconfig_refresh.trigger();
+                            refconfig_mode_blue.checked = interaction.getRefConfigSetting(false);
+                            refconfig_mode_yellow.checked = interaction.getRefConfigSetting(true);
+                            refconfig_blue.currentIndex = interaction.getRefConfigIndex(false);
+                            refconfig_yellow.currentIndex = interaction.getRefConfigIndex(true);
                         }
                     }
                 }

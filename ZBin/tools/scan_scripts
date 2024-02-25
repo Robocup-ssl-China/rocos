@@ -14,6 +14,9 @@ def get_all_files(dir):
     files = []
     for root, dirs, file in os.walk(dir):
         for f in file:
+            rela_path = os.path.relpath(root, dir)
+            if rela_path != ".":
+                f = os.path.join(rela_path, f)
             # files.append(os.path.abspath(os.path.join(root, f)))
             files.append(f)
     # sort

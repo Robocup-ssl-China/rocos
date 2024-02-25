@@ -9,6 +9,9 @@ SAO_ACTION = CGetSettings("Alert/SaoAction","Int")
 IS_RIGHT = CGetSettings("ZAlert/IsRight", "Bool")
 DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
+USE_CUSTOM_REF_CONFIG = CGetSettings("ZAlert/"..team.."_UseRefConfig","Bool")
+REF_CONFIG_TACTIC_NAME = CGetSettings("ZAlert/"..team.."_RefConfigName","String")
+
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 
 gTestPlay = CGetSettings("ZAlert/"..team.."_TestScriptName","String")
