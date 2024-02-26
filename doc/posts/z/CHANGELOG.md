@@ -1,10 +1,15 @@
 # Rocos 更新记录
 
 ## [**dev**](https://github.com/Robocup-ssl-China/rocos/tree/dev)
+## [**v0.0.3**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.3)（2024.2.26）
+  * 可以直接在Client中配置TestScripts以及RefConfig
   * 战术包：用户可以创建独立文件夹作为战术包，战术包可以在自动被识别
+  * 添加战术包中对裁判盒脚本跳转的支持
   * 添加持续维护且可编译的文档
   * 简化了Skill创建流程
   * 删除无用的接口和类，简化调用流程
+  * 添加Wiki支持，随工程一同更新
+  * 在CMakeLists中添加对于tolua:pkg和proto文件的改动监测
 ## [**v0.0.2**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.2)（2024.1.15）
   * 统一编译方式为cmake，使用root下CMakeLists.txt合并为一个工程，代替原本的三个工程
   * 更新主题色！（Teal - #279BE6）
