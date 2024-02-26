@@ -28,3 +28,7 @@
 
   执行上述语句后Log Out，再次进入可以获取权限
 
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Robocup-ssl-China/rocos&type=Date)](https://star-history.com/#Robocup-ssl-China/rocos&Date)
