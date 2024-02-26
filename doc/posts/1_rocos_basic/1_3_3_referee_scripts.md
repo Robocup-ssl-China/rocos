@@ -40,7 +40,7 @@
 # in Rocos root directory
 mkdir -p Core/my_tactic_2024
 cd Core/my_tactic_2024
-cp ../tactic/PlayConfigTemplate.lua ./PlayConfig.lua
+cp ../tactic/PlayConfig.lua.template ./PlayConfig.lua
 ```
 
 打开`PlayConfig.lua`文件，将第二段注释中，针对`gRefConfig`的部分取消注释。

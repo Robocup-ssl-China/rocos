@@ -13,7 +13,7 @@
 - `NormalPlay`          : 正常比赛
 ]]
 
---[[
+---[[
 gRefConfig = {
     GameHalt = "",
     GameStop = "",

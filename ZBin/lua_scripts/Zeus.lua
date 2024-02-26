@@ -77,6 +77,17 @@ for _, value in ipairs(tactic_packages) do
 	end
 end
 
+-- load task.lua for each tactic package
+for _, value in ipairs(tactic_packages) do
+	local task_file = "../Core/" .. value .. "/task.lua"
+	if path_exists(task_file) then
+		package.path = "../Core/" .. value .. "/?.lua;" .. package.path
+		package.loaded['task'] = nil
+		print("Load Task File : ",task_file)
+		require('task')
+	end
+end
+
 for _, value in ipairs(gPlay) do
 	local filename = "./lua_scripts/play/"..value..".lua"
 	print("Init : ",filename)

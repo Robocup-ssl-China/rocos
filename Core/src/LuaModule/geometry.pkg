@@ -48,8 +48,6 @@ class CGeoLine{
 	const double& a() const ;
 	const double& b()const  ;
 	const double& c()const ;
-
-
 };
 class CGeoSegment:public CGeoLine{
 	CGeoSegment() ;
