@@ -17,15 +17,47 @@ gNormalPlay = gOppoConfig.NorPlay
 -- else
 -- 	dofile("./lua_scripts/opponent/"..OPPONENT_NAME..".lua")	
 -- end
-
+function chooseRefConfigScript(choice)
+	local playName = nil
+	if type(choice) == "function" then
+		playName = choice()
+		if type(playName) == "table" then
+			playName = playName[math.random(1,#playName)]
+		end
+	elseif type(choice) == "table" then
+		playName = choice[math.random(1,#choice)]
+	else
+		playName = choice
+	end
+	return playName
+end
 function RunRefScript(name)
+	if USE_CUSTOM_REF_CONFIG then
+		local msg = nil
+		if gRefConfig == nil then
+			msg = "Error: No Ref Config Table, Config Files : " .. (REF_CONFIG_TACTIC_NAME)
+		elseif gRefConfig[name] == nil then
+			msg = "Error: No Ref Config Script for "..name .. ", Config Files : " .. (REF_CONFIG_TACTIC_NAME)
+		else
+			local playName = chooseRefConfigScript(gRefConfig[name])
+			if playName == nil or gPlayTable[playName] == nil then
+				msg = "Error: Select Play \'"..playName.."\' when ref_msg is " ..name.. " but not found in gPlayTable"
+			else
+				gCurrentPlay = playName
+				return true
+			end
+		end
+		debugEngine:gui_debug_msg_fix(CGeoPoint:new_local(-param.pitchLength/2+30,-param.pitchWidth/2+30),msg,1,0,140)
+		return false
+	end
 	local filename = "./lua_scripts/play/Ref/"..name..".lua"
 	dofile(filename)
+	return true
 end
 
 function SelectRefPlay()
 	local curRefMsg = vision:getCurrentRefereeMsg()
-	debugEngine:gui_debug_msg(CGeoPoint:new_local(1000,1000),curRefMsg)
+	debugEngine:gui_debug_msg(CGeoPoint:new_local(0,param.pitchWidth/2+150),curRefMsg)
 	if curRefMsg == "" then
 		gLastRefMsg = curRefMsg
 		return false
@@ -50,9 +82,9 @@ function SelectRefPlay()
 		gLastRefMsg = curRefMsg
 		return false
 	end
-	RunRefScript(curRefMsg)
+	local res = RunRefScript(curRefMsg)
 	gLastRefMsg = curRefMsg
-	return true
+	return res
 end
 
 function SelectBayesPlay()

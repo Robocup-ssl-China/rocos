@@ -96,29 +96,3 @@ bool CActionModule::sendAction() {
 
     return true;
 }
-
-bool CActionModule::sendNoAction() {
-    for (int vecNum = 0; vecNum < PARAM::Field::MAX_PLAYER; ++ vecNum) {
-        // 生成停止命令
-        CPlayerCommand *pCmd = CmdFactory::Instance()->newCommand(CPlayerSpeedV2(vecNum, 0, 0, 0, 0));
-        // 执行且下发
-        auto robotIndex = vecNum;
-        pCmd->execute(robotIndex);
-        // 记录指令
-        _pVision->setPlayerCommand(pCmd->number(), pCmd);
-    }
-
-    return true;
-}
-
-void CActionModule::stopAll() {
-    for (int vecNum = 0; vecNum < PARAM::Field::MAX_PLAYER; ++ vecNum) {
-        // 生成停止命令
-        CPlayerCommand *pCmd = CmdFactory::Instance()->newCommand(CPlayerSpeedV2(vecNum, 0, 0, 0, 0));
-        // 执行且下发
-        pCmd->execute(vecNum);
-        // 指令记录
-        _pVision->setPlayerCommand(pCmd->number(), pCmd);
-    }
-    return ;
-}

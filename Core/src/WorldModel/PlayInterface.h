@@ -1,7 +1,7 @@
 //#ifndef _PLAY_INTERFACE_H_
 //#define _PLAY_INTERFACE_H_
 //#include "staticparams.h"
-//#include <singleton.h>
+//#include <singleton.hpp>
 //#include <misc_types.h>
 //#include <map>
 //#include <string>
@@ -29,5 +29,5 @@
 //	map<string, int> _roleNum;
 //};
 
-//typedef NormalSingleton< CPlayInterface > PlayInterface; // singleton pattern
+//typedef Singleton< CPlayInterface > PlayInterface; // singleton pattern
 //#endif//_PLAY_INTERFACE_H_

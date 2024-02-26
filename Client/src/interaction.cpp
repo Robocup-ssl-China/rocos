@@ -251,6 +251,84 @@ bool Interaction::changeMedusaSettings(bool color, bool side) {
     ZSS::NActionModule::instance()->setMedusaSettings(color,side);
     return true;
 }
+bool Interaction::changeTestSettings(bool color, bool test,int script_index){
+    QString team = color ? "Yellow" : "Blue";
+    QString script_name;
+    bool test_res = false;
+    bool res = false;
+    if(test){
+        if(script_index < 0 || script_index >= _test_script_show_name_list.size()) {
+            script_name = "";
+            test_res = false;
+            res = false;
+        }else{
+            script_name = _test_script_show_name_list[script_index];
+            test_res = true;
+            res = true;
+        }
+    }else{
+        script_name = "";
+        test_res = false;
+        res = true;
+    }
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_IsTest", test_res);
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_TestScriptName", script_name);
+    return res;
+}
+bool Interaction::changeRefConfigSettings(bool color, bool ref,int config_index){
+    QString team = color ? "Yellow" : "Blue";
+    QString config_name;
+    bool ref_res = false;
+    bool res = false;
+    if(ref){
+        if(config_index < 0 || config_index >= _ref_config_show_name_list.size()) {
+            config_name = "";
+            ref_res = false;
+            res = false;
+        }else{
+            config_name = _ref_config_show_name_list[config_index];
+            ref_res = true;
+            res = true;
+        }
+    }else{
+        config_name = "";
+        ref_res = false;
+        res = true;
+    }
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_UseRefConfig", ref_res);
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_RefConfigName", config_name);
+    return res;
+}
+bool Interaction::getTestSettings(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    bool res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_IsTest");
+    return res;
+}
+bool Interaction::getRefConfigSetting(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    bool res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_UseRefConfig");
+    return res;
+}
+
+int Interaction::getTestScriptIndex(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    QString res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_TestScriptName");
+    qDebug() << "getTestScriptIndex : " << res;
+    int index = _test_script_show_name_list.indexOf(res);
+    return index > 0 ? index : 0;
+}
+int Interaction::getRefConfigIndex(bool color){
+    QString team = color ? "Yellow" : "Blue";
+    QString res;
+    ZSS::ZParamManager::instance()->loadParam(res,"ZAlert/"+team+"_RefConfigName");
+    qDebug() << "getRefConfigIndex : " << res;
+    int index = _ref_config_show_name_list.indexOf(res);
+    return index > 0 ? index : 0;
+}
+
 void Interaction::medusaPrint() {
     emit GlobalSettings::instance()->addOutput(medusaProcess->readAllStandardOutput());
 }
@@ -313,3 +391,21 @@ QStringList Interaction::getAllAddress(){
 QString Interaction::getRealAddress(int index){
     return ZSS::ZActionModule::instance()->getRealAddress(index);
 };
+
+void Interaction::updateTestScriptList(){
+    QProcess process;
+    process.start("./tools/scan_scripts");
+    process.waitForFinished(-1);
+    QString stdout = process.readAllStandardOutput();
+    _test_script_show_name_list = (stdout).split('\n');
+    _test_script_show_name_list.removeAll(QString(""));
+}
+
+void Interaction::updateRefConfigList(){
+    QProcess process;
+    process.start("./tools/scan_ref_configs");
+    process.waitForFinished(-1);
+    QString stdout = process.readAllStandardOutput();
+    _ref_config_show_name_list = (stdout).split('\n');
+    _ref_config_show_name_list.removeAll(QString(""));
+}

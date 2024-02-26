@@ -1,10 +1,10 @@
 #ifndef _TASK_MEDIATOR_H_
 #define _TASK_MEDIATOR_H_
 
-#include <singleton.h>
+#include <singleton.hpp>
 #include <geometry.h>
 #include "staticparams.h"
-#include <skill/PlayerTask.h>
+#include <PlayerTask.h>
 #include "utils.h"
 #include "Global.h"
 #include <PlayInterface.h>
@@ -160,6 +160,6 @@ private:
 	CPlayerTask* _playerTask[PARAM::Field::MAX_PLAYER]; // 队员的任务
 	int _playerTaskPriority[PARAM::Field::MAX_PLAYER]; // 队员任务的优先级
 };
-typedef NormalSingleton< CTaskMediator > TaskMediator;
+typedef Singleton< CTaskMediator > TaskMediator;
 
 #endif // _TASK_MEDIATOR_H_

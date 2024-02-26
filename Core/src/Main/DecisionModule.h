@@ -53,22 +53,10 @@ public:
 	///
 	/// <param name="visualStop">	The visual stop flag. </param>
 
-	void DoDecision(const bool visualStop);
+	void DoDecision();
 protected:
 
-	/// <summary>	停止对应的小车的运动，Stop the robot. </summary>
-	///
-	/// <remarks>	ZjuNlict, 2011-7-25. </remarks>
-	///
-	/// <param name="num">	Vehicle num. </param>
-
-	void GenerateTasks(const bool visualStop);
-
-	/// <summary>	多车配合模式，Executes the team mode operation. </summary>
-	///
-	/// <remarks>	ZjuNlict, 2011-7-25. </remarks>
-
-	void DoTeamMode();
+	void GenerateTasks();
 
 	/// <summary>	任务小车进行任务规划，Plan tasks for every task-assigned vehicle. </summary>
 	///

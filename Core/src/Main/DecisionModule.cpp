@@ -12,20 +12,12 @@
 /************************************************************************/
 
 #include "DecisionModule.h"
-#include <skill/Factory.h>
 #include <TaskMediator.h>
 #include <PlayInterface.h>
-#include <skill/BasicPlay.h>
 #include "LuaModule.h"
 #include "Semaphore.h"
 extern Semaphore vision_to_decision;
 Semaphore decision_to_action(0);
-namespace {
-	/// 是否状态化的策略库
-    bool USE_LUA_SCRIPTS = true;
-	/// 当前的配合策略
-	CBasicPlay* play = NULL;
-}
 
 CDecisionModule::CDecisionModule(CVisionModule* pVision): _pVision(pVision){
     LuaModule::Instance()->RunScript("./lua_scripts/StartZeus.lua");
@@ -34,7 +26,7 @@ CDecisionModule::CDecisionModule(CVisionModule* pVision): _pVision(pVision){
 CDecisionModule::~CDecisionModule(void){
 }
 
-void CDecisionModule::DoDecision(const bool visualStop)
+void CDecisionModule::DoDecision()
 {
 	vision_to_decision.Wait();
 	/************************************************************************/
@@ -52,7 +44,7 @@ void CDecisionModule::DoDecision(const bool visualStop)
 	/************************************************************************/
 	/* 选取合适的Play，进行任务分配                                         */
 	/************************************************************************/
-    GenerateTasks(visualStop);	
+    GenerateTasks();	
 	
 	/************************************************************************/
 	/* 进行任务的规划，逐次进行子任务的设定                                 */
@@ -65,35 +57,9 @@ void CDecisionModule::DoDecision(const bool visualStop)
 	return ;
 }
 
-void CDecisionModule::GenerateTasks(const bool visualStop)
+void CDecisionModule::GenerateTasks()
 {
-	// 图像停止 ： 收不到 或者 暂停接受
-	if (visualStop) {
-		// 每辆小车下发停止任务
-		for (int vecNumber = 0; vecNumber < PARAM::Field::MAX_PLAYER; ++ vecNumber) {
-			TaskMediator::Instance()->setPlayerTask(vecNumber, PlayerRole::makeItStop(vecNumber), LowestPriority);
-		}
-		return;
-	}
-
-	DoTeamMode();
-   
-	return ;
-}
-
-void CDecisionModule::DoTeamMode()
-{
-	// 当前策略重置
-	play = NULL;
-
-	// 两种策略库进行决策规划
-	if (USE_LUA_SCRIPTS){
-        LuaModule::Instance()->RunScript("./lua_scripts/SelectPlay.lua");
-	} 
-	else {
-		cout << "NO PLAY!!!" << std::endl;
-	}
-
+	LuaModule::Instance()->RunScript("./lua_scripts/SelectPlay.lua");
 	return ;
 }
 

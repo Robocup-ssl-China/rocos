@@ -10,7 +10,7 @@
 #include "OptionModule.h"
 #include "utils.h"
 #include <vector>
-#include "singleton.h"
+#include "singleton.hpp"
 #include <QUdpSocket>
 #include "vision_detection.pb.h"
 using namespace std;
@@ -236,6 +236,6 @@ private:
     void debugOnField();
 };
 
-typedef NormalSingleton<CVisionModule> VisionModule;
+typedef Singleton<CVisionModule> VisionModule;
 
 #endif // _VISION_MODULE_H_

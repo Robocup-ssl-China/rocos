@@ -1,7 +1,7 @@
-$#include <singleton.h>
+$#include <singleton.hpp>
 $#include <geometry.h>
 $#include "staticparams.h"
-$#include <skill/PlayerTask.h>
+$#include <PlayerTask.h>
 $#include "utils.h"
 $#include "TaskMediator.h"
 

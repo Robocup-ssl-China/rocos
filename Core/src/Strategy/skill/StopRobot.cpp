@@ -1,6 +1,5 @@
 #include "StopRobot.h"
 #include <CommandFactory.h>
-#include "skill/Factory.h"
 #include <VisionModule.h>
 #include <RobotCapability.h>
 

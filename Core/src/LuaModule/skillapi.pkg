@@ -1,0 +1,70 @@
+$#include <misc_types.h>
+$#include <skillapi.h>
+
+struct PlayerStatus{
+    PlayerStatus();
+    int flag;
+    int kick_flag;
+    CGeoPoint pos;
+    double angle;
+    CVector vel;
+    double rotvel;
+    int rotdir;
+    bool needReport;
+	double max_acceleration;										// 最大加速度
+	double max_deceleration;										// 最大减速度
+    double max_rot_acceleration;
+    double max_speed;
+    double max_rot_speed;
+	bool force_manual_set_running_param;					        // 是否强制手动设置运动参数
+
+	/// 控制方法 ： 用于底层运动控制 ，指定控制方法
+	bool is_specify_ctrl_method;									// 是否指定运动控制方法
+	CTRL_METHOD specified_ctrl_method;								// 指定的运动控制方法
+	
+	/// 踢球参数 ： 用于平射挑射控制 ，默认使用
+	bool needkick;													// 踢球动作执行开关
+	bool ispass;													// 是否进行传球
+	bool ischipkick;												// 挑球还是平射
+	double kickprecision;											// 踢球朝向精度
+	double kickpower;												// 踢球力度
+	double chipkickpower;											// 挑球力度	
+
+	/// 速度参数 ： 用于直接速度控制 ，指定标签辅助 
+	double speed_x;													// 全局x方向平动速度
+	double speed_y;													// 全局y方向平动速度
+	double rotate_speed;											// 转动速度
+	
+    ///规划参数 ： 用于将路径规划限制在一个圆内
+    bool path_plan_in_circle;
+    CGeoPoint path_plan_circle_center;
+    double path_plan_circle_radius;
+
+    bool specify_path_plan_area;
+}
+
+/// 球状态结构
+struct stBallStatus{
+	stBallStatus();
+	CGeoPoint pos;				// 出球的目标点
+	int receiver;				// 接球的队员号码
+	int Sender;                 // 出球者号码（added by shizhy)
+	double angle;
+	bool front;
+};
+
+/// 任务结构
+struct TaskT{
+	TaskT();
+	TaskT(const int executor);
+	int executor;				// 执行任务的队员号码
+	PlayerStatus player;		// 队员的状态
+	stBallStatus ball;			// 球的状态
+};
+
+class CSkillAPI{
+	CSkillAPI();
+	inline bool run(const std::string& name, const TaskT& task);
+    inline std::string get_name(int n);
+    inline int get_size();
+};

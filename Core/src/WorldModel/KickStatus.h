@@ -14,7 +14,7 @@
 #define _KICK_STATUS_H_
 
 #include "staticparams.h"
-#include <singleton.h>
+#include <singleton.hpp>
 
 /// <summary>	Kick status, for kick handling.  </summary>
 ///
@@ -174,7 +174,7 @@ private:
 ///
 /// <remarks>	cliffyin, 2011/7/25. </remarks>
 
-typedef NormalSingleton< CKickStatus > KickStatus;
+typedef Singleton< CKickStatus > KickStatus;
 
 /// <summary>	Defines an alias representing their kick status. . </summary>
 ///

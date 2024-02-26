@@ -5,3 +5,4 @@ CKickStatus*    kickStatus;
 CDribbleStatus* dribbleStatus;
 CGDebugEngine*  debugEngine;
 CWorldModel*	world;
+CSkillAPI*      skillapi;

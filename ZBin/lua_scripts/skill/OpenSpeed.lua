@@ -6,30 +6,19 @@ function OpenSpeed(task)
 	local needReport = task.needReport or false
 	
 	execute = function(runner)
-		if type(task.speedX) == "function" then
-			mspeedX = task.speedX()
-		end
+		mspeedX = _c(task.speedX)
+		mspeedY = _c(task.speedY)
+		mspeedW = _c(task.speedW)
 
-		if type(task.speedY) == "function" then
-			mspeedY = task.speedY()
-		end
-
-		if type(task.speedW) == "function" then
-			mspeedW = task.speedW()
-		end
-
-		if task.dir ~= nil then
-			local mdir
-			if type(task.dir) == "function" then
-				mdir = task.dir(runner)
-			else
-				mdir = task.dir
-			end
-			mspeedX = task.mod * math.cos(mdir)
-			mspeedY = task.mod * math.sin(mdir)
-		end
-		
-		return COpenSpeed(runner, mspeedX, mspeedY, mspeedW, mflag)
+		task_param = TaskT:new_local()
+		task_param.executor = runner
+		task_param.player.speed_x = mspeedX
+		task_param.player.speed_y = mspeedY
+		task_param.player.rotate_speed = mspeedW
+		task_param.player.flag = mflag
+		task_param.player.needReport = needReport
+		-- return COpenSpeed(runner, mspeedX, mspeedY, mspeedW, mflag)
+		return skillapi:run("OpenSpeed", task_param)
 	end
 
 	matchPos = function()

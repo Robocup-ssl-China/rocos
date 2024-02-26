@@ -84,6 +84,7 @@
         <file>source/next.png</file>
         <file>source/scissors1.png</file>
         <file>source/scissors2.png</file>
+        <file>source/refresh.png</file>
         <file>src/qml/ZComboBox.qml</file>
     </qresource>
 </RCC>

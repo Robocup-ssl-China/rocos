@@ -1,12 +1,12 @@
 # Rocos - **RO**bo**C**up **O**pen **S**ource small size league framework
 
-![Rocos](img/rocos.png)
+![Rocos](doc/img/rocos.png)
 
 > RoboCup小型组开源框架
 
-* [编译](INSTALL.md) （已更新Ubuntu编译指令）
+* [编译](https://rocos.readthedocs.io/zh_CN/latest/posts/1_rocos_basic/1_0.html) （已更新Ubuntu编译指令）
 
-* [更新记录](CHANGELOG.md)
+* [更新记录](https://rocos.readthedocs.io/zh_CN/latest/posts/z/CHANGELOG.html)
 
 * [Wiki](https://rocos.readthedocs.io/zh-cn/latest)
 

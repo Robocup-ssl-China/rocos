@@ -53,22 +53,6 @@ public:
 
     bool sendAction();
 
-	/// <summary>	停止小车运动下发接口，Stop action command send interface， Wireless off,TODO. </summary>
-	///
-	/// <remarks>	cliffyin, 2011/7/25. </remarks>
-	///
-	/// <param name="robotIndex">	Real index of the vehicle. </param>
-	///
-	/// <returns>	true if it succeeds, false if it fails. </returns>
-
-    bool sendNoAction();
-
-	/// <summary>	停止小车运动下发接口，Stop all command send interface, Error Stop, TODO. </summary>
-	///
-	/// <remarks>	cliffyin, 2011/7/25. </remarks>
-
-	void stopAll();
-
 private:
 
 	/// <summary> 当前比赛运行模式，The running option </summary>

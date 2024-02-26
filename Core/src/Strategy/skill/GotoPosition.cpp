@@ -1,6 +1,5 @@
 #include "GotoPosition.h"
 #include <utils.h>
-#include "skill/Factory.h"
 #include <CommandFactory.h>
 #include <VisionModule.h>
 #include <RobotCapability.h>

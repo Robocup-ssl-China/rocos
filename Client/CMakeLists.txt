@@ -81,6 +81,7 @@ set(PROTO_LIST
 get_pb_file(PROTO_H PROTO_CPP ${PROTO_LIST})
 
 set(PROJECT_INCLUDE_DIRS
+    ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/proto
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
@@ -111,3 +112,4 @@ set(zss_libs
 add_executable(${TARGET_NAME} ${SRC} "Client.qrc" "Client.rc")
 target_compile_definitions(${TARGET_NAME} PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(${TARGET_NAME} PRIVATE ${libs} ${zss_libs})
+add_dependencies(${TARGET_NAME} proto_gen)

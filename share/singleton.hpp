@@ -7,6 +7,9 @@ public:
         static SingletonClass instance;
         return &instance;
     }
+    static SingletonClass * Instance(){
+        return instance();
+    }
     SingletonClass* operator ->() { return instance(); }
     const SingletonClass* operator ->() const { return instance(); }
 private:

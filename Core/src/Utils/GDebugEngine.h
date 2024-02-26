@@ -9,7 +9,7 @@ DATA: 2009.2.10
 EMAIL: qxzzju@gmail.com
 ***********************************************/
 
-#include <singleton.h>
+#include <singleton.hpp>
 #include <geometry.h>
 #include <QUdpSocket>
 #include <QMutex>
@@ -39,6 +39,8 @@ public:
     void gui_debug_robot(const CGeoPoint& p, double robot_dir, int debug_color = 1,int RGB_value=0);
     void gui_debug_msg(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
     void gui_debug_msg(const CGeoPoint& p, const std::string& msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
+    void gui_debug_msg_fix(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
+    void gui_debug_msg_fix(const CGeoPoint& p, const std::string& msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
     void send(bool);
 private:
     QUdpSocket sendSocket;
@@ -47,6 +49,6 @@ private:
     QString remote_address;
     int remote_port;
 };
-typedef NormalSingleton< CGDebugEngine > GDebugEngine;
+typedef Singleton< CGDebugEngine > GDebugEngine;
 
 #endif

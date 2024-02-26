@@ -2,7 +2,7 @@
 #define _ROBOT_CAPABILITY_H_
 #include <geometry.h>
 #include "staticparams.h"
-#include <singleton.h>
+#include <singleton.hpp>
 #include <vector>
 /**
 * 描述机器人的能力类.
@@ -84,5 +84,5 @@ private:
 	int LeftRobotType[PARAM::Field::MAX_PLAYER];
 	int RightRobotType[PARAM::Field::MAX_PLAYER];
 };
-typedef NormalSingleton< CRobotCapFactory > RobotCapFactory; // 声明为Singleton
+typedef Singleton< CRobotCapFactory > RobotCapFactory; // 声明为Singleton
 #endif // _ROBOT_CAPABILITY_H_

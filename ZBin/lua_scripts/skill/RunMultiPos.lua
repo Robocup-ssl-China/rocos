@@ -40,7 +40,16 @@ function RunMultiPos(task)
 		end
 
 		lastCycle = vision:getCycle()
-		return CGoCmuRush(runner, mpos[curIndex]:x(), mpos[curIndex]:y(), mdir, mflag, msender, macc)
+		
+		task_param = TaskT:new_local()
+		task_param.executor = runner
+		task_param.player.pos = mpos[curIndex]
+		task_param.player.angle = mdir
+		task_param.player.flag = mflag
+		task_param.ball.Sender = msender or 0
+		task_param.player.max_acceleration = macc or 0
+		-- return CGoCmuRush(runner, mpos[curIndex]:x(), mpos[curIndex]:y(), mdir, mflag, msender, macc)
+		return skillapi:run("SmartGoto", task_param)
 	end
 
 	matchPos = function()

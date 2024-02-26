@@ -45,8 +45,8 @@ void qmlRegister() {
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
-    app.setOrganizationName("ZJUNLICT");
-    app.setOrganizationDomain("zjunlict.com");
+    app.setOrganizationName("Turing-zero");
+    app.setOrganizationDomain("turing-zero.com");
     qmlRegister();
     app.setFont(QFont("Microsoft YaHei", 9));
     QQmlApplicationEngine engine;

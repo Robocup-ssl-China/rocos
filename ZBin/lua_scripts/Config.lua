@@ -1,16 +1,20 @@
-IS_TEST_MODE = true
+IS_YELLOW = CGetSettings("ZAlert/IsYellow","Bool")
+local team = IS_YELLOW and "Yellow" or "Blue"
+IS_TEST_MODE = CGetSettings("ZAlert/"..team.."_IsTest","Bool")
 IS_SIMULATION = CGetIsSimulation()
 USE_SWITCH = false
 USE_AUTO_REFEREE = false
 OPPONENT_NAME = "Other"
 SAO_ACTION = CGetSettings("Alert/SaoAction","Int")
-IS_YELLOW = CGetSettings("ZAlert/IsYellow","Bool")
 IS_RIGHT = CGetSettings("ZAlert/IsRight", "Bool")
 DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
+USE_CUSTOM_REF_CONFIG = CGetSettings("ZAlert/"..team.."_UseRefConfig","Bool")
+REF_CONFIG_TACTIC_NAME = CGetSettings("ZAlert/"..team.."_RefConfigName","String")
+
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 
-gTestPlay = "TestDribbleAndKick"
+gTestPlay = CGetSettings("ZAlert/"..team.."_TestScriptName","String")
 
 gRoleFixNum = {
         ["Kicker"]   = {},
@@ -27,18 +31,11 @@ gOurIndirectTable = {
 }
 
 gSkill = {
-        "SmartGoto",
         "SimpleGoto",
         "RunMultiPos",
         "Stop",
-        "Goalie",
-        "Touch",
         "OpenSpeed",
-        "Speed",
-        "GotoMatchPos",
         "GoCmuRush",
-        "NoneZeroRush",
-        "SpeedInRobot"
 }
 
 gRefPlayTable = {
@@ -76,12 +73,7 @@ gBayesPlayTable = {
 gTestPlayTable = {
         "Test/TestRun",
         "Test/TestSkill",
-        "Test/TestPassAndKick",
-        "Test/TestDribbleAndKick",
-        "Test/RunMilitaryBoxing",
         "Test/TestTuningPID",
-        "Test/Benchmark/TestBenchmark_Acc",
-        "Test/Benchmark/TestBenchmark_Dribble",
 }
 gAutoRefTable = {
         "Autoref/ZJRoboCon2023TC"

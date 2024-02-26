@@ -1,6 +1,6 @@
 #ifndef _SMART_GOTO_POSITION_V1_H_
 #define _SMART_GOTO_POSITION_V1_H_
-#include <skill/PlayerTask.h>
+#include "skill_registry.h"
 #include <WorldDefine.h>
 #include <VisionModule.h>
 #include "OtherLibs/cmu/obstacle.h"
@@ -35,4 +35,5 @@ private:
     int _lastCycle;
 };
 
+REGISTER_SKILL(SmartGoto, CSmartGotoPositionV2);
 #endif

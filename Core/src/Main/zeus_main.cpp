@@ -3,7 +3,6 @@
 
 #include <WorldModel.h>
 #include <ServerInterface.h>
-#include <weerror.h>
 #include "DecisionModule.h"
 #include <VisionReceiver.h>
 
@@ -46,7 +45,6 @@ using PARAM::Latency::TOTAL_LATED_FRAME;
 
 bool VERBOSE_MODE = true;
 bool IS_SIMULATION = false;
-bool wireless_off = false;
 bool record_run_pos_on = false;
 namespace {
 COptionModule *option;
@@ -62,6 +60,7 @@ int runLoop() {
     CCommandInterface::instance(option);
     vision->registerOption(option);
     vision->startReceiveThread();
+    skillapi->registerVision(vision);
     decision = new CDecisionModule(vision);
     action = new CActionModule(vision, decision);
     WORLD_MODEL->registerVision(vision);
@@ -70,12 +69,8 @@ int runLoop() {
     RefereeBoxInterface::Instance();
     while (true) {
         vision->setNewVision();
-        decision->DoDecision(false);
-        if (! wireless_off) {
-            action->sendAction();
-        } else {
-            action->sendNoAction();
-        }
+        decision->DoDecision();
+        action->sendAction();
         GDebugEngine::Instance()->send(option->MyColor() == PARAM::BLUE); //Show two teams debug messages
     }
 }

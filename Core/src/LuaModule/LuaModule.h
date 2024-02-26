@@ -1,7 +1,7 @@
 #ifndef _LUA_MODULE_H_
 #define _LUA_MODULE_H_
 
-#include "singleton.h"
+#include "singleton.hpp"
 #include <map>
 #include <vector>
 #include <geometry.h>
@@ -40,6 +40,6 @@ private:
 
 };
 
-typedef NormalSingleton<CLuaModule> LuaModule;
+typedef Singleton<CLuaModule> LuaModule;
 
 #endif

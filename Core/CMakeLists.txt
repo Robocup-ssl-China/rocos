@@ -17,9 +17,14 @@ list(APPEND libs ${LUA_LIBRARIES})
 find_package(toluapp REQUIRED)
 list(APPEND incs ${TOLUAPP_INCLUDE_DIRS})
 list(APPEND libs ${TOLUAPP_LIBRARIES})
-EXECUTE_PROCESS(
+file(GLOB LUA_MODULE_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/LuaModule/*.pkg"
+)
+add_custom_command(
+    OUTPUT tolua_zeus.cpp
     COMMAND ${TOLUAPP_EXECUTABLE} -n zeus -o ${CMAKE_CURRENT_BINARY_DIR}/tolua_zeus.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaModule/zeus.pkg
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/LuaModule
+    DEPENDS ${LUA_MODULE_SRC}
 )
 ## Eigen
 find_package(Eigen3 REQUIRED)
@@ -30,7 +35,6 @@ list(APPEND incs ${fmt_INCLUDE_DIRS})
 list(APPEND libs fmt::fmt)
 
 set(PROTO_LIST
-    game_event
     grSim_Commands
     grSimMessage
     grSim_Packet
@@ -54,6 +58,7 @@ get_pb_file(PROTO_H PROTO_CPP ${PROTO_LIST})
 
 set(PROJECT_INCLUDE_DIRS
     ${incs}
+    ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/proto
     ${CMAKE_SOURCE_DIR}/share
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -78,7 +83,6 @@ set(PROJECT_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/skill
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Vision/mediator/net
 )
-include_directories(${PROJECT_INCLUDE_DIRS})
 file(GLOB PROJECT_SOURCE
     "${CMAKE_SOURCE_DIR}/share/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Algorithm/*.cpp"
@@ -102,9 +106,39 @@ file(GLOB PROJECT_SOURCE
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/rolematch/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/skill/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Vision/mediator/net/*.cpp"
+)
+list(APPEND PROJECT_SOURCE
     ${PROTO_H}
     ${PROTO_CPP}
     "${CMAKE_CURRENT_BINARY_DIR}/tolua_zeus.cpp"
 )
+
+subdir_list(TACTIC_PACKS ${CMAKE_CURRENT_SOURCE_DIR})
+
+# remove ignore directory from TACTIC_PACKS
+list(REMOVE_ITEM TACTIC_PACKS 
+    "src"
+)
+
+message("Write tactic_packages.txt to ${CMAKE_SOURCE_DIR}/ZBin/tactic_packages.txt")
+string (REPLACE ";" "\n" TACTIC_PACKS_OUTPUT "${TACTIC_PACKS}")
+file(WRITE ${CMAKE_SOURCE_DIR}/ZBin/tactic_packages.txt "${TACTIC_PACKS_OUTPUT}")
+foreach(pack ${TACTIC_PACKS})
+    message(STATUS "rocos - tactics_package: '${pack}'")
+    file(GLOB TACTIC_SOURCE 
+        "${CMAKE_CURRENT_SOURCE_DIR}/${pack}/skill/*.cpp"
+    )
+    list(APPEND PROJECT_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/${pack}/skill
+    )
+    foreach (TACTIC_SOURCE_FILE ${TACTIC_SOURCE})
+        get_filename_component(TACTIC_SOURCE_FILE_NAME ${TACTIC_SOURCE_FILE} NAME)
+        message(STATUS "rocos - tactics_package: '${pack}' - source: '${TACTIC_SOURCE_FILE_NAME}'")
+    endforeach()
+    list(APPEND PROJECT_SOURCE ${TACTIC_SOURCE})
+endforeach()
+
+include_directories(${PROJECT_INCLUDE_DIRS})
 add_executable(${TARGET_NAME} ${PROJECT_SOURCE})
+add_dependencies(${TARGET_NAME} proto_gen)
 target_link_libraries(${TARGET_NAME} PRIVATE ${libs})

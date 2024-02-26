@@ -2,7 +2,7 @@
 #define _REFEREE_BOX_IF_H_
 #include <QUdpSocket>
 #include <MultiThread.h>
-#include <singleton.h>
+#include <singleton.hpp>
 #include <QMutex>
 #include "geometry.h"
 /*
@@ -47,5 +47,5 @@ private:
     double _ballPlacementX, _ballPlacementY;
     QMutex refereeMutex;
 };
-typedef NormalSingleton<CRefereeBoxInterface> RefereeBoxInterface;
+typedef Singleton<CRefereeBoxInterface> RefereeBoxInterface;
 #endif

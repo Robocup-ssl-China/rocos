@@ -6,7 +6,7 @@
 
 //#include "proto/cpp/vision_detection.pb.h"
 //#include <MultiThread.h>
-//#include <singleton.h>
+//#include <singleton.hpp>
 //#include <ServerInterface.h>
 //#include <QUdpSocket>
 ////#include "VisionLog.h"

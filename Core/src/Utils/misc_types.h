@@ -23,7 +23,7 @@ struct PlayerStatus{
 					pos(0.0,0.0),angle(0.0),vel(0.0,0.0),rotvel(0.0),
                     max_acceleration(0.0),max_deceleration(0.0),max_rot_acceleration(0.0),max_speed(0.0),max_rot_speed(0.0),rotdir(0),
                     is_specify_ctrl_method(false),specified_ctrl_method(ZERO_FINAL),
-					needkick(true),needdribble(false),ispass(false),ischipkick(false),kickprecision(0.0),kickpower(0.0),chipkickpower(0.0),
+					needkick(true),ispass(false),ischipkick(false),kickprecision(0.0),kickpower(0.0),chipkickpower(0.0),
                     speed_x(0.0),speed_y(0.0),rotate_speed(0.0),path_plan_in_circle(false),path_plan_circle_center(CGeoPoint(1e8, 1e8)),path_plan_circle_radius(1e8),
                     specify_path_plan_area(false){ }
 
@@ -52,7 +52,6 @@ struct PlayerStatus{
 	
 	/// 踢球参数 ： 用于平射挑射控制 ，默认使用
 	bool needkick;													// 踢球动作执行开关
-	bool needdribble;												// 吸球动作执行开关  add by gty 16-6-15
 	bool ispass;													// 是否进行传球
 	bool ischipkick;												// 挑球还是平射
 	double kickprecision;											// 踢球朝向精度
@@ -70,7 +69,6 @@ struct PlayerStatus{
     double path_plan_circle_radius;
 
     bool specify_path_plan_area;
-    static const bool IS_RECTANGLE_PENALTY			= true;		  // 选择矩形/类椭圆禁区 added by Wang in 2018/3/21
 
 	/// 标签常量
 	// 默认的flags
@@ -127,15 +125,10 @@ struct stBallStatus{
 /// 任务结构
 struct TaskT{
 	TaskT() : executor(0){ }
+	TaskT(const int executor) : executor(executor){ }
 	int executor;				// 执行任务的队员号码
 	PlayerStatus player;		// 队员的状态
 	stBallStatus ball;			// 球的状态
 };
-
-/// 指令枚举
-enum CommandTypeT{ CTStop, CTDash, CTTurn, CTArc, CTSpeed, CTKick };
-
-/// 优先级
-enum PriorityType{ LowestPriority, LowPriority, NormalPriority, HighPriority, HighestPriority };
 
 #endif	// ～_MISC_TYPES_H_
