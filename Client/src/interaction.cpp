@@ -253,15 +253,51 @@ bool Interaction::changeMedusaSettings(bool color, bool side) {
 }
 bool Interaction::changeTestSettings(bool color, bool test,int script_index){
     QString team = color ? "Yellow" : "Blue";
-    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_IsTest", test);
-    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_TestScriptName", _test_script_show_name_list[script_index]);
-    return true;
+    QString script_name;
+    bool test_res = false;
+    bool res = false;
+    if(test){
+        if(script_index < 0 || script_index >= _test_script_show_name_list.size()) {
+            script_name = "";
+            test_res = false;
+            res = false;
+        }else{
+            script_name = _test_script_show_name_list[script_index];
+            test_res = true;
+            res = true;
+        }
+    }else{
+        script_name = "";
+        test_res = false;
+        res = true;
+    }
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_IsTest", test_res);
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_TestScriptName", script_name);
+    return res;
 }
 bool Interaction::changeRefConfigSettings(bool color, bool ref,int config_index){
     QString team = color ? "Yellow" : "Blue";
-    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_UseRefConfig", ref);
-    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_RefConfigName", _ref_config_show_name_list[config_index]);
-    return true;
+    QString config_name;
+    bool ref_res = false;
+    bool res = false;
+    if(ref){
+        if(config_index < 0 || config_index >= _ref_config_show_name_list.size()) {
+            config_name = "";
+            ref_res = false;
+            res = false;
+        }else{
+            config_name = _ref_config_show_name_list[config_index];
+            ref_res = true;
+            res = true;
+        }
+    }else{
+        config_name = "";
+        ref_res = false;
+        res = true;
+    }
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_UseRefConfig", ref_res);
+    ZSS::ZParamManager::instance()->changeParam("ZAlert/"+team+"_RefConfigName", config_name);
+    return res;
 }
 bool Interaction::getTestSettings(bool color){
     QString team = color ? "Yellow" : "Blue";

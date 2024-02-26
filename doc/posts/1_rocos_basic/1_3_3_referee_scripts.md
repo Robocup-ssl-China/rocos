@@ -32,4 +32,83 @@
 :::
 
 
-## 响应裁判指令[TODO]
+## 响应裁判指令
+
+在之前`Play`的创建时，我们提到了战术包的概念，为了响应裁判指令，我们依然可以在战术包中进行配置。我们在之前创建的`my_tactic_2024`文件夹中使用`Rocos`的模板文件创建一个`PlayConfig.lua`的文件
+
+```{code-block} bash
+# in Rocos root directory
+mkdir -p Core/my_tactic_2024
+cd Core/my_tactic_2024
+cp ../tactic/PlayConfigTemplate.lua ./PlayConfig.lua
+```
+
+打开`PlayConfig.lua`文件，将第二段注释中，针对`gRefConfig`的部分取消注释。
+
+```{code-block} lua
+:linenos:
+
+--[[
+- `GameHalt`            : 比赛停止
+- `GameStop`            : 比赛暂停
+- `OurTimeout`          : 我方暂停
+- `TheirIndirectKick`   : 对方间接任意球
+- `OurIndirectKick`     : 我方间接任意球
+- `TheirKickOff`        : 对方开球
+- `OurKickOff`          : 我方开球
+- `TheirBallPlacement`  : 对方自动放球
+- `OurBallPlacement`    : 我方自动放球
+- `TheirPenaltyKick`    : 对方点球
+- `OurPenaltyKick`      : 我方点球
+- `NormalPlay`          : 正常比赛
+]]
+
+---[[
+gRefConfig = {
+    GameHalt = "",
+    GameStop = "",
+    OurTimeout = "",
+    TheirIndirectKick = "",
+    OurIndirectKick = "",
+    TheirKickOff = "",
+    OurKickOff = "",
+    TheirBallPlacement = "",
+    OurBallPlacement = "",
+    TheirPenaltyKick = "",
+    OurPenaltyKick = "",
+    NormalPlay = "",
+}
+--]]
+```
+你可以对上面的table进行配置，当裁判指令到来时，`Core`会根据`gRefConfig`的配置来选择对应的`Play`进行执行。
+对于每一项指令的运行脚本，你可以选择以下任意一种类型：
+```{code-block} lua
+-- 第一种：String类型，直接使用脚本名称
+gRefConfig = {
+    GameHalt = "Halt_v1",
+    ...
+}
+-- 第二种：Table类型，框架会在每次选择时随机选择一个脚本
+gRefConfig = {
+    ...
+    OurKickOff = {"KickOff_v1", "KickOff_v2"},
+    ...
+}
+-- 第三种：Function类型，返回类型为String或Table，框架会在每次选择时调用该函数，例如模拟旧版Rocos的定位球分区
+gRefConfig = {
+    ...
+    OurIndirectKick = function()
+        if ball.posX() > 0 then
+            return {"FrontKick_v1","FrontKick_v2"}
+        else
+            return "BackKick_v1"
+        end
+    end,
+    ...
+}
+```
+配置的脚本名称可以是Rocos自带或任意战术包的任意Play，至此组成了一个Tactic的完整配置。如果有多个战术包中存在`PlayConfig.lua`文件，则可以在`Client`中启动`Core`之前进行选择，同时记得勾选`USE`启用战术包。
+:::{thumbnail} ../../img/client_ui_ref.png
+:width: 50%
+:align: center
+:::

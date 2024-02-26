@@ -359,10 +359,17 @@ Page{
                             icon.source:control.medusaConnect ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#2976ca";
                             onClicked: {
+                                var res = false;
                                 control.medusaConnect = !control.medusaConnect;
                                 interaction.changeMedusaSettings(false,medusaSide.checked)
-                                interaction.changeTestSettings(false,test_script_mode_blue.checked,test_script_blue.currentIndex)
-                                interaction.changeRefConfigSettings(false,refconfig_mode_blue.checked,refconfig_blue.currentIndex)
+                                res = interaction.changeTestSettings(false,test_script_mode_blue.checked,test_script_blue.currentIndex)
+                                if (res == false){
+                                    test_script_mode_blue.checked = false;
+                                }
+                                res = interaction.changeRefConfigSettings(false,refconfig_mode_blue.checked,refconfig_blue.currentIndex)
+                                if (res == false){
+                                    refconfig_mode_blue.checked = false;
+                                }
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect,0,false);
                                 }else{
@@ -376,10 +383,17 @@ Page{
                             icon.source:control.medusaConnect2 ? "/source/stop.png" : "/source/start.png";
                             icon.color: "#ebdb7c";
                             onClicked: {
+                                var res = false;
                                 control.medusaConnect2 = !control.medusaConnect2;
                                 interaction.changeMedusaSettings(true,!medusaSide.checked)
-                                interaction.changeTestSettings(true,test_script_mode_yellow.checked,test_script_yellow.currentIndex)
-                                interaction.changeRefConfigSettings(true,refconfig_mode_yellow.checked,refconfig_yellow.currentIndex)
+                                res = interaction.changeTestSettings(true,test_script_mode_yellow.checked,test_script_yellow.currentIndex)
+                                if (res == false){
+                                    test_script_mode_yellow.checked = false;
+                                }
+                                res = interaction.changeRefConfigSettings(true,refconfig_mode_yellow.checked,refconfig_yellow.currentIndex)
+                                if (res == false){
+                                    refconfig_mode_yellow.checked = false;
+                                }
                                 if(!simulation.checked){
                                     interaction.connectSim(control.medusaConnect2,1,true);
                                 }else{
