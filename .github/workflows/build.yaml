@@ -1,0 +1,20 @@
+name: Build
+run-name: CMake build test 🚀 - ${{ github.actor }} 
+on:
+  push:
+jobs:
+  build-project:
+    name: Build Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Install Deps
+        run: sudo apt-get install -y cmake build-essential libgl1-mesa-dev libode-dev qtbase5-dev qtdeclarative5-dev libqt5serialport5-dev libtolua++5.1-dev libeigen3-dev protobuf-compiler libprotobuf-dev qml-module-qtquick* qml-module-qtgamepad libfmt-dev
+
+      - name: Configure Project
+        uses: threeal/cmake-action@v1.3.0
+
+      - name: Build Project
+        run: cmake --build build
