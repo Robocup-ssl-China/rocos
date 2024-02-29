@@ -116,13 +116,16 @@ list(APPEND PROJECT_SOURCE
 subdir_list(TACTIC_PACKS ${CMAKE_CURRENT_SOURCE_DIR})
 
 # remove ignore directory from TACTIC_PACKS
-list(REMOVE_ITEM TACTIC_PACKS 
+set(TACTIC_IGNORE_PACKS
     "src"
 )
+list(REMOVE_ITEM TACTIC_PACKS 
+    ${TACTIC_IGNORE_PACKS}
+)
 
-message("Write tactic_packages.txt to ${CMAKE_SOURCE_DIR}/ZBin/tactic_packages.txt")
-string (REPLACE ";" "\n" TACTIC_PACKS_OUTPUT "${TACTIC_PACKS}")
-file(WRITE ${CMAKE_SOURCE_DIR}/ZBin/tactic_packages.txt "${TACTIC_PACKS_OUTPUT}")
+message("Write tactic_ignore_packages.txt to ${CMAKE_SOURCE_DIR}/ZBin/tactic_ignore_packages.txt")
+string (REPLACE ";" "\n" TACTIC_IGNORE_PACKS_OUTPUT "${TACTIC_IGNORE_PACKS}")
+file(WRITE ${CMAKE_SOURCE_DIR}/ZBin/tactic_ignore_packages.txt "${TACTIC_IGNORE_PACKS_OUTPUT}")
 foreach(pack ${TACTIC_PACKS})
     message(STATUS "rocos - tactics_package: '${pack}'")
     file(GLOB TACTIC_SOURCE 

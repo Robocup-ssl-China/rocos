@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+import os, re
+
+# get all tactic package name from pack_path and ignore package name from ignore_file_path
+def get_tactic_packages(pack_path,ignore_file_path):
+    tactic_packages = []
+    tactic_ignore_packages = []
+    with open(ignore_file_path, "r") as f:
+        for line in f:
+            tactic_ignore_packages.append(line.strip())
+    for pack in os.listdir(pack_path):
+        if pack in tactic_ignore_packages or not os.path.isdir(os.path.join(pack_path, pack)):
+            continue
+        tactic_packages.append(pack)
+    return tactic_packages
+
+# get all file name in current dir
+def get_all_files(dir):
+    files = []
+    for root, dirs, file in os.walk(dir):
+        for f in file:
+            rela_path = os.path.relpath(root, dir)
+            if rela_path != ".":
+                f = os.path.join(rela_path, f)
+            # files.append(os.path.abspath(os.path.join(root, f)))
+            files.append(f)
+    # sort
+    files.sort()
+    return files
+
+if __name__ == '__main__':
+    RELATIVE_PATH = "../../Core/"
+    # get current file path
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    tactic_ignore_packages_name_file_path = os.path.join(current_path, "../tactic_ignore_packages.txt")
+    tactic_name_list = get_tactic_packages(os.path.join(current_path, RELATIVE_PATH), tactic_ignore_packages_name_file_path)
+    tactic_path = os.path.normpath(os.path.join(current_path, RELATIVE_PATH))
+
+    import sys
+    if sys.argv[1] == 'tactic_dir':
+        for tactic_name in tactic_name_list:
+            print(os.path.join(tactic_path, tactic_name))
+    if sys.argv[1] == "scripts":
+        for tactic_name in tactic_name_list:
+            tactic_dir = os.path.join(tactic_path, tactic_name, "play")
+            if not os.path.exists(tactic_dir):
+                # print("tactic package {} not exists".format(tactic_dir))
+                continue
+            # get all file name in tactic package
+            files = get_all_files(tactic_dir)
+            # print("tactic package {} has {} files".format(tactic_name, len(files)))
+            for file in files:
+                # check if file is .lua file
+                if not file.endswith(".lua"):
+                    continue
+                # get file content and get 'name = "TestName"' line using regex
+                file_path = os.path.join(tactic_dir, file)
+                with open(file_path, "r") as f:
+                    content = f.read().split('\n')
+                    for line in content:
+                        line = line.replace(' ','')
+                        if "name" in line and line.startswith("name=") and line.endswith(","):
+                            # get name value in "" or ''
+                            name = re.findall(r'name=(?:"|\')(.*?)(?:"|\')', line)
+                            if len(name) == 0:
+                                continue
+                            if len(sys.argv) <= 2 or sys.argv[2] == "playname":
+                                print(name[0])
+                            elif sys.argv[2] == "filename":
+                                print(file_path)
+                            break
+
+                # print("{}\t{}".format(tactic_name,file))
+                # print(file)
+
+    if sys.argv[1] == "ref_configs":
+        for tactic_name in tactic_name_list:
+            ref_config_file = os.path.join(tactic_path, tactic_name, "PlayConfig.lua")
+            if not os.path.exists(ref_config_file):
+                continue
+            print(tactic_name)

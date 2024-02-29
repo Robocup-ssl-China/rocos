@@ -394,7 +394,7 @@ QString Interaction::getRealAddress(int index){
 
 void Interaction::updateTestScriptList(){
     QProcess process;
-    process.start("./tools/scan_scripts");
+    process.start("./tools/scan_tool scripts playname");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
     _test_script_show_name_list = (stdout).split('\n');
@@ -403,7 +403,7 @@ void Interaction::updateTestScriptList(){
 
 void Interaction::updateRefConfigList(){
     QProcess process;
-    process.start("./tools/scan_ref_configs");
+    process.start("./tools/scan_tool ref_configs");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
     _ref_config_show_name_list = (stdout).split('\n');

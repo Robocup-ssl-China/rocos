@@ -6,7 +6,7 @@ firstState = "t",
 ["t"] = {
 	switch = function()
 	end,
-	Leader = {MyTouch{}},
+	Leader = task.touch(),
 	match = "[L]"
 },
 
