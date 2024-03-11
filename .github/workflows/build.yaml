@@ -1,7 +1,8 @@
 name: Build
 run-name: CMake build test 🚀 - ${{ github.actor }} 
 on:
-  workflow_call:
+  push:
+  pull_request:
 jobs:
   build-project:
     name: Build Project

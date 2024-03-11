@@ -3,6 +3,9 @@
 # policy, and support documentation.
 
 name: Scorecard supply-chain security
+
+run-name: Analyze using OSSF
+
 on:
   # For Branch-Protection check. Only the default branch is supported. See
   # https://github.com/ossf/scorecard/blob/main/docs/checks.md#branch-protection

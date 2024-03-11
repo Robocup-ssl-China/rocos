@@ -15,9 +15,9 @@ run-name: build 🚀 & analyze - ${{ github.actor }}
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
 
 jobs:
   analyze:
