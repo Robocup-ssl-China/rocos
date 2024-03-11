@@ -10,7 +10,7 @@ list(APPEND libs ${PROTOBUF_LIBRARIES})
 find_package(Qt5 COMPONENTS Core Qml Quick Network REQUIRED)
 list(APPEND libs Qt5::Core Qt5::Qml Qt5::Quick Qt5::Network)
 ## Lua
-find_package(Lua REQUIRED)
+find_package(Lua 5.1 REQUIRED)
 list(APPEND incs ${LUA_INCLUDE_DIR})
 list(APPEND libs ${LUA_LIBRARIES})
 ## tolua++
