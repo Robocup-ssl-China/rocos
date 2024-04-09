@@ -25,15 +25,14 @@ return {
         switch = function()
             if bufcnt(true,30) then 
                 if not subScript then
-                    gSubPlay.new(PLAY_NAME .. "task1", "TestSubScript", {pos=start_pos + Utils.Polar2Vector(2*dist, math.pi/4), dist=2000})
-                    gSubPlay.new(PLAY_NAME .. "task2", "TestSubScript", {pos=start_pos + Utils.Polar2Vector(2*dist, -math.pi/4*3), dist=500})
-                    rotateSpeed = -1
+                    gSubPlay.new("kickTask", "TestPassAndKick")
                 end
                 return "run"
             end
         end,
+        Assister = task.stop(),
         Leader = task.stop(),
-        match = "[L]"
+        match = "[LA]"
     },
     ["run"] = {
         switch = function()
@@ -42,10 +41,10 @@ return {
             --     print("printFileTable: ", key, value)
             -- end
         end,
-        Assister = gSubPlay.roleTask("task1","Leader"),
-        Fronter = gSubPlay.roleTask("task2","Leader"),
-        Leader = task.goCmuRush(runPos, 0, nil, DSS_FLAG),
-        match = "(LAF)"
+        b = gSubPlay.roleTask("kickTask", "Assister"),
+        c = gSubPlay.roleTask("kickTask", "Leader"),
+        a = task.goCmuRush(runPos, 0, nil, DSS_FLAG),
+        match = "(abc)"
     },
 
     name = "TestSubScript",

@@ -85,28 +85,28 @@ end
 
 -- 注意，此处只是针对间接和直接定位球的防守
 -- 此时，Leader和Goalie不参与第二次防碰撞检测
-function UsePenaltyCleaner(curPlay)
-	for rolename, task in pairs(curPlay[gRealState]) do
-		if(type(task) == "table" and rolename ~= "match" and rolename ~= "Goalie" and rolename ~= "Kicker") then
-			local p
-			if type(gRolePos[rolename]) == "function" then
-				p = gRolePos[rolename]()
-			else
-				p = gRolePos[rolename]
-			end
-			CAddPenaltyCleaner(string.sub(rolename,1,1), gRoleNum[rolename], p:x(), p:y())
-		end
-	end
-	CCleanPenalty()
-	for rolename, task in pairs(curPlay[gRealState]) do
-		if(type(task) == "table" and rolename ~= "match" and rolename ~= "Goalie" and rolename ~= "Kicker") then
-			local x, y = CGetPenaltyCleaner(string.sub(rolename,1,1))
-			gRolePos[rolename] = CGeoPoint:new_local(x,y)
-		end
-	end
-	-- print(gCurrentState, CGetResetMatchStr())
-	DoRoleMatchReset(CGetResetMatchStr())
-end
+-- function UsePenaltyCleaner(curPlay)
+-- 	for rolename, task in pairs(curPlay[gRealState]) do
+-- 		if(type(task) == "table" and rolename ~= "match" and rolename ~= "Goalie" and rolename ~= "Kicker") then
+-- 			local p
+-- 			if type(gRolePos[rolename]) == "function" then
+-- 				p = gRolePos[rolename]()
+-- 			else
+-- 				p = gRolePos[rolename]
+-- 			end
+-- 			CAddPenaltyCleaner(string.sub(rolename,1,1), gRoleNum[rolename], p:x(), p:y())
+-- 		end
+-- 	end
+-- 	CCleanPenalty()
+-- 	for rolename, task in pairs(curPlay[gRealState]) do
+-- 		if(type(task) == "table" and rolename ~= "match" and rolename ~= "Goalie" and rolename ~= "Kicker") then
+-- 			local x, y = CGetPenaltyCleaner(string.sub(rolename,1,1))
+-- 			gRolePos[rolename] = CGeoPoint:new_local(x,y)
+-- 		end
+-- 	end
+-- 	-- print(gCurrentState, CGetResetMatchStr())
+-- 	DoRoleMatchReset(CGetResetMatchStr())
+-- end
 
 function DoRolePosMatch(curPlay, isPlaySwitched, isStateSwitched)
 	if gCurrentState == "exit" or gCurrentState == "finish" then
@@ -116,6 +116,13 @@ function DoRolePosMatch(curPlay, isPlaySwitched, isStateSwitched)
 	end
 	gActiveRole = {}
 	for rolename, itask in pairs(curPlay[gRealState]) do
+		local task = itask
+		-- unpack for subPlayTask
+		if (type(task) == "table" and task.name == "subPlayTask" and task.task ~= nil) then
+			gSubPlay.register("", rolename, task.args)
+			itask = task.task
+		end
+
 		if(type(itask) == "function" and rolename ~= "match" and rolename~="switch") then
 			itask = itask()
 		end
@@ -196,7 +203,7 @@ function RunPlay(name)
 			isStateSwitched = true
 			PlayFSMClearAll()
 		end
-
+		
 --		debugEngine:gui_debug_msg(vision:ourPlayer(gRoleNum[rolename]):Pos(), rolename)
 		gSubPlay.step()
 		DoRolePosMatch(curPlay, false, isStateSwitched)
@@ -210,6 +217,10 @@ function RunPlay(name)
 --~		1 ---> task, 2 --> matchpos, 3--->kick, 4 --->dir, 5 --->pre, 6 --->kp, 7--->cp, 8--->flag
 		kickStatus:clearAll()
 		for rolename, task in pairs(curPlay[gRealState]) do
+			if (type(task) == "table" and task.name == "subPlayTask" and task.task ~= nil) then
+				gSubPlay.register("", rolename, task.args)
+				task = task.task
+			end
 			if (type(task) == "function" and rolename ~= "match" and (gRoleNum[rolename] ~= nil or type(rolename)=="function")) then
 				task = task(gRoleNum[rolename])
 			end
@@ -226,7 +237,6 @@ function RunPlay(name)
 				elseif type(rolename)=="function" then
 					roleNum = rolename()
 					--print("Here in function : "..roleNum)
-					
 				end
 				
 				if roleNum ~= -1 then
