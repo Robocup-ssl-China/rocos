@@ -24,10 +24,10 @@ gIsRefPlayExit = false
 gCurrentBallStatus="None"
 gLastBallStatus=""
 
---gCurrentOurBallAction="None"
------add by zhyaic 2014.5.22-----
 gExternStopCycle = 0
 gExternExitCycle = 0
+
+gPlayFileTable = {}
 
 function gPlay.Next()
 	local index = 1
@@ -116,10 +116,7 @@ function DoRolePosMatch(curPlay, isPlaySwitched, isStateSwitched)
 	end
 	gActiveRole = {}
 	for rolename, itask in pairs(curPlay[gRealState]) do
-		--YuN 2016.03.30 增加函数模式下的匹配
 		if(type(itask) == "function" and rolename ~= "match" and rolename~="switch") then
-			--print("closure of task!!!!!!!!!!!!!")
-			--curPlay[gRealState][rolename]=task()
 			itask = itask()
 		end
 
@@ -133,27 +130,25 @@ function DoRolePosMatch(curPlay, isPlaySwitched, isStateSwitched)
 				end
 				curPlay[gRealState][rolename].name = "continue"
 			end
-			gRolePos[rolename] = itask[2]--curPlay[gRealState][rolename][2]()
+			gRolePos[rolename] = itask[2]
 		end
 	end
 
 	UpdateRole(curPlay[gRealState].match, isPlaySwitched, isStateSwitched)
-	-- SetRoleAndNumToCPlusPlus()
-	-- add by zhyaic for test 2013.5.24
-	-- if vision:getCurrentRefereeMsg() == "TheirIndirectKick" or
-	--    vision:getCurrentRefereeMsg() == "TheirDirectKick" or
-	--    vision:getCurrentRefereeMsg() == "GameStop" then
-	-- 	UsePenaltyCleaner(curPlay)
-	-- end
 end
 
 function SetNextPlay(name)
 	gNextPlay = name
 end
 
+function PlayFSMClearAll()
+	world:SPlayFSMSwitchClearAll(true)
+	bufcntClear()
+end
+
 function ResetPlay(name)
 	local curPlay = gPlayTable[name]
-	world:SPlayFSMSwitchClearAll(true)
+	PlayFSMClearAll()
 	--------------------------------
 	if curPlay.firstState ~= nil then
 		gCurrentState = curPlay.firstState
@@ -166,7 +161,7 @@ end
 
 function ResetPlayWithLastMatch(name)
 	local curPlay = gPlayTable[name]
-	world:SPlayFSMSwitchClearAll(true)
+	PlayFSMClearAll()
 	if curPlay.firstState ~= nil then
 		gCurrentState = curPlay.firstState
 	else
@@ -175,36 +170,35 @@ function ResetPlayWithLastMatch(name)
 	gTimeCounter = 0
 end
 
+function _RunPlaySwitch(curPlay, curState)
+	local newState
+	if curPlay.switch ~= nil then
+		newState = curPlay:switch()
+	else
+		if curState ~= "exit" and curState ~= "finish" then
+			newState = curPlay[curState]:switch()
+		end
+	end
+	return newState
+end
+
 function RunPlay(name)
 
 	if(gPlayTable[name] == nil) then
 		print("Error In RunPlay: "..name)
 	else
 		local curPlay = gPlayTable[name]
-		local curState
---		gLastState = gCurrentState
+		local curState = _RunPlaySwitch(curPlay, gCurrentState)
 		local isStateSwitched = false
-		if curPlay.switch ~= nil then
-			curState = curPlay:switch()
-			--gCurrentState = curPlay:switch()
-		else
-			if gCurrentState ~= "exit" and gCurrentState ~= "finish" then
-				curState = curPlay[gCurrentState]:switch()
-			end
-			--gCurrentState = curPlay[gCurrentState]:switch()
-		end
-
-		-- if gCurrentState == nil then
-		-- 	gCurrentState = gLastState
 		if curState ~= nil then
 			gLastState = gCurrentState
 			gCurrentState = curState
 			isStateSwitched = true
-			world:SPlayFSMSwitchClearAll(true)
+			PlayFSMClearAll()
 		end
 
 --		debugEngine:gui_debug_msg(vision:ourPlayer(gRoleNum[rolename]):Pos(), rolename)
-
+		gSubPlay.step()
 		DoRolePosMatch(curPlay, false, isStateSwitched)
 		gExceptionNum={}
 

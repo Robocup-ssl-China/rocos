@@ -154,7 +154,7 @@ end
 
 gLastPlay = gCurrentPlay
 gNextPlay = ""
-debugEngine:gui_debug_msg(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2+200),gCurrentPlay)
+debugEngine:gui_debug_msg_fix(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2+200),gCurrentPlay)
 RunPlay(gCurrentPlay)
 gLastTask = gRoleTask
 gRoleTask = {}
@@ -174,7 +174,7 @@ gRoleTask = {}
 --print("ball",ball.posX(),ball.valid())
 --print("raw",vision:rawBall():X(),vision:rawBall():Valid())
 --print(vision:getBallVelStable(),vision:ballVelValid())
-debugEngine:gui_debug_msg(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2),gCurrentState)
+debugEngine:gui_debug_msg_fix(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2),gCurrentState)
 --world:drawReflect(gRoleNum["Tier"])
 --defenceInfo:setNoChangeFlag()
 --print(vision:getCycle()..vision:getCurrentRefereeMsg(),vision:gameState():gameOn())

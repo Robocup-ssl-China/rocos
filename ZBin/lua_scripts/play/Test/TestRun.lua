@@ -14,10 +14,6 @@ firstState = "run1",
 
 ["run1"] = {
 	switch = function()
-		print(skillapi:get_size())
-		for i=0,skillapi:get_size()-1 do
-			print(i .. " " .. skillapi:get_name(i))
-		end
 	end,
 	Assister = task.goCmuRush(testPos[1],0, nil, DSS_FLAG),
 	Leader = task.goCmuRush(testPos[2],0, nil, DSS_FLAG),
