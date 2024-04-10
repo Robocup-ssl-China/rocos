@@ -60,6 +60,7 @@ int runLoop() {
     CCommandInterface::instance(option);
     vision->registerOption(option);
     vision->startReceiveThread();
+    ballModel->registerVision(vision);
     skillapi->registerVision(vision);
     decision = new CDecisionModule(vision);
     action = new CActionModule(vision, decision);

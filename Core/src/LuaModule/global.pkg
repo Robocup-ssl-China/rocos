@@ -6,3 +6,4 @@ CDribbleStatus* dribbleStatus;
 CGDebugEngine*  debugEngine;
 CWorldModel*	world;
 CSkillAPI*      skillapi;
+CBallSpeedModel* ballModel;

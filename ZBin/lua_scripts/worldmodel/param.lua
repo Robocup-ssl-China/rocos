@@ -32,7 +32,7 @@ playerFrontToCenter = 76
 lengthRatio	= 1.5
 widthRatio	= 1.5
 stopRatio = 1.1
-frameRate = 75
+frameRate = 73
 --~ -------------------------------------------
 --~ used for debug
 --~ -------------------------------------------

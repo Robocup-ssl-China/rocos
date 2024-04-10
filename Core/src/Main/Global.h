@@ -8,6 +8,7 @@
 #include "singleton.hpp"
 #include "WorldModel.h"
 #include "skillapi.h"
+#include "BallSpeedModel.h"
 
 extern CVisionModule*  vision;
 extern CKickStatus*    kickStatus;
@@ -15,5 +16,6 @@ extern CDribbleStatus* dribbleStatus;
 extern CGDebugEngine*  debugEngine;
 extern CWorldModel* world;
 extern CSkillAPI* skillapi;
+extern CBallSpeedModel* ballModel;
 void initializeSingleton();
 #endif
