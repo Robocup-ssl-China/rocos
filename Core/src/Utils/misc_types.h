@@ -120,6 +120,7 @@ struct stBallStatus{
 	int Sender;                 // 出球者号码（added by shizhy)
 	double angle;
 	bool front;
+	double avoid_dist = -1;
 };
 
 /// 任务结构

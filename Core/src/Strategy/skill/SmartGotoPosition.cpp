@@ -179,7 +179,7 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
 
     obstacles obs(avoidLength);
     if(!(playerFlag & PlayerStatus::BREAK_THROUGH))
-        obs.addObs(pVision, task(), DRAW_OBSTACLES, OPP_AVOID_DIST, TEAMMATE_AVOID_DIST, BALL_AVOID_DIST);
+        obs.addObs(pVision, task(), DRAW_OBSTACLES, OPP_AVOID_DIST, TEAMMATE_AVOID_DIST, std::max(task().ball.avoid_dist, BALL_AVOID_DIST));
     else
         obs.addObs(pVision, task(), DRAW_OBSTACLES, PARAM::Vehicle::V2::PLAYER_SIZE + PARAM::Field::BALL_SIZE + 20, PARAM::Vehicle::V2::PLAYER_SIZE + PARAM::Field::BALL_SIZE + 20.0, PARAM::Field::BALL_SIZE);
 

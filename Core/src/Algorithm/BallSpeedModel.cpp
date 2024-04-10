@@ -33,7 +33,7 @@ std::tuple<double, CVector> CBallSpeedModel::predictForDist(const double dist){
 	this->update();
 	auto maxDist = _ballVel.mod() * _ballVel.mod() / (2 * _DEC);
 	if (dist > maxDist) {
-		return {-1, CVector(0,0)};
+		return {99999, CVector(0,0)};
 	}
 	auto v0 = _ballVel.mod();
 	auto v1 = sqrt(v0 * v0 - 2 * _DEC * dist);

@@ -17,7 +17,7 @@ return {
             local dist = (ball.pos() - player.pos("Assister")):mod()
             debugEngine:gui_debug_msg(ball.pos()+Utils.Polar2Vector(300,math.pi/2),"Dist : " .. dist)
         end,
-        Assister = task.touchKick(CGeoPoint(6000,0),nil,1000,true),
+        Assister = task.touchKick(CGeoPoint(6000,0),nil,6000,true),
         -- Assister = task.stop(),
         match = "[A]"
     },
