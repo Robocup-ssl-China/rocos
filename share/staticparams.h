@@ -26,16 +26,16 @@ namespace PARAM {
         const double BALL_DECAY = -0.8; // 阻力对球的加速度和速度成正比,单位为 /s
         /* Player */
         const double MAX_PLAYER_SIZE = 180;
-        const double PITCH_LENGTH = 9000;                 // 场地长
-        const double PITCH_WIDTH = 6000;                  // 场地宽
+        const double PITCH_LENGTH = 12000;                 // 场地长
+        const double PITCH_WIDTH = 9000;                  // 场地宽
         const double PITCH_MARGIN = 10;                   // 边界宽度
         const double CENTER_CIRCLE_R = 500;               // 中圈半径
 
         const double GOAL_POST_AVOID_LENGTH = 20;         //伸进场地内门柱的避障长度
         const double GOAL_POST_THICKNESS = 20;           //门柱宽度
         const bool   IF_USE_ELLIPSE = false;             // whether use ellipse penalty
-        const double PENALTY_AREA_WIDTH = 2000;           // rectangle禁区宽度
-        const double PENALTY_AREA_DEPTH = 1000;            // rectangle禁区深度
+        const double PENALTY_AREA_WIDTH = 2400;           // rectangle禁区宽度
+        const double PENALTY_AREA_DEPTH = 1200;            // rectangle禁区深度
         const double PENALTY_AREA_R = 800;               // ellipse penalty 两个圆弧
         const double PENALTY_AREA_L = 350;          // ellipse penalty 连接两个圆弧的线段
         const double PENALTY_L = 500;						//代替PENALTY_AREA_L
@@ -52,7 +52,7 @@ namespace PARAM {
         const double MaxDribbleDist = 500; // 最大带球距离, 0代表没有限制
     }
     namespace Vision{
-        const double FRAME_RATE = 61;
+        const double FRAME_RATE = 73;
     }
     namespace Latency{
         // 下面分开的部分是给server作仿真用的

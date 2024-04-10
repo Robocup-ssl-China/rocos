@@ -17,7 +17,7 @@ CBallSpeedModel::CBallSpeedModel():_ballVel(0,0),_ballPos(-9999,-9999){
     bool IS_SIMULATION;
     ZSS::ZParamManager::instance()->loadParam(IS_SIMULATION,"Alert/IsSimulation",false);
     if (IS_SIMULATION)
-		ZSS::ZParamManager::instance()->loadParam(_DEC, "AlertParam/BallDec_Sim", 1200);
+		ZSS::ZParamManager::instance()->loadParam(_DEC, "AlertParam/BallDec_Sim", 1100);
 	else
 		ZSS::ZParamManager::instance()->loadParam(_DEC, "AlertParam/BallDec_Real", 400);
 }

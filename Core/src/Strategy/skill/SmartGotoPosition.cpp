@@ -193,7 +193,6 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
 
     //处理无效目标点:在禁区内、在车身内、在场地外
     validateFinalTarget(finalTargetPos, myPos, avoidLength, isGoalie, avoidBallCircle, obs, onlyPlanInCircle, planCircleCenter, planCircleRadius);
-    CVector velNew;
 
     validateStartPoint(myPos, avoidLength, isGoalie, obs);
     GDebugEngine::Instance()->gui_debug_x(finalTargetPos, COLOR_YELLOW);
@@ -211,7 +210,6 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
 
     TaskT newTask(task());
     newTask.player.pos = finalTargetPos;
-    newTask.player.vel = velNew;
 
     if(self.Pos().dist(finalTargetPos) < startToRotateToTargetDirDist && needBreakRotate)
         newTask.player.flag &= (!PlayerStatus::BREAK_THROUGH);

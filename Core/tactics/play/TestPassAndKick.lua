@@ -1,5 +1,5 @@
-local waitPos = ball.antiYPos(CGeoPoint:new_local(2600,1500))
-local waitPos2 = ball.antiYPos(CGeoPoint:new_local(1800,1500))
+local waitPos = ball.antiYPos(CGeoPoint:new_local(2800,2800))
+local waitPos2 = ball.antiYPos(CGeoPoint:new_local(2800,2800))
 local mode = true
 
 return {
@@ -20,9 +20,9 @@ firstState = "init",
             return "shoot"
         end
 	end,
-	Leader = task.touchKick(waitPos,false,3500,mode),
+	Leader = task.touchKick(waitPos,false,2500,mode),
     Assister = task.goCmuRush(waitPos2),
-	match = ""
+	match = "{LA}"
 },
 ["shoot"] = {
     switch = function()
@@ -32,7 +32,7 @@ firstState = "init",
     end,
     Leader = task.stop(),
     Assister = task.touchKick(pos.theirGoal(), false,6000,mode),
-    match = ""
+    match = "{LA}"
 },
 
 name = "TestPassAndKick",

@@ -1,8 +1,12 @@
-local testPos = {CGeoPoint:new_local(1000, 1000), CGeoPoint:new_local(-1000, 1000), CGeoPoint:new_local(-1000, -1000),
-                 CGeoPoint:new_local(1000, -1000)}
+local testPos = {
+    CGeoPoint:new_local(3000, 3100), 
+    CGeoPoint:new_local(-3000, 3100),
+    CGeoPoint:new_local(-3000,-3100),
+    CGeoPoint:new_local(3000,-3100)
+}
 local vel = CVector:new_local(0, 0)
 local maxvel = 0
-local time = 120
+local time = 1
 local DSS_FLAG = bit:_or(flag.allow_dss, flag.dodge_ball)
 
 local DIR = function()
@@ -11,12 +15,45 @@ end
 
 return {
     firstState = "run1",
-
     ["run1"] = {
         switch = function()
+            if bufcnt(player.toTargetDist("a")<5,time) then
+                return "run"..2
+            end
         end,
-        Assister = task.goCmuRush(testPos[1], DIR, nil, DSS_FLAG),
-        match = "[A]"
+        a = task.goCmuRush(testPos[1],0, _, DSS_FLAG),
+        b = task.goCmuRush(testPos[1]+Utils.Polar2Vector(1000,-math.pi/2),0, _, DSS_FLAG),
+        match = "{ab}"
+    },
+    ["run2"] = {
+        switch = function()
+            if bufcnt(player.toTargetDist("a")<5,time) then
+                return "run"..3
+            end
+        end,
+        a = task.goCmuRush(testPos[2],0, _, DSS_FLAG),
+        b = task.goCmuRush(testPos[2]+Utils.Polar2Vector(1000,-math.pi/2),0, _, DSS_FLAG),
+        match = "{ab}"
+    },
+    ["run3"] = {
+        switch = function()
+            if bufcnt(player.toTargetDist("a")<5,time) then
+                return "run"..4
+            end
+        end,
+        a = task.goCmuRush(testPos[3],0, _, DSS_FLAG),
+        b = task.goCmuRush(testPos[3]+Utils.Polar2Vector(1000,-math.pi/2),0, _, DSS_FLAG),
+        match = "{ab}"
+    },
+    ["run4"] = {
+        switch = function()
+            if bufcnt(player.toTargetDist("a")<5,time) then
+                return "run"..1
+            end
+        end,
+        a = task.goCmuRush(testPos[4],0, _, DSS_FLAG),
+        b = task.goCmuRush(testPos[4]+Utils.Polar2Vector(1000,-math.pi/2),0, _, DSS_FLAG),
+        match = "{ab}"
     },
 
     name = "TestMyRun",
