@@ -127,6 +127,11 @@ ZBin/ballSpeedLog.txt
 ZBin/Core
 ZBin/Controller
 # python
+ZBin/__data
+ZBin/*/model
+ZBin/*/runs/
+ZBin/*/tbox
+ZBin/*/*.pth
 ZBin/__pycache__
 ZBin/*.py[cod]
 ZBin/*$py.class
