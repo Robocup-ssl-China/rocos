@@ -66,7 +66,6 @@ namespace{
     CGeoPoint lastFinalPoint[PARAM::Field::MAX_PLAYER];
     CGeoPoint veryStart[PARAM::Field::MAX_PLAYER];
     bool isExecuting[PARAM::Field::MAX_PLAYER];
-    const double Fake_PENALTY_AREA_R = 150; // added by ftq
     const double TEAMMATE_AVOID_DIST = PARAM::Vehicle::V2::PLAYER_SIZE + 40.0f; // 2014/03/13 修改，为了减少stop的时候卡住的概率 yys
     const double OPP_AVOID_DIST = PARAM::Vehicle::V2::PLAYER_SIZE + 55.0f;
     const double BALL_AVOID_DIST = PARAM::Field::BALL_SIZE + 50.0f;
