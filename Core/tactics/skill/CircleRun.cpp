@@ -39,7 +39,7 @@ CPlayerCommand* CCircleRun::execute(const CVisionModule* pVision){
 
     const CVector localVel = meVel + dv;
 
-    const double limitTargetRotVel = targetRotVel*localVel.mod()/targetVelMod;
+    const double limitTargetRotVel = std::abs(targetVelMod > 0.1) ? targetRotVel*localVel.mod()/targetVelMod : targetRotVel;
     const double dRotVel = std::clamp(limitTargetRotVel - meRotVel, -MAX_ROT_ACC/PARAM::Vision::FRAME_RATE, MAX_ROT_ACC/PARAM::Vision::FRAME_RATE);
     const double rotVel = meRotVel + dRotVel;
 
