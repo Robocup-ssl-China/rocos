@@ -14,7 +14,13 @@ local DIR = function()
 end
 
 return {
-    firstState = "run1",
+    firstState = "skill",
+    ["skill"] = {
+        switch = function()
+        end,
+        Leader = {CircleRun{pos=CGeoPoint(0,100), rotVel=4}},
+        match = "[L]"
+    },
     ["run1"] = {
         switch = function()
             if bufcnt(player.toTargetDist("a")<5,time) then

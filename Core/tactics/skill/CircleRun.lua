@@ -6,8 +6,8 @@ function CircleRun(task)
 	execute = function(runner)
 		task_param = TaskT:new_local()
 		task_param.executor = runner
-		task_param.player.pos = CGeoPoint(100,100)
-        task_param.player.rotvel = 4
+		task_param.player.pos = task.pos
+        task_param.player.rotvel = task.rotVel
 		return skillapi:run("CircleRun", task_param)
 	end
 

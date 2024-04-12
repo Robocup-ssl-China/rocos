@@ -3,7 +3,7 @@
 
 class CCircleRun : public CPlayerTask{
 public:
-    CCircleRun() = default;
+    CCircleRun();
     virtual void plan(const CVisionModule* pVision);
 	virtual CPlayerCommand* execute(const CVisionModule* pVision);
     virtual void toStream(std::ostream& os) const { os << "CircleRun"; }
