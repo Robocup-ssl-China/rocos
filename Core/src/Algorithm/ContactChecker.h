@@ -23,8 +23,8 @@ class ContactChecker {
     std::vector<PlayerVisionT> AllPlayer;
     Last_Contact _last_contact;
 
-    MobileVisionT _ball;
-    MobileVisionT _lastball;
+    ObjectPoseT _ball;
+    ObjectPoseT _lastball;
     CVector ball_direction_before;
     CVector ball_direction_after;
     double speed_before ;

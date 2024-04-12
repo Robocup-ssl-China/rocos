@@ -3,5 +3,5 @@ class CBallSpeedModel
 {
 	double timeForDist(const double dist);
 	CVector speedForDist(const double dist);
-	MobileVisionT poseForTime(const double time);
+	ObjectPoseT poseForTime(const double time);
 };

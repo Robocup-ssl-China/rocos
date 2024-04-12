@@ -232,7 +232,7 @@ void CVisionModule::setNewVision() {
     /// @brief Step 2: 进行我方和对方机器人位置预测，关注滤波器
     /////////////////////////////////////////////////////////////////////////////
     //【#TODO】机器人碰撞检测器清空，
-    const MobileVisionT& thisBall = _ballPredictor.getData(_timeCycle);
+    const ObjectPoseT& thisBall = _ballPredictor.getData(_timeCycle);
     // 确定球员的信息是否需要反向，确保正确更新比赛双方球员的信息
     for (int i = 0; i < PARAM::Field::MAX_PLAYER; ++ i) {
         const VehicleInfoT& ourPlayer = _info.player[0][i];

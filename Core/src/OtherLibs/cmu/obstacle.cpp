@@ -442,12 +442,12 @@ void obstacles::addObs(const CVisionModule *pVision, const TaskT &task, bool dra
 
     // ball
     if(flags & PlayerStatus::DODGE_BALL) {
-        const MobileVisionT& ball = pVision->ball();
+        const ObjectPoseT& ball = pVision->ball();
         add_circle(vector2f(ball.Pos().x(), ball.Pos().y()), vector2f(ball.Vel().x(), ball.Vel().y()), ballAvoidDist, 1, drawObs);
     }
 
     if(WorldModel::Instance()->CurrentRefereeMsg() == "GameStop") {
-        const MobileVisionT& ball = pVision->ball();
+        const ObjectPoseT& ball = pVision->ball();
         add_circle(vector2f(ball.Pos().x(), ball.Pos().y()), vector2f(0.0f, 0.0f), 50.0f, 1, drawObs);
     }
 

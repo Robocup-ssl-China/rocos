@@ -16,6 +16,10 @@ return {
         switch = function()
             local dist = (ball.pos() - player.pos("Assister")):mod()
             debugEngine:gui_debug_msg(ball.pos()+Utils.Polar2Vector(300,math.pi/2),"Dist : " .. dist)
+            debugEngine:gui_debug_x(player.pos("Assister"), param.GREEN)
+            debugEngine:gui_debug_msg(player.pos("Assister"), "Pos", param.GREEN)
+            debugEngine:gui_debug_x(player.rawPos("Assister"), param.PURPLE)
+            debugEngine:gui_debug_msg(player.rawPos("Assister"), "RawPos", param.PURPLE)
         end,
         Assister = task.touchKick(CGeoPoint(6000,0),nil,6000,true),
         -- Assister = task.stop(),

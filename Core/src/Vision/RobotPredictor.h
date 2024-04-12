@@ -25,9 +25,9 @@ class CRobotPredictor {
     CRobotPredictor();
     CRobotPredictor (bool isHasRotaion);
     void updateCommand(int cycle, const CPlayerCommand* cmd); // 更新命令
-    void updateVision(int cycle, const VehicleInfoT& player, const MobileVisionT& ball, bool invert); // 更新视觉信息
-    void updateOurVision(int cycle, const VehicleInfoT& player, const MobileVisionT& ball, bool invert, int realNum); // 更新视觉信息
-    void updateTheirVision(int cycle, const VehicleInfoT& player, const MobileVisionT& ball, bool invert, int realNum); // 更新视觉信息
+    void updateVision(int cycle, const VehicleInfoT& player, const ObjectPoseT& ball, bool invert); // 更新视觉信息
+    void updateOurVision(int cycle, const VehicleInfoT& player, const ObjectPoseT& ball, bool invert, int realNum); // 更新视觉信息
+    void updateTheirVision(int cycle, const VehicleInfoT& player, const ObjectPoseT& ball, bool invert, int realNum); // 更新视觉信息
 
     CRobotCommandLogger& getCommandLogger() {
         return _commandLogger;
@@ -50,7 +50,7 @@ class CRobotPredictor {
     bool collideWithBall() const {
         return _collisionSimulator.hasCollision();    // 只是单纯地考虑是否相撞与碰撞区域
     }
-    const MobileVisionT& ballCollidedResult() const {
+    const ObjectPoseT& ballCollidedResult() const {
         return _collisionSimulator.ball();
     }
     void setIsHasRotation(bool isHasRot) {
@@ -59,7 +59,7 @@ class CRobotPredictor {
   protected:
 //    void updateRawVision(int cycle, double x, double y, double dir, bool seen);
     bool checkValid(int cycle, const CGeoPoint& pos);
-    void predictLost(int cycle, const MobileVisionT& ball); // 预测看不到的信息
+    void predictLost(int cycle, const ObjectPoseT& ball); // 预测看不到的信息
   private:
 //    FilteredObject _robotFilter; // KalmanFilter
 //    FilteredObject _robotRotationFilter; // 进行robot朝向滤波

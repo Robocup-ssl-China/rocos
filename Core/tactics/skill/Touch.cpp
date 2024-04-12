@@ -29,7 +29,7 @@ void CTouch::plan(const CVisionModule* pVision){
     const PlayerVisionT& me = pVision->ourPlayer(runner);
     const auto mouseVec = Utils::Polar2Vector(PARAM::Vehicle::V2::PLAYER_CENTER_TO_BALL_CENTER, me.Dir());
     const auto mousePos = me.Pos() + mouseVec;
-    const MobileVisionT& ball = pVision->ball();
+    const ObjectPoseT& ball = pVision->ball();
     const double ballVelDir = ball.Vel().dir();
     const CGeoPoint& ballPos = ball.RawPos();
     const CGeoLine ballVelLine(ballPos, ballVelDir);

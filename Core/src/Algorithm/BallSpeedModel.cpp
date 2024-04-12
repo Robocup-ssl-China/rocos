@@ -40,9 +40,9 @@ std::tuple<double, CVector> CBallSpeedModel::predictForDist(const double dist){
 	auto time = (v0 - v1) / _DEC;
 	return {time, Utils::Polar2Vector(v1, _ballVel.dir())};
 }
-MobileVisionT CBallSpeedModel::poseForTime(const double time){
+ObjectPoseT CBallSpeedModel::poseForTime(const double time){
 	this->update();
-	MobileVisionT predictPose;
+	ObjectPoseT predictPose;
 	auto v0 = _ballVel.mod();
 	auto v1 = std::max(v0 - _DEC * time, 0.0);
 	auto runtime = std::min(v0 / _DEC, time);
