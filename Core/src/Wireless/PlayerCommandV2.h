@@ -23,20 +23,6 @@ private:
 };
 
 /************************************************************************/
-/*                         Kick                                         */
-/************************************************************************/
-class CPlayerKickV2 : public CPlayerCommand{
-public:
-	CPlayerKickV2(int number, double normal, double chip, double pass, unsigned char dribble)
-		: CPlayerCommand(number, dribble), _normal(normal), _chip(chip), _pass(pass){ }
-    virtual void execute(int);
-	virtual void toStream(std::ostream& os) const;
-private:
-	double _normal; // 普通击球的力度
-	double _chip; // 挑球的距离
-	double _pass; // 传球的距离
-};
-/************************************************************************/
 /*                         Gyro(陀螺仪)                                 */
 /************************************************************************/
 class CPlayerGyroV2 : public CPlayerCommand{

@@ -62,23 +62,15 @@ bool CActionModule::sendAction() {
         }
 
         // 踢：有效的踢控指令
-        double kickPower = 0.0;
-        double chipkickDist = 0.0;
-        double passdist = 0.0;
         if (KickStatus::Instance()->needKick(vecNum)) {
-            // 更新踢相关参数
-            kickPower = KickStatus::Instance()->getKickPower(vecNum);
-            chipkickDist = KickStatus::Instance()->getChipKickDist(vecNum);
-            passdist = KickStatus::Instance()->getPassDist(vecNum);
-            // 涉及到平/挑射分档，这里只关系相关参数，实际分档请关注 CommandSender
-            CPlayerKickV2 kickCmd(vecNum, kickPower, chipkickDist, passdist, dribble);
-            // 机构动作 <kick dribble>
-            kickCmd.execute(vecNum);
+            double kickPower = KickStatus::Instance()->getKickPower(vecNum);
+            double chipkickDist = KickStatus::Instance()->getChipKickDist(vecNum);
+            bool direct_kick_no_calibration = KickStatus::Instance()->isDirectKickNoCalibration(vecNum);
+            double direct_kick_power = KickStatus::Instance()->getDirectKickPower(vecNum);
+            CCommandInterface::instance()->setKick(vecNum, kickPower, chipkickDist, direct_kick_no_calibration, direct_kick_power);
         } else {
-            CPlayerKickV2 kickCmd(vecNum, 0, 0, 0, dribble);
-            kickCmd.execute(vecNum);
+            CCommandInterface::instance()->setKick(vecNum, 0, 0);
         }
-
     }
 
     /************************************************************************/
