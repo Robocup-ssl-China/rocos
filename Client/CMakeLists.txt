@@ -43,6 +43,11 @@ else()
     find_package(ZLIB)
 endif()
 
+## fmt
+find_package(fmt REQUIRED)
+include_directories(${fmt_INCLUDE_DIRS})
+list(APPEND libs fmt::fmt)
+
 include_directories(${ZLIB_INCLUDE_DIRS})
 list(APPEND libs ${ZLIB_LIBRARIES})
 ## find Qt

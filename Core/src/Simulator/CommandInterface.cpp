@@ -55,7 +55,7 @@ void CCommandInterface::setSpeed(int num, double dribble, double vx, double vy, 
     commands[number].velocity_r = vr;
 
 }
-void CCommandInterface::setKick(int num, double kp, double cp) {
+void CCommandInterface::setKick(int num, double kp, double cp, bool direct_kick_no_calibration, double direct_kick_power) {
     int number = num;
     if (number < 0 || number > PARAM::Field::MAX_PLAYER - 1) {
         //std::cout << "Robot Number Error in Simulator setKick" << std::endl;
@@ -63,6 +63,8 @@ void CCommandInterface::setKick(int num, double kp, double cp) {
     }
     commands[number].flat_kick = kp;
     commands[number].chip_kick = cp;
+    commands[number].direct_kick_no_calibration = direct_kick_no_calibration;
+    commands[number].direct_kick_power = direct_kick_power;
 }
 
 void CCommandInterface::setNeedReport(int num, bool needReport){

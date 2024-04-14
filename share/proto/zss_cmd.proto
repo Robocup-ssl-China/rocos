@@ -52,4 +52,8 @@ message Robot_Command {
 
   required bool use_dir = 10;
   required bool need_report = 11;
+
+  // use for power calibration
+  optional bool  direct_kick_no_calibration = 12;
+  optional float direct_kick_power = 13;
 }

@@ -98,7 +98,7 @@ void Communicator::receiveCommand(int t) {
                     ZSS::ZRemoteSimModule::instance()->sendSim(t, commands);
             } else {
 //                qDebug() << "realreal!";
-                ZSS::ZActionModule::instance()->sendLegacy(t, commands);
+                // ZSS::ZActionModule::instance()->sendLegacy(t, commands);
                 ZSS::NActionModule::instance()->sendLegacy(commands);
             }
         }
