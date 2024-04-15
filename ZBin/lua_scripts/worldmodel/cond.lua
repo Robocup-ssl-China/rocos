@@ -36,36 +36,8 @@ function isNormalStart()
 	return vision:gameState():canEitherKickBall()
 end
 
---~ -----------------------------------------------
---~ geometry condition
---~ -----------------------------------------------
-
-
---~ -----------------------------------------------
---~ other condition
---~ -----------------------------------------------
-function bestPlayerChanged()
-	return world:IsBestPlayerChanged()
-end
-
-function canShootOnBallPos(role)
-	return world:canShootOnBallPos(vision:getCycle(),gRoleNum[role])
-end
-
-function canPassOnBallPos(role,passPos,guisePos)
-	return world:canPassOnBallPos(vision:getCycle(),passPos,guisePos,gRoleNum[role])
-end
-
--- function canKickAtEnemy(role,kickDir)
--- 	return world:canKickAtEnemy(vision:getCycle(),kickDir,gRoleNum[role])
--- end
-
 function validNum()
 	return vision:getValidNum()
-end
-
-function canDefenceExit()
-	return world:CanDefenceExit()
 end
 
 function timeRemain()
@@ -242,43 +214,6 @@ function  kickOffEnemyNumChanged()
 end
 
 --------------------------------------For Freekick--------------------------------------------------
-function canPassAndShoot(role)
-		if gRoleNum[role] ~= 0 and not world:isPassLineBlocked(gRoleNum[role]) and not world:isShootLineBlocked(gRoleNum[role]) then
-			return true
-		else
-			return false
-		end
-end
-
--- 优先级从role1至role5降低, 可少角色
-function findChance(role1, role2, role3, role4, role5)
-	if role1 ~= nil and type(role1) == "string" then
-		if gRoleNum[role1] ~= 0 and not world:isBeingMarked(gRoleNum[role1]) and canPassAndShoot(role1) then
-			return role1
-		end
-	end
-	if role2 ~= nil and type(role2) == "string" then
-		if gRoleNum[role2] ~= 0 and not world:isBeingMarked(gRoleNum[role2]) and canPassAndShoot(role2) then
-			return role2
-		end
-	end
-	if role3 ~= nil and type(role3) == "string" then
-		if gRoleNum[role3] ~= 0 and not world:isBeingMarked(gRoleNum[role3]) and canPassAndShoot(role3) then
-			return role3
-		end
-	end
-	if role4 ~= nil and type(role4) == "string" then
-		if gRoleNum[role4] ~= 0 and not world:isBeingMarked(gRoleNum[role4]) and canPassAndShoot(role4) then
-			return role4
-		end
-	end
-	if role5 ~= nil and type(role5) == "string" then
-		if gRoleNum[role5] ~= 0 and not world:isBeingMarked(gRoleNum[role5]) and canPassAndShoot(role5) then
-			return role5
-		end
-	end
-	return "None"
-end
 
 -- str 为所在的区域
 -- script 为所使用的脚本

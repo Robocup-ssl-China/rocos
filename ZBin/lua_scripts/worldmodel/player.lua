@@ -3,7 +3,7 @@ module(..., package.seeall)
 function instance(role)
 	local realIns
 	if type(role) == "string" then
-		realIns = vision:ourPlayer(gRoleNum[role])
+		realIns = vision:ourPlayer(num(role))
 	elseif type(role) == "number" then
 --	and	role >= 1 and role <= param.maxPlayer then
 		realIns = vision:ourPlayer(role)
@@ -16,8 +16,12 @@ end
 
 function num(role)
 	local retNum
+	if type(role) == "function" then
+		role = role()
+	end
 	if type(role) == "string" then
-		retNum = gRoleNum[role]
+		retNum = gSubPlay.getRoleNum(role)
+		-- retNum = gRoleNum[role]
 	elseif type(role) == "number" then
 		retNum = role
 	else
@@ -36,6 +40,10 @@ end
 
 function posY(role)
 	return instance(role):Y()
+end
+
+function rawPos(role)
+	return instance(role):RawPos()
 end
 
 function dir(role)
@@ -150,10 +158,14 @@ end
 
 function toTargetDist(role)
 	local p
-	if type(gRolePos[role]) == "function" then
-		p = gRolePos[role]()
+	local realrole = gSubPlay.getRole(role)
+	if type(gRolePos[realrole]) == "function" then
+		p = gRolePos[realrole]()
 	else
-		p = gRolePos[role]
+		p = gRolePos[realrole]
+	end
+	if p == nil then
+		return 9999
 	end
 	return player.pos(role):dist(p)
 end
@@ -241,12 +253,13 @@ function canBreak(role)
 	for i=1,param.maxPlayer do
 		if enemy.valid(i) then
 			local p
-			if type(gRolePos[role]) == "function" then
-				p = gRolePos[role]()
+			local realrole = gSubPlay.getRole(role)
+			if type(gRolePos[realrole]) == "function" then
+				p = gRolePos[realrole]()
 			else
-				p = gRolePos[role]
+				p = gRolePos[realrole]
 			end
-			local breakSeg = CGeoSegment:new_local(player.pos(role), p)
+			local breakSeg = CGeoSegment:new_local(player.pos(realrole), p)
 			local projP = breakSeg:projection(enemy.pos(i))
 			if breakSeg:IsPointOnLineOnSegment(projP) then
 				if enemy.pos(i):dist(projP) < 40 then
@@ -353,7 +366,7 @@ function canFlatPassToPos(role, targetpos)
 		end
 	end
 	for j = 1, param.maxPlayer do
-		if player.valid(j) and j ~= gRoleNum["Leader"] and player.pos(j):dist(p2) > 20 then
+		if player.valid(j) and j ~= num("Leader") and player.pos(j):dist(p2) > 20 then
 			local dist = seg:projection(player.pos(j)):dist(player.pos(j))
 			local isprjon = seg:IsPointOnLineOnSegment(seg:projection(player.pos(j)))
 			if dist < 12 and isprjon then

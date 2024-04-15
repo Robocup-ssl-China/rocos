@@ -383,7 +383,7 @@ bool CDynamicSafetySearch::CheckAccel (const int player, vector2f acc, const CVi
     if(pVision->ball().Valid() && (_flag & PlayerStatus::DODGE_BALL)) {
         vector2f pj = vector2f(pVision->ball().Pos().x(), pVision->ball().Pos().y());
         vector2f vj = vector2f(pVision->ball().VelX(), pVision->ball().VelY());
-        const MobileVisionT& last_ball = pVision->ball(pVision->getLastCycle());
+        const ObjectPoseT& last_ball = pVision->ball(pVision->getLastCycle());
         vector2f Aj;
         Aj = (vj - vector2f(last_ball.VelX(), last_ball.VelY())) /_C;
         if(CheckRobot(player, _pos, _vel, acc, -1, pj, vj, Aj, type, limitTime) == UNSAFE) {

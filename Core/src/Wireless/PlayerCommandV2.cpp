@@ -66,26 +66,6 @@ double CPlayerSpeedV2::getAffectedRotateSpeed() const
 }
 
 /************************************************************************/
-/*                          Kick                                        */
-/************************************************************************/
-void CPlayerKickV2::execute(int realNum){
-     CCommandInterface::instance()->setKick(realNum, _normal, _chip);
-}
-void CPlayerKickV2::toStream(std::ostream& os) const
-{
-	os << number();
-	if( _normal ){
-		if( _pass ){
-			os << " pass " << _pass;
-		}else{
-			os << " kick " << _normal;
-		}
-	}else{
-		os << " chip kick " << _chip;
-	}
-}
-
-/************************************************************************/
 /*                         Gyro(陀螺仪)                                 */
 /************************************************************************/
 void CPlayerGyroV2::execute()

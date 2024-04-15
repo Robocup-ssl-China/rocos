@@ -16,9 +16,9 @@ CGDebugEngine::CGDebugEngine(){
 CGDebugEngine::~CGDebugEngine(){
 }
 
-void CGDebugEngine::gui_debug_x(const CGeoPoint& p, int debug_color,int RGB_value){
+void CGDebugEngine::gui_debug_x(const CGeoPoint& p, int debug_color,int RGB_value, const int size){
 	CGeoPoint basePos = p;
-    static const int x_line_length = 30;
+    const int x_line_length = size/2;
     const CGeoPoint p1 = basePos + CVector( x_line_length, x_line_length);
     const CGeoPoint p2 = basePos + CVector(-x_line_length,-x_line_length);
     gui_debug_line(p1, p2, debug_color,RGB_value);

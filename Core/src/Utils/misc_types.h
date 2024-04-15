@@ -54,6 +54,8 @@ struct PlayerStatus{
 	bool needkick;													// 踢球动作执行开关
 	bool ispass;													// 是否进行传球
 	bool ischipkick;												// 挑球还是平射
+	bool isDirectNoCalibrationKick;									// 是否是直接下发踢球时间参数给硬件（一般用于标定）
+	double directNoCalibrationKickPower;							// 直接下发踢球时间参数给硬件的时间
 	double kickprecision;											// 踢球朝向精度
 	double kickpower;												// 踢球力度
 	double chipkickpower;											// 挑球力度	
@@ -120,6 +122,7 @@ struct stBallStatus{
 	int Sender;                 // 出球者号码（added by shizhy)
 	double angle;
 	bool front;
+	double avoid_dist = -1;
 };
 
 /// 任务结构

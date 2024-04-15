@@ -86,8 +86,8 @@ bool CBallPredictor::checkValid(int cycle) {
     return true;
 }
 
-void CBallPredictor::setCollisionResult(int cycle, const MobileVisionT& ball) {
-    MobileVisionT& oldBall = _visionLogger.getVision(cycle);
+void CBallPredictor::setCollisionResult(int cycle, const ObjectPoseT& ball) {
+    ObjectPoseT& oldBall = _visionLogger.getVision(cycle);
     oldBall = ball;
     _hasCollision = true;
 

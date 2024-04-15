@@ -52,56 +52,55 @@ Client/*.pb.*
 
 # C++ objects and libs
 
-Medusa/*.slo
-Medusa/*.lo
-Medusa/*.o
-Medusa/*.a
-Medusa/*.la
-Medusa/*.lai
-Medusa/*.so
-Medusa/*.dll
-Medusa/*.dylib
+Core/*.slo
+Core/*.lo
+Core/*.o
+Core/*.a
+Core/*.la
+Core/*.lai
+Core/*.so
+Core/*.dll
+Core/*.dylib
 
 # Qt-es
 
-Medusa/object_script.*.Release
-Medusa/object_script.*.Debug
-Medusa/*_plugin_import.cpp
-Medusa//.qmake.cache
-Medusa//.qmake.stash
-Medusa/*.pro.user
-Medusa/*.pro.user.*
-Medusa/*.qbs.user
-Medusa/*.qbs.user.*
-Medusa/*.moc
-Medusa/moc_*.cpp
-Medusa/moc_*.h
-Medusa/qrc_*.cpp
-Medusa/ui_*.h
-Medusa/Makefile*
-Medusa/*build*
+Core/object_script.*.Release
+Core/object_script.*.Debug
+Core/*_plugin_import.cpp
+Core//.qmake.cache
+Core//.qmake.stash
+Core/*.pro.user
+Core/*.pro.user.*
+Core/*.qbs.user
+Core/*.qbs.user.*
+Core/*.moc
+Core/moc_*.cpp
+Core/moc_*.h
+Core/qrc_*.cpp
+Core/ui_*.h
+Core/Makefile*
+Core/*build*
 
 # Qt unit tests
-Medusa/target_wrapper.*
+Core/target_wrapper.*
 
 
 # QtCreator
 
-Medusa/*.autosave
+Core/*.autosave
 
 # QtCtreator Qml
-Medusa/*.qmlproject.user
-Medusa/*.qmlproject.user.*
+Core/*.qmlproject.user
+Core/*.qmlproject.user.*
 
 # QtCtreator CMake
-Medusa/CMakeLists.txt.user*
+Core/CMakeLists.txt.user*
 
 # Protobuf
-Medusa/*.pb.*
-Medusa/*_pb2.py
-Medusa/src/LuaModule/lua_zeus.cpp
-Medusa/share/proto/cpp/
-
+Core/*.pb.*
+Core/*_pb2.py
+Core/src/LuaModule/lua_zeus.cpp
+Core/share/proto/cpp/
 
 
 
@@ -117,8 +116,8 @@ ZBin/LOG/*.log
 ZBin/Client.exp
 ZBin/Client.lib
 ZBin/Client
-ZBin/Medusa
-ZBin/MedusaD
+ZBin/Core
+ZBin/CoreD
 ZBin/grsim
 ZBin/Crazy
 ZBin/Client
@@ -127,6 +126,11 @@ ZBin/ballSpeedLog.txt
 ZBin/Core
 ZBin/Controller
 # python
+ZBin/__data
+ZBin/*/model
+ZBin/*/runs/
+ZBin/*/tbox
+ZBin/*/*.pth
 ZBin/__pycache__
 ZBin/*.py[cod]
 ZBin/*$py.class

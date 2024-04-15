@@ -55,7 +55,7 @@ void CBallStatus::UpdateBallStatus(const CVisionModule* pVision)
 
 void CBallStatus::UpdateBallMoving(const CVisionModule* pVision)
 {
-	const MobileVisionT& ball = pVision->ball(); // 球	
+	const ObjectPoseT& ball = pVision->ball(); // 球	
 	isNearPlayer = false;
 	for (int i=0; i<PARAM::Field::MAX_PLAYER*2; i++){
 		if (pVision->allPlayer(i).Valid() && pVision->allPlayer(i).Pos().dist(ball.Pos())< PARAM::Field::MAX_PLAYER_SIZE/2+5){

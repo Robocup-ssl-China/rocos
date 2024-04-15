@@ -12,6 +12,7 @@ math.random(1,10)
 require(OPPONENT_NAME)
 require("Skill")
 require("Play")
+require("SubPlay")
 require("cond")
 require("pos")
 require("dir")
@@ -104,7 +105,11 @@ for _, value in ipairs(tactic_packages) do
 		-- print("Skill Files : ",table.concat(play_files, ","))
 		for _, filename in ipairs(play_files) do
 			print("Init TPs Play : ",filename)
-			dofile(filename)
+			local res = dofile(filename)
+			if res ~= nil and res.name ~= nil then
+				gPlayTable.CreatePlay(res)
+				gSubPlayFiles[res.name] = filename
+			end
 		end
 	else
 		print("Tactic Dir Not Exists : ",tactic_dir)

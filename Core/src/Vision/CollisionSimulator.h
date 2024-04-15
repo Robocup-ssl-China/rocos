@@ -9,10 +9,10 @@ public:
 	CCollisionSimulator() : _hasCollision(false){ }
 	void reset(const CGeoPoint& ballRawPos, const CVector& ballVel);
 	void simulate(PlayerVisionT robot, const double time); // 模拟一定时间
-	const MobileVisionT& ball() const { return _ball; }
+	const ObjectPoseT& ball() const { return _ball; }
 	bool hasCollision() const { return _hasCollision; }
 private:
-	MobileVisionT _ball; // 球的信息
+	ObjectPoseT _ball; // 球的信息
 	CVector _ballRelToRobot; // 球在机器人局部坐标系中的位置
 	bool _hasCollision; // 是否碰撞
 };

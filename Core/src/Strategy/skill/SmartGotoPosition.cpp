@@ -66,7 +66,6 @@ namespace{
     CGeoPoint lastFinalPoint[PARAM::Field::MAX_PLAYER];
     CGeoPoint veryStart[PARAM::Field::MAX_PLAYER];
     bool isExecuting[PARAM::Field::MAX_PLAYER];
-    const double Fake_PENALTY_AREA_R = 150; // added by ftq
     const double TEAMMATE_AVOID_DIST = PARAM::Vehicle::V2::PLAYER_SIZE + 40.0f; // 2014/03/13 修改，为了减少stop的时候卡住的概率 yys
     const double OPP_AVOID_DIST = PARAM::Vehicle::V2::PLAYER_SIZE + 55.0f;
     const double BALL_AVOID_DIST = PARAM::Field::BALL_SIZE + 50.0f;
@@ -179,7 +178,7 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
 
     obstacles obs(avoidLength);
     if(!(playerFlag & PlayerStatus::BREAK_THROUGH))
-        obs.addObs(pVision, task(), DRAW_OBSTACLES, OPP_AVOID_DIST, TEAMMATE_AVOID_DIST, BALL_AVOID_DIST);
+        obs.addObs(pVision, task(), DRAW_OBSTACLES, OPP_AVOID_DIST, TEAMMATE_AVOID_DIST, std::max(task().ball.avoid_dist, BALL_AVOID_DIST));
     else
         obs.addObs(pVision, task(), DRAW_OBSTACLES, PARAM::Vehicle::V2::PLAYER_SIZE + PARAM::Field::BALL_SIZE + 20, PARAM::Vehicle::V2::PLAYER_SIZE + PARAM::Field::BALL_SIZE + 20.0, PARAM::Field::BALL_SIZE);
 
@@ -193,7 +192,6 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
 
     //处理无效目标点:在禁区内、在车身内、在场地外
     validateFinalTarget(finalTargetPos, myPos, avoidLength, isGoalie, avoidBallCircle, obs, onlyPlanInCircle, planCircleCenter, planCircleRadius);
-    CVector velNew;
 
     validateStartPoint(myPos, avoidLength, isGoalie, obs);
     GDebugEngine::Instance()->gui_debug_x(finalTargetPos, COLOR_YELLOW);
@@ -211,7 +209,6 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
 
     TaskT newTask(task());
     newTask.player.pos = finalTargetPos;
-    newTask.player.vel = velNew;
 
     if(self.Pos().dist(finalTargetPos) < startToRotateToTargetDirDist && needBreakRotate)
         newTask.player.flag &= (!PlayerStatus::BREAK_THROUGH);

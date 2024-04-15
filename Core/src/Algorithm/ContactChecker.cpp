@@ -33,7 +33,7 @@ bool isPointOutField(CGeoPoint pos)
 }
 void ContactChecker::OutFieldJudge(const CVisionModule* pVision)
 {
-	MobileVisionT last_ball=pVision->ball(pVision->getCycle()-4);
+	ObjectPoseT last_ball=pVision->ball(pVision->getCycle()-4);
 	if (pVision->ball().Valid()&&isPointOutField(pVision->ball().Pos())){
 		_isBallOutField=true;
 	}

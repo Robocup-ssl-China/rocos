@@ -16,16 +16,9 @@ class ObjectPoseT{
 	double VelY() const;
 	void SetValid(bool v);
 	bool Valid() const;
-};
-
-class VisionObjectT{
 	const CGeoPoint& RawPos() const;
 	void SetRawPos(double x, double y);
 	void SetRawPos(const CGeoPoint& pos);
-};
-
-class MobileVisionT : public ObjectPoseT, public VisionObjectT{
-
 };
 
 struct PlayerPoseT : public ObjectPoseT{
@@ -39,12 +32,12 @@ struct PlayerPoseT : public ObjectPoseT{
 };
 
 class PlayerTypeT{
-	void SetType(int t);
-	int Type() const;
+
 };
 
-class PlayerVisionT : public PlayerPoseT, public VisionObjectT, public PlayerTypeT{
-
+class PlayerVisionT : public PlayerPoseT {
+	void SetType(int t);
+	int Type() const;
 };
 
 struct PlayerCapabilityT{

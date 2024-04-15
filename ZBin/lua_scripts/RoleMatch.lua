@@ -40,6 +40,7 @@ gRoleNum = {
 	["z"] = -1
 }
 
+
 gLastRoleNum = {
 
 }

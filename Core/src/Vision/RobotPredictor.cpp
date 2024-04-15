@@ -34,7 +34,7 @@ CRobotPredictor::CRobotPredictor(bool isHasRotation) : _robotLostTime(0), _isHas
 //        _robotFilter.initialize(PARAM::File::RobotPosFilterDir + "slowMatrices.txt", PARAM::File::RobotPosFilterDir + "fastMatrices.txt");
 //    }
 }
-void CRobotPredictor::updateVision(int cycle, const VehicleInfoT& player, const MobileVisionT& ball, bool invert) {
+void CRobotPredictor::updateVision(int cycle, const VehicleInfoT& player, const ObjectPoseT& ball, bool invert) {
     // !!!!这里好像有问题:
     // 如果是对手车也能识别朝向,就会调用updateOurVision, 但因为在该函数里取不到cmd(只有我方车才有cmd存下来), 结果就不对.
     // 这里需要一个辨别我方车与对方车的方式!!
@@ -95,7 +95,7 @@ void CRobotPredictor::updateVision(int cycle, const VehicleInfoT& player, const 
     }
 }
 
-//void CRobotPredictor::updateOurVision(int cycle, const VehicleInfoT& player, const MobileVisionT& ball, bool invert, int realNum) {
+//void CRobotPredictor::updateOurVision(int cycle, const VehicleInfoT& player, const ObjectPoseT& ball, bool invert, int realNum) {
 //    const double x = invert ? -player.pos.x : player.pos.x;
 //    const double y = invert ? -player.pos.y : player.pos.y;
 //    double dir = 0;
@@ -279,7 +279,7 @@ void CRobotPredictor::updateVision(int cycle, const VehicleInfoT& player, const 
 //    predictedVision.SetType(player.type);
 //}
 
-//void CRobotPredictor::updateTheirVision(int cycle, const VehicleInfoT & player, const MobileVisionT & ball, bool invert, int realNum) {
+//void CRobotPredictor::updateTheirVision(int cycle, const VehicleInfoT & player, const ObjectPoseT & ball, bool invert, int realNum) {
 //    const double x = invert ? -player.pos.x : player.pos.x;
 //    const double y = invert ? -player.pos.y : player.pos.y;
 //    double dir = 0;
@@ -435,7 +435,7 @@ bool CRobotPredictor::checkValid(int cycle, const CGeoPoint & pos) {
     }
     return true;
 }
-void CRobotPredictor::predictLost(int cycle, const MobileVisionT & ball) {
+void CRobotPredictor::predictLost(int cycle, const ObjectPoseT & ball) {
     //cout<<cycle<<" ";
     // 图像当前帧丢车后的处理办法
     if( _visionLogger.visionValid(cycle - 1)) {

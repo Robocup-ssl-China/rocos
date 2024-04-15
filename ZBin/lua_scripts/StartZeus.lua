@@ -1,3 +1,4 @@
+math.randomseed(os.time())
 package.path = package.path .. ";./lua_scripts/?.lua"
 
 -- require("Judge")

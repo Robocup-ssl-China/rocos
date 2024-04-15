@@ -82,7 +82,7 @@ public:
 		}
 	}
 
-    const MobileVisionT& ball() const {
+    const ObjectPoseT& ball() const {
         return _ballPredictor.getResult(_timeCycle);
     }
 
@@ -94,7 +94,7 @@ public:
         return _theirPlayerPredictor[num].getResult(cycle);
     }
 
-    const MobileVisionT& ball(int cycle) const {
+    const ObjectPoseT& ball(int cycle) const {
         return _ballPredictor.getResult(cycle);
     }
 

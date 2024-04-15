@@ -1,3 +1,14 @@
+local warningX = -param.pitchLength/2
+local warningY = 0
+function warning(msg)
+    msg = "WARNING: " .. msg
+    print( msg)
+    debugEngine:gui_debug_msg_fix(CGeoPoint(warningX, warningY), msg, param.CYAN)
+    warningY = warningY + 120
+    if warningY > param.pitchWidth/2 then
+        warningY = -param.pitchWidth/2
+    end
+end
 function _c(f,...) -- auto convert for closure
 	if type(f) == "function" then
 		return f(...)

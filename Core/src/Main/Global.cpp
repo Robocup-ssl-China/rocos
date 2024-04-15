@@ -6,6 +6,7 @@ CDribbleStatus* dribbleStatus;
 CGDebugEngine*  debugEngine;
 CWorldModel* world;
 CSkillAPI* skillapi;
+CBallSpeedModel *ballModel;
 void initializeSingleton()
 {
 	vision        = VisionModule::Instance();
@@ -14,4 +15,5 @@ void initializeSingleton()
     debugEngine   = GDebugEngine::Instance();
     world         = WorldModel::Instance();
 	skillapi	  = SkillAPI::Instance();
+	ballModel = BallSpeedModel::Instance();
 }
