@@ -82,6 +82,10 @@ function gSubPlay.roleTask(name, role)
                 gSubPlay.register(name, role, subTask.args)
                 return subTask.task()
             end
+            local _subRoleTask = _subPlayState[role]
+            if type(_subRoleTask) == "function" then
+                return _subRoleTask()
+            end
             return _subPlayState[role]
         end,
         args = {
