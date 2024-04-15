@@ -120,7 +120,6 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     CGeoPoint target = task().player.pos;							// 目标的位置
     playerFlag = task().player.flag;
     const bool needBreakRotate = (playerFlag & PlayerStatus::BREAK_THROUGH);
-    nonZeroMode mode =  FAST;
     const bool isBack = (vecNumber == TaskMediator::Instance()->leftBack()) ||
                          (vecNumber == TaskMediator::Instance()->rightBack()) ||
                         (vecNumber == TaskMediator::Instance()->singleBack()) ||
@@ -193,7 +192,7 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     float usedtime = target.dist(self.Pos()) / capability.maxSpeed / 1.414;	// 单位：秒
 
     /// 进行轨迹生成并记录理想执行时间
-    control.makeCmTrajectory(self, final, capability, mode);					// CMU 非零速到点
+    control.makeCmTrajectory(self, final, capability);					// CMU 非零速到点
 
     const double time_factor = 1.5;
 
