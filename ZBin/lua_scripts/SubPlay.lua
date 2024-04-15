@@ -130,11 +130,11 @@ function gSubPlay.getRoleAndNum(roleName)
         else
             if gSubPlay.playTable[scope] == nil then
                 warning("subPlay not exist - " .. scope .. " " .. role .. pathOutput(findPath))
-                return -1
+                return "",-1
             end
             if gSubPlay.playTable[scope].roleMapping[role] == nil then
                 warning("role not exist - " .. scope .. " " .. role .. pathOutput(findPath))
-                return -1
+                return "",-1
             end
             local tRoleMap = gSubPlay.playTable[scope].roleMapping[role]
             scope, role = tRoleMap[1], tRoleMap[2]
@@ -144,7 +144,7 @@ function gSubPlay.getRoleAndNum(roleName)
         iterCount = iterCount + 1
         if iterCount > 10 then
             warning("getRoleNum failed - " .. pathOutput(findPath))
-            return -1
+            return "",-1
         end
     end
 end
