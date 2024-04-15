@@ -256,6 +256,7 @@ void compute_motion_2d(CVector x0, CVector v0, CVector v1,
 
     traj_accel = CVector(traj_accel_x, traj_accel_y);
     traj_accel = traj_accel.rotate(rotangle);
+    traj_accel = Utils::Polar2Vector(std::min(traj_accel.mod(),a_max), traj_accel.dir());
     if(time_x < 1e-5 || time_x > 50) time_x = 0;
     if(time_y < 1e-5 || time_y > 50) time_y = 0;
     time = std::max(time_x, time_y);
