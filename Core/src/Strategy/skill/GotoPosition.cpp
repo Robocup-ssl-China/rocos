@@ -151,9 +151,6 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     bool ignoreNotStop = false;
     target = avoidPenaltyArea(pVision, vecPos, target, avoidLength, vecNumber);
 
-    // 记录当前的规划执行目标点
-    GDebugEngine::Instance()->gui_debug_x(target, TASK_TARGET_COLOR);
-    GDebugEngine::Instance()->gui_debug_line(self.Pos(), target, TASK_TARGET_COLOR);
     if(task().player.vel.mod() > 1e-8) {
         GDebugEngine::Instance()->gui_debug_line(target, target + task().player.vel / 10, COLOR_WHITE);
     }
@@ -185,6 +182,12 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     final.SetDir((playerFlag & (PlayerStatus::TURN_AROUND_FRONT)) ? self.Dir() : task().player.angle);
     final.SetVel(task().player.vel);
     final.SetRotVel(task().player.rotvel);
+
+    // 记录当前的规划执行目标点
+    GDebugEngine::Instance()->gui_debug_x(final.Pos(), TASK_TARGET_COLOR, 0, 20);
+    GDebugEngine::Instance()->gui_debug_line(target, target+Utils::Polar2Vector(100,final.Dir()), TASK_TARGET_COLOR);
+    GDebugEngine::Instance()->gui_debug_line(self.Pos(), target, TASK_TARGET_COLOR);
+
     /// 调用控制方法
     CControlModel control;
     float usedtime = target.dist(self.Pos()) / capability.maxSpeed / 1.414;	// 单位：秒
