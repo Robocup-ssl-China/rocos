@@ -18,6 +18,12 @@ void goto_point_omni( const PlayerPoseT& start,
 					 const double& accel_factor,
 					 const double& angle_accel_factor,
                      PlayerPoseT& nextStep);
+void __new_goto_point_omni(const PlayerPoseT& start,
+						const PlayerPoseT& final,
+						const PlayerCapabilityT& CAPABILITY,
+						const double& ACC_FACTOR,
+						const double& ANGLE_ACC_FACTOR,
+						PlayerPoseT& nextStep);
 double expectedCMPathTime(const PlayerPoseT& start, const CGeoPoint& final, double maxAccel, double maxVelocity, double accel_factor);
 double predictedTime(const PlayerVisionT& start, const CGeoPoint& Target, const CVector& targetVel = CVector(0, 0));
 double predictedTimeWithRawVel(const PlayerVisionT& start, const CGeoPoint & Target, const CVector& targetVel = CVector(0, 0));

@@ -192,7 +192,7 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     float usedtime = target.dist(self.Pos()) / capability.maxSpeed / 1.414;	// 单位：秒
 
     /// 进行轨迹生成并记录理想执行时间
-    control.makeCmTrajectory(self, final, capability);					// CMU 非零速到点
+    control.makeNewCmTrajectory(self, final, capability);					// CMU 非零速到点
 
     const double time_factor = 1.5;
 

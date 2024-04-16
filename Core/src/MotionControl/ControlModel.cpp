@@ -80,6 +80,18 @@ void CControlModel::makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT
     goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep);
 }
 
+void CControlModel::makeNewCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
+{
+    _pathList.clear();
+    double accel_factor = 1.5;
+    double angle_accel_factor = 1.5;
+    if(IS_SIMULATION) {
+        accel_factor = 1.0;
+        angle_accel_factor = 1.0;
+    }
+    __new_goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep);
+}
+
 /// Trapezoidal control from ZJU : zero final velocity trajectory
 void CControlModel::makeTrapezoidalVelocityPath(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
 {

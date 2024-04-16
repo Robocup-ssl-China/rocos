@@ -51,10 +51,9 @@ int timeDebugColor = COLOR_GREEN;
 /// @param	traj_accel		计算得加速度
 /// @param	traj_time		计算得加速时间
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void origin_compute_motion_1d(double x0, double v0, double v1,
+void __new_compute_motion_1d(double x0, double v0, double v1,
                               double a_max, double v_max, double a_factor,
-                              double &traj_accel, double &traj_time)
-{
+                              double &traj_accel, double &traj_time){
   // First check to see if nothing needs to be done...
   if (x0 == 0 && v0 == v1) { traj_accel = 0; traj_time = 0;  return; }
 
@@ -78,7 +77,7 @@ void origin_compute_motion_1d(double x0, double v0, double v1,
     double time_to_stop = fabs(v0) / a_max;
     double x_to_stop = v0 * v0 / (2 * a_max);
 
-    origin_compute_motion_1d(x0 + copysign(x_to_stop, v0), 0, v1, a_max * a_factor,
+    __new_compute_motion_1d(x0 + copysign(x_to_stop, v0), 0, v1, a_max * a_factor,
                       v_max, a_factor, traj_accel, traj_time);
     traj_time += time_to_stop;
  
@@ -174,10 +173,81 @@ void origin_compute_motion_1d(double x0, double v0, double v1,
     }
   }
 }
+
+void __new_compute_motion_2d(CVector x0, CVector v0, CVector v1,
+                              double a_max, double v_max, double a_factor,
+                              CVector &traj_accel, double &time){
+  double time_x, time_y;
+  double rotangle = x0.dir();
+
+  x0 = x0.rotate(-rotangle);
+  v0 = v0.rotate(-rotangle);
+  v1 = v1.rotate(-rotangle);
+  
+  double traj_accel_x, traj_accel_y;
+
+  __new_compute_motion_1d(x0.x(), v0.x(), v1.x(), a_max, v_max, a_factor,
+		    traj_accel_x, time_x);
+  __new_compute_motion_1d(x0.y(), v0.y(), v1.y(), a_max, v_max, a_factor,
+		    traj_accel_y, time_y);
+
+  traj_accel = CVector(traj_accel_x, traj_accel_y).rotate(rotangle);
+  traj_accel = Utils::Polar2Vector(std::min(traj_accel.mod(),a_max), traj_accel.dir());
+
+  time = std::max(time_x, time_y);
+}
+
+void __new_goto_point_omni(const PlayerPoseT& start,
+						const PlayerPoseT& final,
+						const PlayerCapabilityT& CAPABILITY,
+						const double& ACC_FACTOR,
+						const double& ANGLE_ACC_FACTOR,
+						PlayerPoseT& nextStep){
+    CGeoPoint target_pos = final.Pos();
+    CVector x = start.Pos() - target_pos;
+    CVector v = start.Vel();
+    CVector target_vel = final.Vel();
+
+    CVector a;
+    double time;
+    __new_compute_motion_2d(x, v, target_vel, CAPABILITY.maxAccel, CAPABILITY.maxSpeed, ACC_FACTOR, a, time);
+
+    double w0 = Utils::Normalize(start.Dir() - final.Dir());
+    double wv = start.RotVel();
+    double wv1 = final.RotVel();
+    double aw;
+    double time_w;
+    __new_compute_motion_1d(w0, wv, wv1, CAPABILITY.maxAngularAccel, CAPABILITY.maxAngularSpeed, ANGLE_ACC_FACTOR, aw, time_w);
+
+    if (DISPLAY_ROTATION_LIMIT){
+        auto P = start.Pos() + CVector(200,200);
+        auto C = COLOR_PURPLE;
+        GDebugEngine::Instance()->gui_debug_msg(P, "TT", C);
+        GDebugEngine::Instance()->gui_debug_line(P,P+v*0.1,C);
+        GDebugEngine::Instance()->gui_debug_msg(P+v*0.2, fmt::format("V,wv:{:.1f},l-({:.1f},{:.1f})",wv, (wv + aw * FRAME_PERIOD), std::min(1000.0,CAPABILITY.maxAccel/(v.mod()))), C);
+    }
+
+    v = v + a * FRAME_PERIOD;
+
+    // option 1 : old method - bang-bang control to vw
+    // wv = wv + aw * FRAME_PERIOD;
+
+    // 思路 ： 根据移动和旋转的预计时间进行限制的分配
+    // option2 : consider conbine constraint of vw and v
+    double target_wv = wv + aw * FRAME_PERIOD;
+    wv = copysign(std::min(fabs(target_wv), CAPABILITY.maxAccel/(v.mod())), target_wv);
+
+    nextStep.SetValid(true);
+    nextStep.SetVel(v);
+    nextStep.SetPos(start.Pos() + v*FRAME_PERIOD);
+    nextStep.SetRotVel(wv);
+    nextStep.SetDir(Utils::Normalize(start.Dir() + wv * FRAME_PERIOD));
+}
+
 void compute_motion_1d(double x0, double v0, double v1,
                        double a_max, double d_max, double v_max, double a_factor, double vel_factor,
                        double &traj_accel, double &traj_time){
-                        origin_compute_motion_1d(x0, v0, v1, a_max, v_max, a_factor, traj_accel, traj_time);
+                        __new_compute_motion_1d(x0, v0, v1, a_max, v_max, a_factor, traj_accel, traj_time);
                        }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
