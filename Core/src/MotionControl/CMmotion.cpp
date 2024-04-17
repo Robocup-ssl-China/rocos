@@ -394,7 +394,8 @@ void goto_point_omni( const PlayerPoseT& start,
     double ang_a, factor_a;
     double time_a, time_a_acc, time_a_dec, time_a_flat, time;
     double time_acc, time_dec, time_flat;
-    compute_motion_2d(x, v, target_vel, max_accel, max_decel, max_speed, accel_factor, a, time);
+    // compute_motion_2d(x, v, target_vel, max_accel, max_decel, max_speed, accel_factor, a, time);
+    __new_compute_motion_2d(x, v, target_vel, max_accel, max_speed, accel_factor, a, time);
     // a = Utils::Polar2Vector(std::min(1.0,a.mod()),a.dir());
     factor_a = 1;
 
