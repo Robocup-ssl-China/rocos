@@ -28,6 +28,8 @@ double OUR_MAX_ACC = ZSS::ZParamManager::instance()->value("CGotoPositionV2/MNor
 double OUR_MAX_DEC = ZSS::ZParamManager::instance()->value("CGotoPositionV2/MNormalDec",QVariant(450*10)).toDouble();
 bool DISPLAY_ROTATION_LIMIT = ZSS::ZParamManager::instance()->value("Debug/RotationLimit",QVariant(false)).toBool();//true;
 bool DEBUG_TIME = ZSS::ZParamManager::instance()->value("Debug/TimePredict", QVariant(false)).toBool();
+double PREDICT_TIME_ACC_RATIO = ZSS::ZParamManager::instance()->value("CGotoPositionV2/PredictAccRatio", QVariant(1.5)).toDouble();
+double PREDICT_TIME_THEIR_ACC_RATIO = ZSS::ZParamManager::instance()->value("CGotoPositionV2/PredictAccTheirRatio", QVariant(1.5)).toDouble();
 bool addComp = true;
 int timeDebugColor = COLOR_GREEN;
 int timeItor = 0;
@@ -483,11 +485,11 @@ double expectedCMPathTime(const PlayerPoseT& start, const CGeoPoint& final, doub
 
 double predictedTime(const PlayerVisionT& start, const CGeoPoint & Target, const CVector& targetVel) {
     CVector x = start.Pos() - Target;
-    CVector v = (start.Vel().mod() < 2.5*10) ? CVector(0, 0) : start.Vel();
+    CVector v = start.Vel();
     double time;
     CVector a;
     double time_acc, time_dec, time_flat;
-    double accel_factor = 1.5;
+    double accel_factor = PREDICT_TIME_ACC_RATIO;
     if(IS_SIMULATION) {
         accel_factor = 1.0;
     }
@@ -503,12 +505,12 @@ double predictedTime(const PlayerVisionT& start, const CGeoPoint & Target, const
 
 double predictedTimeWithRawVel(const PlayerVisionT& start, const CGeoPoint & Target, const CVector& targetVel) {
     CVector x = start.Pos() - Target;
-    CVector v = (start.RawVel().mod() < 2.5*10) ? CVector(0, 0) : start.RawVel();
+    CVector v = start.RawVel();
 //    GDebugEngine::Instance()->gui_debug_msg(start.Pos(), QString("vel: (%1, %2)").arg(v.x()).arg(v.y()).toLatin1());
     double time;
     CVector a;
     double time_acc, time_dec, time_flat;
-    double accel_factor = 1.5;
+    double accel_factor = PREDICT_TIME_ACC_RATIO;
     if(IS_SIMULATION) {
         accel_factor = 1.0;
     }
@@ -535,7 +537,7 @@ double predictedTheirTime(const PlayerVisionT& start, const CGeoPoint & Target, 
                       max_acc,
                       max_acc,
                       max_speed,
-                      1.5,
+                      PREDICT_TIME_THEIR_ACC_RATIO,
                       a, time, time_acc, time_dec, time_flat);
 
     return time;
