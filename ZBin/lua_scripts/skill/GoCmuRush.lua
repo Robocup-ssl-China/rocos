@@ -5,7 +5,6 @@ function GoCmuRush(task)
 	local msender = task.sender or 0
 	local mrole   = task.srole or ""
 	local macc    = task.acc or 0
-	local mrec    = task.rec or 0 --mrec判断是否吸球  gty 2016-6-15
 	local mvel
 	local mspeed  = task.speed or 0
 	local mforce_maunal_set_running_param = task.force_manual or false

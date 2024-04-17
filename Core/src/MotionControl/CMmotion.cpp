@@ -488,16 +488,21 @@ double expectedCMPathTime(const PlayerPoseT& start, const CGeoPoint& final, doub
 
 double predictedTime(const PlayerVisionT& start, const CGeoPoint & Target, const CVector& targetVel) {
     CVector x = start.Pos() - Target;
-    CVector v = (start.Vel().mod() < 2.5*10) ? CVector(0, 0) : start.Vel();
+    CVector v = start.Vel();
     double time;
     CVector a;
-    double accel_factor = 1.5;
+    double accel_factor = 1.8;
     if(IS_SIMULATION) {
         accel_factor = 1.0;
     }
-    compute_motion_2d(x, v, targetVel,
+    // compute_motion_2d(x, v, targetVel,
+    //                   OUR_MAX_ACC,
+    //                   OUR_MAX_DEC,
+    //                   OUR_MAX_SPEED,
+    //                   accel_factor,
+    //                   a, time);
+    __new_compute_motion_2d(x, v, targetVel,
                       OUR_MAX_ACC,
-                      OUR_MAX_DEC,
                       OUR_MAX_SPEED,
                       accel_factor,
                       a, time);
@@ -507,7 +512,7 @@ double predictedTime(const PlayerVisionT& start, const CGeoPoint & Target, const
 
 double predictedTimeWithRawVel(const PlayerVisionT& start, const CGeoPoint & Target, const CVector& targetVel) {
     CVector x = start.Pos() - Target;
-    CVector v = (start.RawVel().mod() < 2.5*10) ? CVector(0, 0) : start.RawVel();
+    CVector v = start.RawVel();
 //    GDebugEngine::Instance()->gui_debug_msg(start.Pos(), QString("vel: (%1, %2)").arg(v.x()).arg(v.y()).toLatin1());
     double time;
     CVector a;
