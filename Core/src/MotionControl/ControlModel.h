@@ -51,7 +51,8 @@ public:
 	//void makeProportionalGainTheta(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability);
 	
 	/// Trapezoidal control from CMU : none-zero final velocity trajectory
-    void makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability, nonZeroMode mode = FAST);
+    void makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability);
+    void makeNewCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability);
 
 	/// Get the real-time next step
 	const PlayerPoseT& getNextStep() const { return _nextStep; }

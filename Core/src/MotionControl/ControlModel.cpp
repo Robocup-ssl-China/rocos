@@ -62,7 +62,7 @@ void CControlModel::makeZeroFinalVelocityTheta(const PlayerPoseT& start, const P
 //}
 
 /// Trapezoidal control from CMU : none-zero final velocity trajectory
-void CControlModel::makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability, nonZeroMode mode)
+void CControlModel::makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
 {
     _pathList.clear();
     double accel_factor = 1.5;
@@ -75,7 +75,19 @@ void CControlModel::makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT
     //cout << "ControlModel"<< endl;
     //cout << start.X()<<" "<<start.Y()<<" "<<start.Vel().mod()<<" "<<start.RotVel()<< endl;
     //cout << final.X() << " " << final.Y() << " " << final.Vel().mod() << endl;
-    goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep, mode);
+    goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep);
+}
+
+void CControlModel::makeNewCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
+{
+    _pathList.clear();
+    double accel_factor = 1.5;
+    double angle_accel_factor = 1.5;
+    if(IS_SIMULATION) {
+        accel_factor = 1.0;
+        angle_accel_factor = 1.0;
+    }
+    __new_goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep);
 }
 
 //////////////////////////////////////////////////////////////////////////
