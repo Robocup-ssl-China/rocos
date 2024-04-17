@@ -257,9 +257,9 @@ function RunPlay(name)
 
 						if isDirOk or bit:_and(mflag, flag.force_kick) ~= 0 then
 							if mkick == kick.flat() then
-								kickStatus:setKick(roleNum, mkp)
+								kickStatus:setKick(roleNum, _c(mkp))
 							elseif mkick == kick.chip() then
-								kickStatus:setChipKick(roleNum, mcp)
+								kickStatus:setChipKick(roleNum, _c(mcp))
 							end
 						end
 					end
