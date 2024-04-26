@@ -61,6 +61,12 @@ Rocos's Wiki!
    posts/z/INSTALL.md
    posts/z/TODO.md
 
+
+**Other Wikis:**
+
+* from `ZJHU <https://rocos.salta.top>`_
+
+
 Indices and tables
 ==================
 

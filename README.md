@@ -10,15 +10,9 @@
 
 * [更新记录](https://rocos.readthedocs.io/zh_CN/latest/posts/z/CHANGELOG.html)
 
-* [Wiki](https://rocos.readthedocs.io/zh-cn/latest)
-
-主要贡献名单：
-
-| github                                 | 贡献模块     |
-| -------------------------------------- | ------------ |
-| [Wayne](https://github.com/zijinoier)  | VisionModule |
-| [Luckky](https://github.com/guodashun) | LogModule    |
-| [Mark](https://github.com/ZJUMark)     | GUI          |
+* Wikis
+  * Official [Wiki](https://rocos.readthedocs.io/zh-cn/latest)
+  * from [ZJHU](https://rocos.salta.top)
 
 -----
 ## 常见问题
