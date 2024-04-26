@@ -10,7 +10,11 @@
 -- 		gSwitchNum["state"] = "normal"
 -- 	end
 -- end
-gNormalPlay = gOppoConfig.NorPlay
+if USE_CUSTOM_REF_CONFIG then
+	gNormalPlay = gRefConfig["NormalPlay"]
+else
+	gNormalPlay = gOppoConfig.NorPlay
+end
 -- 先注掉，在需要时可以开启使用
 -- if (not IS_TEST_MODE) and USE_SWITCH and gSwitchNum["state"] == "backup" then
 -- 	dofile("./lua_scripts/opponent/Backup.lua")
