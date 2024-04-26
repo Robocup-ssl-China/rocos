@@ -1,4 +1,5 @@
 #include <QtSerialPort/QSerialPortInfo>
+#include <QDateTime>
 #include "serialobject.h"
 SerialObject::SerialObject(QObject *parent):QObject(parent),radioPacket(&serial){
     // add needed settings
@@ -111,7 +112,8 @@ void SerialObject::readData(){
             infrared = (quint8)data[3] & 0x40;
             flat     = (quint8)data[3] & 0x20;
             chip     = (quint8)data[3] & 0x10;
-            qDebug() << id << ' ' << infrared << ' ' << flat << ' ' << chip << ' ' << battery << ' ' << capacitance;
+            // get current time
+            qDebug() << QDateTime::currentDateTime() << id << ' ' << infrared << ' ' << flat << ' ' << chip << ' ' << battery << ' ' << capacitance;
         }
     }
     rx = "";

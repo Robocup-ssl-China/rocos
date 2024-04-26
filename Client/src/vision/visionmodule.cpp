@@ -186,7 +186,7 @@ void CVisionModule::readRemoteSimData(){
  */
 bool CVisionModule::dealWithData() {
     counter++;
-    if (IF_EDGE_TEST) edgeTest();
+    edgeTest();
     DealBall::instance()->run();
     DealRobot::instance()->run();
     Maintain::instance()->run();

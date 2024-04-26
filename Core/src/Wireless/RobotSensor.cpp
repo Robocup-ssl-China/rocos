@@ -27,9 +27,9 @@ void CRobotSensor::Update(const CVisionModule* pVision){
             robotMsg[i]._mutex.unlock();
         }
         for(int i=0;i<DATA_SIZE;i++){
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * i),fmt::format("{:6s}: ",text[i]),COLOR_GRAY,0,FONT_SIZE);
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X+DEBUG_TEXT_LENGTH,DEBUG_Y + DEBUG_Y_STEP * i),msgs[i],COLOR_GRAY,0,FONT_SIZE);
-            GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(DEBUG_X+DEBUG_TEXT_LENGTH,DEBUG_Y + DEBUG_Y_STEP * i),msgs2[i],COLOR_GREEN,0,FONT_SIZE);
+            GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * i),fmt::format("{:6s}: ",text[i]),COLOR_GRAY,0,FONT_SIZE);
+            GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(DEBUG_X+DEBUG_TEXT_LENGTH,DEBUG_Y + DEBUG_Y_STEP * i),msgs[i],COLOR_GRAY,0,FONT_SIZE);
+            GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(DEBUG_X+DEBUG_TEXT_LENGTH,DEBUG_Y + DEBUG_Y_STEP * i),msgs2[i],COLOR_GREEN,0,FONT_SIZE);
         }
     }
     for(int i=0;i<PARAM::Field::MAX_PLAYER;i++){

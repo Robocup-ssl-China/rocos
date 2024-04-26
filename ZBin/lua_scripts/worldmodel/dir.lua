@@ -90,7 +90,7 @@ function evaluateTouch(p)
 	end
 	return function (role)
 		if type(role) == "string" then
-			role = gRoleNum[role]
+			role = gSubPlay.getRoleNum(role)
 		elseif type(role) == "number" and
 			role >= 1 and role <= param.maxPlayer then
 			role = role
@@ -267,12 +267,6 @@ end
 
 function sideBackDir()
 	return (pos.sideBackPos()- pos.ourGoal()):dir()
-end
-
-function getTandemDir(role)
-	return function ()
-		return world:getTandemDir(gRoleNum[role])
-	end
 end
 
 function reflectDir(d)

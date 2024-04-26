@@ -38,7 +38,7 @@ public:
 	/// <param name="num">  	Specified vehicle. </param>
 	/// <param name="power">	Specified kick power. </param>
 
-	void setKick(int num, double power) { _normal[num] = power; _chip[num] = _pass[num] = 0; _kicker = num; _needKick[num] = true; }
+	void setKick(int num, double power) { _normal[num] = power; _chip[num] = 0; _kicker = num; _needKick[num] = true; }
 
 	/// <summary>	Sets chip kick. </summary>
 	///
@@ -48,32 +48,24 @@ public:
 	/// <param name="power">	Specified kick power. </param>
 
 	void setChipKick(int num, double power) { 
-		_normal[num] = _pass[num] = 0;
+		_normal[num] = 0;
 		_chip[num] = power;
 		_kicker = num; 
 		_needKick[num] = true; 
 	}
 
-	/// <summary>	Sets both kick. </summary>
-	///
-	/// <remarks>	cliffyin, 2011/7/25. </remarks>
-	///
-	/// <param name="num"> 	Specified vehicle. </param>
-	/// <param name="kick">	The kick distance. </param>
-	/// <param name="chip">	The chip distance. </param>
-
-	void setBothKick(int num, double kick, double chip) { _normal[num] = kick; _chip[num] = chip; _pass[num] = 0; _kicker = num; _needKick[num] = true; }
-
-	/// <summary>	Sets all kick. </summary>
-	///
-	/// <remarks>	cliffyin, 2011/7/25. </remarks>
-	///
-	/// <param name="num"> 	Specified vehicle. </param>
-	/// <param name="kick">	The kick power. </param>
-	/// <param name="chip">	The chip distance. </param>
-	/// <param name="pass">	The pass distance. </param>
-
-	void setAllKick(int num, double kick, double chip, double pass) { _normal[num] = kick; _chip[num] = chip; _pass[num] = pass; _kicker = num; _needKick[num] = true; }
+	// kick_mode: false for flat kick, true for chip kick
+	void setDirectKick(int num, bool kick_mode, double power, bool no_calibration = false, double direct_kick_power = 0){
+		_normal[num] = kick_mode ? 0 : power;
+		_chip[num] = kick_mode ? power : 0;
+		_kicker = num;
+		_needKick[num] = true;
+		// use for kick collect calibration data
+		_direct_kick_no_calibration[num] = no_calibration;
+		_direct_kick_power[num] = direct_kick_power;
+	}
+	bool isDirectKickNoCalibration(int num) const { return _direct_kick_no_calibration[num]; }
+	double getDirectKickPower(int num) const { return _direct_kick_power[num]; }
 
 	/// <summary>	Check If Need kick. </summary>
 	///
@@ -101,14 +93,6 @@ public:
 
 	double getChipKickDist(int num) const { return _chip[num]; }
 
-	/// <summary>	Gets the pass distance. </summary>
-	///
-	/// <remarks>	cliffyin, 2011/7/25. </remarks>
-	///
-	/// <returns>	The pass distance. </returns>
-
-	double getPassDist(int num) const { return _pass[num]; }
-
 	/// <summary>	Gets the kiker. </summary>
 	///
 	/// <remarks>	cliffyin, 2011/7/25. </remarks>
@@ -127,7 +111,8 @@ public:
 			_needKick[vecNum] = false;
 			_normal[vecNum] = 0;
 			_chip[vecNum] = 0;
-			_pass[vecNum] = 0;
+			_direct_kick_no_calibration[vecNum] = false;
+			_direct_kick_power[vecNum] = 0;
 		}
 		_forceClose = false;
 		_forceCloseCycle = 0;
@@ -159,11 +144,11 @@ private:
 	/// <summary> The chip kick distance </summary>
 	double _chip[PARAM::Field::MAX_PLAYER];		// 挑球的距离
 
-	/// <summary> The pass kick distance</summary>
-	double _pass[PARAM::Field::MAX_PLAYER];		// 传球的距离
-
 	/// <summary> Need kick flag </summary>
 	bool _needKick[PARAM::Field::MAX_PLAYER];
+
+	bool _direct_kick_no_calibration[PARAM::Field::MAX_PLAYER];
+	double _direct_kick_power[PARAM::Field::MAX_PLAYER];
 
 	bool _forceClose;
 

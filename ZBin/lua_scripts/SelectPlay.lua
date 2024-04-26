@@ -158,27 +158,9 @@ end
 
 gLastPlay = gCurrentPlay
 gNextPlay = ""
-debugEngine:gui_debug_msg(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2+200),gCurrentPlay)
+debugEngine:gui_debug_msg_fix(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2+200),gCurrentPlay)
 RunPlay(gCurrentPlay)
 gLastTask = gRoleTask
 gRoleTask = {}
--- local stateFile=io.open(".\\LOG\\"..gStateFileNameString..".txt","a")
--- if not stateFile then
--- 	print("-------- Can't create LOG FILE !!!!!!!!!!!!! --------")
--- end
--- stateFile:write(vision:getCycle().." "..gCurrentState.." "..gCurrentPlay.." me:"..skillUtils:getOurBestPlayer()
--- 	.." he:"..skillUtils:getTheirBestPlayer().."\n")
--- stateFile:close()
 
---print( world:getSuitSider())
---print("vel"..enemy.vel(skillUtils:getTheirGoalie()):y()*2)
---print(skillUtils:getTheirGoalie())
---print("hello",skillUtils:getOurBestPlayer())
---print(gCurrentState,vision:getCycle())
---print("ball",ball.posX(),ball.valid())
---print("raw",vision:rawBall():X(),vision:rawBall():Valid())
---print(vision:getBallVelStable(),vision:ballVelValid())
-debugEngine:gui_debug_msg(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2),gCurrentState)
---world:drawReflect(gRoleNum["Tier"])
---defenceInfo:setNoChangeFlag()
---print(vision:getCycle()..vision:getCurrentRefereeMsg(),vision:gameState():gameOn())
+debugEngine:gui_debug_msg_fix(CGeoPoint:new_local(-param.pitchLength*2/5, param.pitchWidth/2),gCurrentState)

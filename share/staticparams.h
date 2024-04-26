@@ -12,7 +12,6 @@ namespace PARAM {
     const int BLUE = 0;
     const int YELLOW = 1;
     const int BALLMERGEDISTANCE = 0;
-    const int ROBOTMERGEDOSTANCE = 100;
     const int TEAMS = 2;
 
     namespace Field{
@@ -26,33 +25,30 @@ namespace PARAM {
         const double BALL_DECAY = -0.8; // 阻力对球的加速度和速度成正比,单位为 /s
         /* Player */
         const double MAX_PLAYER_SIZE = 180;
-        const double PITCH_LENGTH = 9000;                 // 场地长
-        const double PITCH_WIDTH = 6000;                  // 场地宽
+
+        extern const double PITCH_LENGTH;                 // 场地长
+        extern const double PITCH_WIDTH;                  // 场地宽
+        extern const double PENALTY_AREA_WIDTH;           // rectangle禁区宽度
+        extern const double PENALTY_AREA_DEPTH;            // rectangle禁区深度
+        extern const double GOAL_WIDTH;
+        extern const double GOAL_DEPTH;
+
         const double PITCH_MARGIN = 10;                   // 边界宽度
         const double CENTER_CIRCLE_R = 500;               // 中圈半径
 
         const double GOAL_POST_AVOID_LENGTH = 20;         //伸进场地内门柱的避障长度
         const double GOAL_POST_THICKNESS = 20;           //门柱宽度
-        const bool   IF_USE_ELLIPSE = false;             // whether use ellipse penalty
-        const double PENALTY_AREA_WIDTH = 2000;           // rectangle禁区宽度
-        const double PENALTY_AREA_DEPTH = 1000;            // rectangle禁区深度
-        const double PENALTY_AREA_R = 800;               // ellipse penalty 两个圆弧
-        const double PENALTY_AREA_L = 350;          // ellipse penalty 连接两个圆弧的线段
-        const double PENALTY_L = 500;						//代替PENALTY_AREA_L
+
         const double PENALTY_MARK_X = 4800;               // 点球点的X坐标
         const double OUTER_PENALTY_AREA_WIDTH = 1950;     // 外围禁区宽度(界外开球时不能站在该线内)
         const double FREE_KICK_AVOID_BALL_DIST = 500;     // 开任意球的时候,对方必须离球这么远
-    //  const double FIELD_WALL_DIST = 20;               // 场地护栏到边界的距离
-        const double GOAL_WIDTH = 1000;
-        const double GOAL_DEPTH = 200;
-        const double RATIO = 1.5;
     }
     namespace Rule{
         const int Version = 2019; // 规则的版本/年份
         const double MaxDribbleDist = 500; // 最大带球距离, 0代表没有限制
     }
     namespace Vision{
-        const double FRAME_RATE = 61;
+        const double FRAME_RATE = 73;
     }
     namespace Latency{
         // 下面分开的部分是给server作仿真用的
@@ -70,44 +66,16 @@ namespace PARAM {
             const double PLAYER_FRONT_TO_CENTER = 80.0;
             const double PLAYER_CENTER_TO_BALL_CENTER = 93;
             const double KICK_ANGLE = PARAM::Math::PI*30/180; // 可以击球的最大相对身体角度
-            const double DRIBBLE_SIZE = PLAYER_FRONT_TO_CENTER + PARAM::Field::BALL_SIZE; // 带球时离球的距离
             const double DRIBBLE_ANGLE = PARAM::Math::PI*17/180; // 可以带球的最大相对身体角度
             const double HEAD_ANGLE = 57*PARAM::Math::PI/180; // 前面的开口角度
-            //const double TOUCH_SHIFT_DIST = 10.06;		// Touch时后退的距离
-            const double TOUCH_SHIFT_DIST = 93;
         }
     }
     namespace AvoidDist{
         //避障所用参数
-        //const double TEAMMATE_AVOID_DIST =  PARAM::Field::MAX_PLAYER_SIZE/2+15.0f; // 厘米 12
         const double TEAMMATE_AVOID_DIST = PARAM::Vehicle::V2::PLAYER_SIZE*3;
         const double OPP_AVOID_DIST = PARAM::Field::MAX_PLAYER_SIZE; // 厘米 18
         const double BALL_AVOID_DIST = PARAM::Field::BALL_SIZE/2+20.0; // 厘米3
-        const double DEFENDKICK_MARKING_DIST = 65;
     }
-    #ifdef _WIN32
-    namespace File{
-        const std::string DataDir = "data\\";
-        const char* const ParamDir = "params\\";
-        const std::string RobotPosFilterDir = "vision\\Robot_Param\\Pos\\";
-        const std::string RobotRotFilterDir = "vision\\Robot_Param\\Rotation\\";
-        const std::string BallFilterDir = "vision\\Ball_Param\\";
-        const std::string PlayBookPath = "play_books\\";
-        const std::string CBayesReader_SCRIPT_PATH = "params\\GameFilterParam\\";
-        const std::string OppConfigPath = "defence_config\\";
-    }
-    #else // not windows
-    namespace File{
-        const std::string DataDir = "data/";
-        const char* const ParamDir = "params/";
-        const std::string RobotPosFilterDir = "vision/Robot_Param/Pos/";
-        const std::string RobotRotFilterDir = "vision/Robot_Param/Rotation/";
-        const std::string BallFilterDir = "vision/Ball_Param/";
-        const std::string PlayBookPath = "play_books/";
-        const std::string CBayesReader_SCRIPT_PATH = "params/GameFilterParam/";
-        const std::string OppConfigPath = "defence_config/";
-    }
-    #endif
 }
 namespace ZSS {
     const QString ZSS_ADDRESS = "233.233.233.233";

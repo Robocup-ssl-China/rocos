@@ -58,7 +58,9 @@ class CGlobalData {
     bool ctrlC;
     QMutex ctrlCMutex;
 
-  private:
+    void CameraInit();
+
+private:
     CGeoPoint saoConvert(CGeoPoint);
     void  saoConvertEdge();
     int saoAction;

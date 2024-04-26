@@ -1,0 +1,7 @@
+$#include <WorldDefine.h>
+class CBallSpeedModel
+{
+	double timeForDist(const double dist);
+	CVector speedForDist(const double dist);
+	ObjectPoseT poseForTime(const double time);
+};

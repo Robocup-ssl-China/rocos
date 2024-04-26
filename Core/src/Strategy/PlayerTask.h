@@ -5,6 +5,7 @@
 * 这个类表示队员的各种任务，包括带球，传球，跑位，面向，拦截，卡位等
 * 这个类的执行结果是产3系列基本动作
 */
+#include <memory>
 #include <PlayerCommand.h>
 #include <misc_types.h>
 #include <string>

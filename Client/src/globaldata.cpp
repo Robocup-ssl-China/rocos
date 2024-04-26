@@ -98,48 +98,19 @@ void CGlobalData::saoConvertEdge() {
 void CGlobalData::setCameraMatrix(bool real) {
     zpm->loadParam(saoAction, "Alert/SaoAction", 0);
     if (real) {
-        /*
-        //NEED CHANGE IN CANADA
-        for (int i = 0; i < PARAM::CAMERA; i++) {
-            double x, y;
-            vpm->loadParam(x, "Camera" + QString::number(i) + "CenterX", 0);
-            vpm->loadParam(y, "Camera" + QString::number(i) + "CenterY", 0);
-            cameraMatrix[i].fillCenter(saoConvert(CGeoPoint(x, y)));
+        for (int i = 0; i < PARAM::CAMERA; i++)
+        {
+            cameraMatrix[i].fillCenter((CGeoPoint(0.0, 0.0)));
+            cameraMatrix[i].leftedge.min = 0;
+            cameraMatrix[i].leftedge.max = 0;
+            cameraMatrix[i].rightedge.min = 0;
+            cameraMatrix[i].rightedge.max = 0;
+            cameraMatrix[i].downedge.min = 0;
+            cameraMatrix[i].downedge.max = 0;
+            cameraMatrix[i].upedge.min = 0;
+            cameraMatrix[i].upedge.max = 0;
         }
-
-        cameraMatrix[0].fillCenter(saoConvert(CGeoPoint(2410,1579)));//(-4500,2250);
-        cameraMatrix[1].fillCenter(saoConvert(CGeoPoint(2162,-1529)));//(-1500,2250);
-        cameraMatrix[2].fillCenter(saoConvert(CGeoPoint(-2195,-1404)));//(1500,2250);
-        cameraMatrix[3].fillCenter(saoConvert(CGeoPoint(-2310,1477)));//(4500,2250);
-        //        cameraMatrix[4].fillCenter(saoConvert(CGeoPoint(-4500,-2250)));
-        //        cameraMatrix[5].fillCenter(saoConvert(CGeoPoint(-1500,-2250)));
-        //        cameraMatrix[6].fillCenter(saoConvert(CGeoPoint(1500,-2250)));
-        //        cameraMatrix[7].fillCenter(saoConvert(CGeoPoint(4500,-2250)));
-        for (int i = 0; i < PARAM::CAMERA; i++) {
-            vpm->loadParam(cameraMatrix[i].leftedge.min,    "Camera" + QString::number(i) + "Leftmin",	cameraMatrix[i].campos.x());
-            vpm->loadParam(cameraMatrix[i].leftedge.max,    "Camera" + QString::number(i) + "Leftmax",	cameraMatrix[i].campos.x());
-            vpm->loadParam(cameraMatrix[i].rightedge.min,   "Camera" + QString::number(i) + "Rightmin",	cameraMatrix[i].campos.x());
-            vpm->loadParam(cameraMatrix[i].rightedge.max,   "Camera" + QString::number(i) + "Rightmax",	cameraMatrix[i].campos.x());
-            vpm->loadParam(cameraMatrix[i].upedge.min,      "Camera" + QString::number(i) + "Upmin",	cameraMatrix[i].campos.y());
-            vpm->loadParam(cameraMatrix[i].upedge.max,      "Camera" + QString::number(i) + "Upmax",	cameraMatrix[i].campos.y());
-            vpm->loadParam(cameraMatrix[i].downedge.min,    "Camera" + QString::number(i) + "Downmin",	cameraMatrix[i].campos.y());
-            vpm->loadParam(cameraMatrix[i].downedge.max,    "Camera" + QString::number(i) + "Downmax",	cameraMatrix[i].campos.y());
-        }
-        saoConvertEdge();
-        */
-        cameraMatrix[0].fillCenter(saoConvert(CGeoPoint(-3170, 0)));
-        cameraMatrix[1].fillCenter(saoConvert(CGeoPoint(3000, 0))); //(-4500,2250);
-
-        for (int i = 0; i < PARAM::CAMERA; i = i + 1) {
-            cameraMatrix[i].leftedge.min = cameraMatrix[i].campos.x() - 2800;
-            cameraMatrix[i].leftedge.max = cameraMatrix[i].campos.x() - 3400;
-            cameraMatrix[i].rightedge.min = cameraMatrix[i].campos.x() + 2800;
-            cameraMatrix[i].rightedge.max = cameraMatrix[i].campos.x() + 3400;
-            cameraMatrix[i].downedge.min = cameraMatrix[i].campos.y() - 4800;
-            cameraMatrix[i].downedge.max = cameraMatrix[i].campos.y() - 4800;
-            cameraMatrix[i].upedge.min = cameraMatrix[i].campos.y() + 4900;
-            cameraMatrix[i].upedge.max = cameraMatrix[i].campos.y() + 4900;
-        }
+        CameraInit();
     } else {            //for Sim
         cameraMatrix[0].fillCenter(saoConvert(CGeoPoint(2410, 1579))); //(-4500,2250);
         cameraMatrix[1].fillCenter(saoConvert(CGeoPoint(2162, -1529))); //(-1500,2250);
@@ -165,5 +136,20 @@ void CGlobalData::setCameraMatrix(bool real) {
             cameraMatrix[i].upedge.min = cameraMatrix[i].campos.y() + 2550;
             cameraMatrix[i].upedge.max = cameraMatrix[i].campos.y() + 2250;
         }
+    }
+}
+
+void CGlobalData::CameraInit()
+{
+    for (int i = 0; i < PARAM::CAMERA; i++)
+    {
+        cameraMatrix[i].leftedge.min = 0;
+        cameraMatrix[i].leftedge.max = 0;
+        cameraMatrix[i].rightedge.min = 0;
+        cameraMatrix[i].rightedge.max = 0;
+        cameraMatrix[i].downedge.min = 0;
+        cameraMatrix[i].downedge.max = 0;
+        cameraMatrix[i].upedge.min = 0;
+        cameraMatrix[i].upedge.max = 0;
     }
 }

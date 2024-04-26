@@ -254,12 +254,6 @@ function theirBestPlayer()
 	return enemy.pos(oppNum)
 end
 
-function getTandemPos(role)
-	return function ()
-		return world:getTandemPos(gRoleNum[role])
-	end
-end
-
 -- x, y分别为相对于球的偏移量, yys 2014-06-11
 function reflectPos(x, y)
 	return function ()
@@ -269,19 +263,6 @@ function reflectPos(x, y)
 		if ball.posY()>=0 then 
 			return (ball.refSyntYPos(CGeoPoint:new_local(ball.posX() + x, math.abs(ball.posY()) + y )))()	
 		end
-	end
-end
-
-function reflectPassPos(role)
-	return function ()
-		return world:getReflectPos(gRoleNum[role])
-	end
-end
-
--- y表示在距离中线多远的地方做touch, yys 2014-06-20
-function reflectTouchPos(role, y)
-	return function ()
-		return world:getReflectTouchPos(gRoleNum[role], y)
 	end
 end
 

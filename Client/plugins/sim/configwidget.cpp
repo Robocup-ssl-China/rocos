@@ -1,6 +1,7 @@
 #include "configwidget.h"
 namespace{
     auto ppm = ZSS::pm::instance();
+    auto zpm = ZSS::ZParamManager::instance();
 }
 //#define END_ENUM(parents, name) \
 //    parents->addChild(v_##name);
@@ -15,24 +16,26 @@ namespace{
 #define ADD_VALUE(parent,type,name,defaultvalue,namestring) \
     ppm->loadParam(v_##name,#parent"/"#name,defaultvalue);
 
+#define ADD_CLIENT_VALUE(parent, type, name, defaultvalue, namestring, ratio) \
+    v_##name = zpm->value(#parent "/" #namestring, QVariant(ratio * defaultvalue)).to##type() / ratio;
 
 ConfigWidget::ConfigWidget()
 {
     ADD_VALUE(game_vars,Int,Robots_Count, 16, "Robots Count")
     ADD_VALUE(field_vars,Double,Field_Line_Width,0.020,"Line Thickness")
-    ADD_VALUE(field_vars,Double,Field_Length,9.000,"Length")
-    ADD_VALUE(field_vars,Double,Field_Width,6.000,"Width")
+    ADD_CLIENT_VALUE(field,Double,Field_Length,9.000,width, 1000.0)
+    ADD_CLIENT_VALUE(field,Double,Field_Width,6.000,height, 1000.0)
     ADD_VALUE(field_vars,Double,Field_Rad,0.500,"Radius")
     ADD_VALUE(field_vars,Double,Field_Free_Kick,0.700,"Free Kick Distanse From Defense Area")
-    ADD_VALUE(field_vars,Double,Field_Penalty_Width,2.0,"Penalty width")
-    ADD_VALUE(field_vars,Double,Field_Penalty_Depth,1.0,"Penalty depth")
+    ADD_CLIENT_VALUE(field,Double,Field_Penalty_Width,2.0,penaltyLength, 1000.0)
+    ADD_CLIENT_VALUE(field,Double,Field_Penalty_Depth,1.0,penaltyWidth, 1000.0)
     ADD_VALUE(field_vars,Double,Field_Penalty_Point,1.0,"Penalty point")
     ADD_VALUE(field_vars,Double,Field_Margin,0.4,"Margin")
     ADD_VALUE(field_vars,Double,Field_Referee_Margin,0.0,"Referee margin")
     ADD_VALUE(field_vars,Double,Wall_Thickness,0.050,"Wall thickness")
     ADD_VALUE(field_vars,Double,Goal_Thickness,0.020,"Goal thickness")
-    ADD_VALUE(field_vars,Double,Goal_Depth,0.200,"Goal depth")
-    ADD_VALUE(field_vars,Double,Goal_Width,1.000,"Goal width")
+    ADD_CLIENT_VALUE(field,Double,Goal_Depth,0.200,goalDepth, 1000.0)
+    ADD_CLIENT_VALUE(field,Double,Goal_Width,1.000,goalWidth, 1000.0)
     ADD_VALUE(field_vars,Double,Goal_Height,0.160,"Goal height")
     ADD_VALUE(field_vars,Double,overlap,0.20,"Camera Overlap")
 

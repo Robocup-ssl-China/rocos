@@ -91,7 +91,7 @@ void Interaction::showIfEdgeTest() {
     std::cout << VisionModule::instance()->showIfEdgeTest() << std::endl;
 }
 void Interaction::setVision(bool needStart, bool real) {
-    ZSS::ZActionModule::instance()->setSimulation(!real);
+    // ZSS::ZActionModule::instance()->setSimulation(!real);
     if (needStart) {
         ZSS::ZParamManager::instance()->changeParam("Alert/IsSimulation", !real);
         ZCommunicator::instance()->reloadSimulation();
@@ -116,11 +116,12 @@ bool Interaction::connectRadio(bool sw, int id, int frq) {
     if(sw) {
         ZCommunicator::instance()->disconnectMedusa(id);
         ZCommunicator::instance()->connectMedusa(id);
-        ZSS::ZActionModule::instance()->disconnectRadio(id);
-        return ZSS::ZActionModule::instance()->connectRadio(id, frq);
+        // ZSS::ZActionModule::instance()->disconnectRadio(id);
+        // return ZSS::ZActionModule::instance()->connectRadio(id, frq);
     } else {
 //        return ZSS::ZActionModule::instance()->disconnectRadio(id);
     }
+    return false;
 }
 bool Interaction::connectSim(bool sw, int id, bool color) {
     if(sw) {
@@ -383,13 +384,13 @@ int Interaction::getFrequency(){
     return ZSS::NActionModule::instance()->getFrequency();
 }
 void Interaction::changeAddress(int team, int index){
-    ZSS::ZActionModule::instance()->changeAddress(team,index);
+    // ZSS::ZActionModule::instance()->changeAddress(team,index);
 }
 QStringList Interaction::getAllAddress(){
-    return ZSS::ZActionModule::instance()->getAllAddress();
+    // return ZSS::ZActionModule::instance()->getAllAddress();
 }
 QString Interaction::getRealAddress(int index){
-    return ZSS::ZActionModule::instance()->getRealAddress(index);
+    // return ZSS::ZActionModule::instance()->getRealAddress(index);
 };
 
 void Interaction::updateTestScriptList(){

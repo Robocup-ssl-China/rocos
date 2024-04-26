@@ -31,7 +31,7 @@ class CGDebugEngine{
 public:
     CGDebugEngine();
     ~CGDebugEngine();
-    void gui_debug_x(const CGeoPoint& p, int debug_color = 1,int RGB_value=0);
+    void gui_debug_x(const CGeoPoint& p, int debug_color = 1,int RGB_value=0, const int size = 60 /*mm*/);
     void gui_debug_points(const std::vector<CGeoPoint> points, int debug_color = 1,int RGB_value=0);
     void gui_debug_line(const CGeoPoint& p1, const CGeoPoint& p2, int debug_color = 1,int RGB_value=0);
     void gui_debug_arc(const CGeoPoint& p, double r, double start_angle, double span_angle, int debug_color = 1, int RGB_value=0);

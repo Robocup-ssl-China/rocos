@@ -120,7 +120,6 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     CGeoPoint target = task().player.pos;							// 目标的位置
     playerFlag = task().player.flag;
     const bool needBreakRotate = (playerFlag & PlayerStatus::BREAK_THROUGH);
-    nonZeroMode mode =  FAST;
     const bool isBack = (vecNumber == TaskMediator::Instance()->leftBack()) ||
                          (vecNumber == TaskMediator::Instance()->rightBack()) ||
                         (vecNumber == TaskMediator::Instance()->singleBack()) ||
@@ -151,9 +150,6 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     bool ignoreNotStop = false;
     target = avoidPenaltyArea(pVision, vecPos, target, avoidLength, vecNumber);
 
-    // 记录当前的规划执行目标点
-    GDebugEngine::Instance()->gui_debug_x(target, TASK_TARGET_COLOR);
-    GDebugEngine::Instance()->gui_debug_line(self.Pos(), target, TASK_TARGET_COLOR);
     if(task().player.vel.mod() > 1e-8) {
         GDebugEngine::Instance()->gui_debug_line(target, target + task().player.vel / 10, COLOR_WHITE);
     }
@@ -185,12 +181,18 @@ CPlayerCommand* CGotoPositionV2::execute(const CVisionModule* pVision)
     final.SetDir((playerFlag & (PlayerStatus::TURN_AROUND_FRONT)) ? self.Dir() : task().player.angle);
     final.SetVel(task().player.vel);
     final.SetRotVel(task().player.rotvel);
+
+    // 记录当前的规划执行目标点
+    GDebugEngine::Instance()->gui_debug_x(final.Pos(), TASK_TARGET_COLOR, 0, 20);
+    GDebugEngine::Instance()->gui_debug_line(target, target+Utils::Polar2Vector(100,final.Dir()), TASK_TARGET_COLOR);
+    GDebugEngine::Instance()->gui_debug_line(self.Pos(), target, TASK_TARGET_COLOR);
+
     /// 调用控制方法
     CControlModel control;
     float usedtime = target.dist(self.Pos()) / capability.maxSpeed / 1.414;	// 单位：秒
 
     /// 进行轨迹生成并记录理想执行时间
-    control.makeCmTrajectory(self, final, capability, mode);					// CMU 非零速到点
+    control.makeCmTrajectory(self, final, capability);					// CMU 非零速到点
 
     const double time_factor = 1.5;
 

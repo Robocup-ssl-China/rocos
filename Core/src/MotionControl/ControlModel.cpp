@@ -21,8 +21,6 @@
 #include <cornell/Trajectory.h>				// for Cornell BangBang
 #include <cornell/TrajectorySupport.h>
 
-#include <TrapezoidalVelTrajectory.h>
-#include <noneTrapzodalVelTrajectory.h>
 #include <CMmotion.h>
 #include <parammanager.h>
 
@@ -64,11 +62,11 @@ void CControlModel::makeZeroFinalVelocityTheta(const PlayerPoseT& start, const P
 //}
 
 /// Trapezoidal control from CMU : none-zero final velocity trajectory
-void CControlModel::makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability, nonZeroMode mode)
+void CControlModel::makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
 {
     _pathList.clear();
     double accel_factor = 1.5;
-    double angle_accel_factor = 6.5;
+    double angle_accel_factor = 5.5;
     if(IS_SIMULATION) {
         accel_factor = 1.0;
         angle_accel_factor = 1.0;
@@ -77,126 +75,20 @@ void CControlModel::makeCmTrajectory(const PlayerPoseT& start, const PlayerPoseT
     //cout << "ControlModel"<< endl;
     //cout << start.X()<<" "<<start.Y()<<" "<<start.Vel().mod()<<" "<<start.RotVel()<< endl;
     //cout << final.X() << " " << final.Y() << " " << final.Vel().mod() << endl;
-    goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep, mode);
+    goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep);
 }
 
-/// Trapezoidal control from ZJU : zero final velocity trajectory
-void CControlModel::makeTrapezoidalVelocityPath(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
+void CControlModel::makeNewCmTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
 {
     _pathList.clear();
-    trapezoidalVelocityPath(start,final,PARAM::Vision::FRAME_RATE,capability,_nextStep,_pathList);
+    double accel_factor = 1.5;
+    double angle_accel_factor = 1.5;
+    if(IS_SIMULATION) {
+        accel_factor = 1.0;
+        angle_accel_factor = 1.0;
+    }
+    __new_goto_point_omni(start,final,capability,accel_factor,angle_accel_factor,_nextStep);
 }
-
-/// Trapezoidal control from ZJU : none-zero final velocity trajectory
-void CControlModel::makeNoneTrapezoidalVelocityPath(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability)
-{
-    _pathList.clear();
-    nonetrapezoidalVelocityPath(start,final,PARAM::Vision::FRAME_RATE,capability,_nextStep,_pathList);
-}
-
-/// Parameterized control from ZJU : diff-omni zero final velocity trajectory
-//void CControlModel::makePTGTrajectory(const PlayerPoseT& start, const PlayerPoseT& final, const PlayerCapabilityT& capability, PTG_CTRL_MODE mode)
-//{
-//	// Initialize
-//	CONTROL_MODULE->Initialize();
-//	CONTROL_MODULE->ResetMCState();
-//
-//	// Two boundary
-//	P_State initial_state;
-//	P_State final_state;
-//
-//	static double cmd_v = 0.0;
-//	static double cmd_w = 0.0;
-//
-//	if (DIFF == mode) {
-//		// start
-//		initial_state.x = start.X();
-//		initial_state.y = start.Y();
-//		initial_state.theta = start.Dir();			// 规划的初始朝向为当前车的朝向
-//		initial_state.v = start.Vel().mod();
-//		initial_state.w = start.RotVel();
-//		// final
-//		final_state.x = final.X();
-//		final_state.y = final.Y();
-//		final_state.theta = final.Dir();
-//		final_state.v = final.Vel().mod();
-//		final_state.w = final.RotVel();
-//
-//		CONTROL_MODULE->SetTransitionSpeed(initial_state.v);
-//		CONTROL_MODULE->SetRotationalSpeed(initial_state.w);
-//		CONTROL_MODULE->GenerateMoveCmd(initial_state,final_state);
-//
-//		// get result
-//		bool isFailed = CONTROL_MODULE->IS_Generate_PTG_Failed();
-//		P_PathList _ptg_pathlist = CONTROL_MODULE->GetPathList();
-//
-//		_pathList.clear();
-//		for (size_t i = 0 ; i < _ptg_pathlist.size(); i ++) {
-//			vector<double>  storeData;
-//			storeData.push_back(_ptg_pathlist[i].x);
-//			storeData.push_back(_ptg_pathlist[i].y);
-//			storeData.push_back(_ptg_pathlist[i].theta);
-//			storeData.push_back(_ptg_pathlist[i].v);
-//			storeData.push_back(_ptg_pathlist[i].w);
-//			storeData.push_back(_ptg_pathlist[i].a);
-//			_pathList.push_back(storeData);
-//		}
-//
-//		cmd_v = CONTROL_MODULE->GetTransitionSpeed();
-//		cmd_w = CONTROL_MODULE->GetRotationalSpeed();
-//
-//		_nextStep.SetVel(Utils::Polar2Vector(cmd_v,start.Dir()));
-//		_nextStep.SetRotVel(cmd_w);
-//
-//	} else if (OMNI == mode) {
-//		initial_state.x = start.X();
-//		initial_state.y = start.Y();
-//		initial_state.theta = start.Vel().dir();		// 规划的初始朝向为当前车速度的方向
-//		initial_state.v = start.Vel().mod();
-//		initial_state.w = start.RotVel();
-//
-//		if (fabs(initial_state.v) < 10) {
-//			initial_state.theta = (final.Pos() - start.Pos()).dir();
-//			initial_state.v = 10;
-//		}
-//
-//		final_state.x = final.X();
-//		final_state.y = final.Y();
-//		final_state.theta = final.Dir();
-//		final_state.v = final.Vel().mod();
-//		final_state.w = final.RotVel();
-//
-//		CONTROL_MODULE->SetTransitionSpeed(initial_state.v);
-//		CONTROL_MODULE->SetRotationalSpeed(initial_state.w);
-//		CONTROL_MODULE->GenerateMoveCmd(initial_state,final_state);
-//
-//		// get result
-//		bool isFailed = CONTROL_MODULE->IS_Generate_PTG_Failed();
-//		P_PathList _ptg_pathlist = CONTROL_MODULE->GetPathList();
-//
-//		_pathList.clear();
-//		for (size_t i = 0 ; i < _ptg_pathlist.size(); i ++) {
-//			vector<double>  storeData;
-//			storeData.push_back(_ptg_pathlist[i].x);
-//			storeData.push_back(_ptg_pathlist[i].y);
-//			storeData.push_back(_ptg_pathlist[i].theta);
-//			storeData.push_back(_ptg_pathlist[i].v);
-//			storeData.push_back(_ptg_pathlist[i].w);
-//			storeData.push_back(_ptg_pathlist[i].a);
-//			_pathList.push_back(storeData);
-//		}
-//
-//
-//		cmd_v = CONTROL_MODULE->GetTransitionSpeed();
-//		cmd_w = CONTROL_MODULE->GetRotationalSpeed();
-//
-//		_nextStep.SetVel(Utils::Polar2Vector(cmd_v,Utils::Normalize(initial_state.theta+cmd_w*1.0/60)));
-//		_nextStep.SetRotVel(1.0*cmd_w);
-//
-//	}
-//
-//	return ;
-//}
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

@@ -49,7 +49,7 @@ private:
 	const COptionModule* _pOption;
 	PlayerVisionT me;
 	PlayerVisionT he;
-	MobileVisionT ball;
+	ObjectPoseT ball;
 
 
 /************************************************** WorldModel_con ***************************************************/

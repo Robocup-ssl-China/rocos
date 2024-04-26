@@ -11,7 +11,6 @@ function Touch(task)
 		task_param.executor = runner
 		task_param.player.pos = mpos
 		task_param.is_specify_ctrl_method = useInter
-		-- return CTouch(runner, mpos:x(), mpos:y(), useInter)
 		return skillapi:run("Touch", task_param)
 	end
 

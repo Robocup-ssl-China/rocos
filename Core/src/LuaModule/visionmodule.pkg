@@ -17,10 +17,10 @@ class CVisionModule{
 	const PlayerVisionT& allPlayer(int num) const;
 	const PlayerVisionT& ourPlayer(int num) const;
 	const PlayerVisionT& theirPlayer(int num) const;
-	const MobileVisionT& ball() const;
+	const ObjectPoseT& ball() const;
 	const PlayerVisionT& ourPlayer(int cycle, int num) const;
 	const PlayerVisionT& theirPlayer(int cycle, int num) const;
-	const MobileVisionT& ball(int cycle) const;
+	const ObjectPoseT& ball(int cycle) const;
 	const ObjectPoseT& rawBall() const;
         const CGeoPoint& getBallPlacementPosition() const;
 	const RobotRawVisionData& ourRawPlayer(int num) const;
