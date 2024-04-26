@@ -35,6 +35,7 @@ namespace  {
     const double BALL_AVOID_DIST = PARAM::Field::BALL_SIZE + 5.0f;
     const float DEC_MAX = 450;
     const float ACCURATE_AVOID = 250;
+    bool USE_NEW_CAPSULE_OBS = ZSS::ZParamManager::instance()->value("CSmartGotoV2/USE_CAPSULE_OBS", QVariant(false)).toBool();
 }
 //====================================================================//
 //    Obstacle class implementation
@@ -410,7 +411,7 @@ void obstacles::addObs(const CVisionModule *pVision, const TaskT &task, bool dra
                         WorldModel::Instance()->CurrentRefereeMsg() == "OurTimeout"){
                     dist = PARAM::Vehicle::V2::PLAYER_SIZE;
                 }
-                auto move_dist = std::min(teammate.Vel().mod() * 0.5, 1000.0); // move for 0.5s
+                auto move_dist = USE_NEW_CAPSULE_OBS ? std::min(teammate.Vel().mod() * 0.5, 1000.0) : 0.0; // move for 0.5s
                 auto move_end = teammate.Pos() + Utils::Polar2Vector(move_dist, teammate.Vel().dir());
                 add_long_circle(vector2f(teammate.Pos().x(), teammate.Pos().y()), vector2f(move_end.x(),move_end.y()), vector2f(teammate.Vel().x(), teammate.Vel().y()), dist, 1, drawObs);
             }
@@ -425,7 +426,7 @@ void obstacles::addObs(const CVisionModule *pVision, const TaskT &task, bool dra
                 if((target.dist(opp.Pos()) < PARAM::Field::MAX_PLAYER_SIZE / 2) ) {
                     continue;
                 }
-                auto move_dist = std::min(opp.Vel().mod() * 0.5, 1000.0); // move for 0.5s
+                auto move_dist = USE_NEW_CAPSULE_OBS ? std::min(opp.Vel().mod() * 0.5, 1000.0) : 0.0; // move for 0.5s
                 auto move_end = opp.Pos() + Utils::Polar2Vector(move_dist, opp.Vel().dir());
                 add_long_circle(vector2f(opp.Pos().x(), opp.Pos().y()), vector2f(move_end.x(),move_end.y()), vector2f(opp.Vel().x(), opp.Vel().y()), oppAvoidDist, 1, drawObs);
             }
