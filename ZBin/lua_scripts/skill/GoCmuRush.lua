@@ -33,12 +33,12 @@ function GoCmuRush(task)
 
 		task_param = TaskT:new_local()
 		task_param.executor = runner
-		task_param.player.pos = mpos
+		task_param.player.pos = CGeoPoint(mpos)
 		task_param.player.angle = mdir
 		task_param.player.flag = mflag
 		task_param.ball.Sender = msender or 0
 		task_param.player.max_acceleration = macc or 0
-		task_param.player.vel = mvel
+		task_param.player.vel = CVector(mvel)
 		task_param.player.force_manual_set_running_param = mforce_maunal_set_running_param
 		-- return CGoCmuRush(runner, mpos:x(), mpos:y(), mdir, mflag, msender, macc, mrec, mvel:x(), mvel:y(), mspeed, mforce_maunal_set_running_param)
 		return skillapi:run("SmartGoto", task_param)

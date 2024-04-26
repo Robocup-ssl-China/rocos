@@ -43,7 +43,7 @@ function RunMultiPos(task)
 		
 		task_param = TaskT:new_local()
 		task_param.executor = runner
-		task_param.player.pos = mpos[curIndex]
+		task_param.player.pos = CGeoPoint(mpos[curIndex])
 		task_param.player.angle = mdir
 		task_param.player.flag = mflag
 		task_param.ball.Sender = msender or 0

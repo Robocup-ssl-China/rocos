@@ -9,7 +9,7 @@ function SimpleGoto(task)
 
 		task_param = TaskT:new_local()
 		task_param.executor = runner
-		task_param.player.pos = mpos
+		task_param.player.pos = CGeoPoint(mpos)
 		task_param.player.angle = mdir
 		task_param.player.flag = mflag
 		-- return SimpleGotoPos(runner, mpos:x(), mpos:y(), mdir, mflag)
