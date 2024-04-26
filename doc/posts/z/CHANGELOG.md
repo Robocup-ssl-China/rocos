@@ -1,7 +1,7 @@
 # Rocos 更新记录
 
 ## [**dev**](https://github.com/Robocup-ssl-China/rocos/tree/dev)
-## [**v0.0.3**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.3)（2024.2.26）
+## [**v0.0.3**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.3)（alpha:2024.2.26, stable:2024.4.26）
   * 可以直接在Client中配置TestScripts以及RefConfig
   * 战术包：用户可以创建独立文件夹作为战术包，战术包可以在自动被识别
   * 添加战术包中对裁判盒脚本跳转的支持
@@ -10,6 +10,10 @@
   * 删除无用的接口和类，简化调用流程
   * 添加Wiki支持，随工程一同更新
   * 在CMakeLists中添加对于tolua:pkg和proto文件的改动监测
+  * fix ISSUE
+    * [#7](https://github.com/Robocup-ssl-China/rocos/issues/7) 增加skillapi时引进的bug，在lua层对于const CGeoPoint的报错，暂修复
+    * [#8](https://github.com/Robocup-ssl-China/rocos/issues/8) 修复*战术包中的NormalPlay不起作用*的问题
+  * 增加一个非官方Wiki，包含一些技巧和API解释[Wiki from ZJHU](https://rocos.salta.top/)
 ## [**v0.0.2**](https://github.com/Robocup-ssl-China/rocos/releases/tag/v0.0.2)（2024.1.15）
   * 统一编译方式为cmake，使用root下CMakeLists.txt合并为一个工程，代替原本的三个工程
   * 更新主题色！（Teal - #279BE6）
