@@ -76,7 +76,7 @@ void CVisionModule::startReceiveThread() {
     int port = ZSS::Athena::VISION_SEND[isYellow ? PARAM::YELLOW : PARAM::BLUE];
     visionSocket = new QUdpSocket();
     visionSocket->bind(QHostAddress::AnyIPv4, port, QUdpSocket::ShareAddress);
-    visionThread = new std::thread([=] {receiveVisionMsg();});
+    visionThread = new std::thread([&] {receiveVisionMsg();});
     visionThread->detach();
     RefereeBoxInterface::Instance()->start();
 }

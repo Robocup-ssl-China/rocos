@@ -62,7 +62,18 @@ double CDealBall::calculateWeight(int camID, CGeoPoint ballPos) {
     else return 1e-8;//to deal with can see out of border situation
 }
 
-
+void CDealBall::reset(){
+    lastBall.pos.setX(0);
+    lastBall.pos.setY(0);
+    lastFrame = 0;
+    lastPossible = 0;
+    currentBall.pos.setX(0);
+    currentBall.pos.setY(0);
+    currentFrame = 0;
+    currentPossible = 0;
+    lostFrame = 0;
+    validBall = false;
+}
 void CDealBall::mergeBall() {
     int i, j;
     actualBallNum = 0;

@@ -78,7 +78,7 @@ void CVisionModule::udpSocketConnect(bool real) {
         ZSS::SParamManager::instance()->loadParam(desired,"worldp_vars/DesiredFPS");
         if(desired > 500) desired = 500;
         connect(&sim_timer,SIGNAL(timeout()),this,SLOT(oneStepSimData()),Qt::DirectConnection);
-        dealThread = new std::thread([ = ] {readSimData();});
+        dealThread = new std::thread([&] {readSimData();});
         dealThread->detach();
         sim_timer.start(int(1000/desired));
     }
@@ -191,6 +191,11 @@ bool CVisionModule::dealWithData() {
     DealRobot::instance()->run();
     Maintain::instance()->run();
     return true;
+}
+void CVisionModule::reset(){
+    DealBall::instance()->reset();
+    DealRobot::instance()->reset();
+    Maintain::instance()->reset();
 }
 /**
  * @brief parse camera vision message

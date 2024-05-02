@@ -8,7 +8,7 @@
 #include "GDebugEngine.h"
 #include "PlayInterface.h"
 #include "BufferCounter.h"
-
+#include "CommandInterface.h"
 // 默认参数初始化
 const int CWorldModel::myDefaultNum = 0;
 const int CWorldModel::enemyDefaultNum = 0;
@@ -84,4 +84,11 @@ int CWorldModel::InfraredOffCount(int num){
 bool CWorldModel::KickDirArrived(int current_cycle, double kickdir, double kickdirprecision, int myNum){
     const PlayerVisionT& me = this->_pVision->ourPlayer(myNum);
     return ::deltaMarginKickingMetric(current_cycle,kickdir,kickdirprecision,me.Dir(),myNum);
+}
+
+void CWorldModel::placeRobot(int num, double x, double y, double dir){
+    CCommandInterface::instance()->placeRobot(num, x, y, dir);
+}
+void CWorldModel::placeBall(double x, double y, double vx, double vy){
+    CCommandInterface::instance()->placeBall(x, y, vx, vy);
 }

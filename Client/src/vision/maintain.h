@@ -16,6 +16,7 @@ class CMaintain {
     CMaintain();
     ~CMaintain();
     void run();
+    void reset();
     void init();
     void ChipPrediction();
     void StateMachine();

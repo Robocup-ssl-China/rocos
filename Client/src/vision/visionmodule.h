@@ -20,6 +20,7 @@ class CVisionModule : public QObject,public ZSPlugin  {
     void run(){};
     quint16 getFPS();
     bool dealWithData();
+    void reset();
     void setInterfaceIndex(const int);
   signals:
     void needDraw();

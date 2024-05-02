@@ -205,6 +205,7 @@ bool obstacle::check(state s0, state s1) {
         }
 
 	}
+    return false;
 }
 
 // 返回障碍物像位置点s的排斥力方向

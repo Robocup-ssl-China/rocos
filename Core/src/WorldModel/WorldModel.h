@@ -43,7 +43,9 @@ public:
     int     InfraredOnCount(int);
     int     InfraredOffCount(int);
     bool	KickDirArrived (int current_cycle, double kickdir, double kickdirprecision, int myNum = myDefaultNum);
-
+public:
+    void placeRobot(int num, double x, double y, double dir);
+    void placeBall(double x, double y, double vx, double vy);
 private:
 	const CVisionModule* _pVision;
 	const COptionModule* _pOption;

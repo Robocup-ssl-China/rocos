@@ -1,6 +1,8 @@
 set(TARGET_NAME Core)
 set(libs)
 set(incs)
+option(USE_TBK "use tbk lib." OFF)
+option(USE_TORCH "use torch cpp lib." OFF)
 # Core - Medusa
 ## Protobuf
 find_package(Protobuf REQUIRED)
@@ -33,6 +35,17 @@ list(APPEND incs ${EIGEN3_INCLUDE_DIR})
 find_package(fmt REQUIRED)
 list(APPEND incs ${fmt_INCLUDE_DIRS})
 list(APPEND libs fmt::fmt)
+## tbk
+if(USE_TBK)
+    find_package(tbk_core REQUIRED)
+    list(APPEND libs tbk::tbk_core)
+    add_definitions(-DUSE_TBK)
+endif()
+## torch cpp
+if(USE_TORCH)
+    find_package(Torch REQUIRED)
+    list(APPEND libs ${TORCH_LIBRARIES})
+endif()
 
 set(PROTO_LIST
     grSim_Commands

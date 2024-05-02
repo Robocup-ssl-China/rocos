@@ -41,6 +41,8 @@ public:
     void gui_debug_msg(const CGeoPoint& p, const std::string& msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
     void gui_debug_msg_fix(const CGeoPoint& p, const char* msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
     void gui_debug_msg_fix(const CGeoPoint& p, const std::string& msgstr, int debug_color = 1,int RGB_value=0, const double size=120 /*mm*/, const int weight=50/*0-100*/);
+    void warning(const std::string& msgstr);
+    void keep_warning(const std::string& msgstr);
     void send(bool);
 private:
     QUdpSocket sendSocket;
@@ -48,6 +50,8 @@ private:
     bool remote_debugger;
     QString remote_address;
     int remote_port;
+
+    std::vector<std::string> warning_msgs;
 };
 typedef Singleton< CGDebugEngine > GDebugEngine;
 

@@ -13,4 +13,7 @@ class CWorldModel{
     bool    IsInfraredOn(int);
     int     InfraredOnCount(int);
     int     InfraredOffCount(int);
+
+    void placeRobot(int num, double x, double y, double dir);
+    void placeBall(double x, double y, double vx, double vy);
 }

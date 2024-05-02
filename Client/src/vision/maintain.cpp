@@ -49,6 +49,11 @@ double CMaintain::getpredict_y() {
     return result.ball[0].predict_pos.y();
 }
 
+void CMaintain::reset(){
+    ballKalmanFilter.reset();
+    // chipsolver.reset();
+}
+
 void CMaintain::run() {  //TODO move to visionmodule
     init();
     //必须保证processrobot数组里为真值，否则产生误差累计

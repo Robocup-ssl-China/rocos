@@ -30,6 +30,7 @@ CDealRobot::CDealRobot() {
     decidePossible = minBelieveFrame * upPossible;
     ourDownPossible = (1.0 - decidePossible) / ourMaxLostFrame;
     theirDownPossible = (1.0 - decidePossible) / theirMaxLostFrame;
+    // set all __robotNeedReset to true
 }
 
 double CDealRobot::posDist(CGeoPoint pos1, CGeoPoint pos2) {
@@ -136,8 +137,6 @@ void CDealRobot::mergeRobot() {
     if (PARAM::DEBUG) std::cout << "have found " << result.robotSize[PARAM::BLUE] << "blue car.\t" << result.robotSize[PARAM::YELLOW] << std::endl;
 }
 
-
-
 void CDealRobot::sortRobot(int color) {
     for (int id = 0; id < PARAM::ROBOTMAXID; id++) {
         bool found = false;
@@ -183,7 +182,16 @@ void CDealRobot::sortRobot(int color) {
         }
     }
 }
-
+void CDealRobot::reset(){
+    for(int i = 0; i < PARAM::ROBOTMAXID; i++) {
+        GlobalData::instance()->robotPossible[PARAM::BLUE][i] = 0;
+        GlobalData::instance()->robotPossible[PARAM::YELLOW][i] = 0;
+        _kalmanFilter[PARAM::BLUE][i].reset();
+        _kalmanFilter[PARAM::YELLOW][i].reset();
+        _dirFilter[PARAM::BLUE][i].reset();
+        _dirFilter[PARAM::YELLOW][i].reset();
+    }
+}
 void CDealRobot::updateVel(int team, ReceiveVisionMessage& result) {
     for (int i = 0; i < validNum[team]; i++) {
         Robot & robot = result.robot[team][i];

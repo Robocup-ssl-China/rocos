@@ -10,6 +10,9 @@ class  KalmanFilter {
   public:
     KalmanFilter();
     ~KalmanFilter();
+    void reset(){
+      ifInit = false;
+    }
     void init(double, double, double, double);
     const Matrix2d& update(double, double);
     const Matrix2d& update(CGeoPoint pos) {

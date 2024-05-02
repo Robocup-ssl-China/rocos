@@ -65,7 +65,7 @@ public:
     }
     virtual void wait() override {
         std::unique_lock<std::mutex> lock(mutex_);
-        cv_.wait(lock, [=] { return count_ > 0; });
+        cv_.wait(lock, [&] { return count_ > 0; });
         --count_;
     }
     virtual bool try_wait() override {
@@ -108,7 +108,7 @@ public:
 
     virtual void wait() override {
         std::unique_lock<std::mutex> lock(mutex_);
-        cv_.wait(lock, [=] { return count_ > 0; });
+        cv_.wait(lock, [&] { return count_ > 0; });
         --count_;
     }
 
@@ -367,7 +367,7 @@ public:
     }
     virtual void run() = 0;
     virtual void start() final{
-        _t = std::thread([=]{run();});
+        _t = std::thread([&]{run();});
     }
     virtual void detech() final{
         _t.detach();

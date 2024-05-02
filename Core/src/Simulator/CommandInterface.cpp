@@ -2,8 +2,6 @@
 #include "ServerInterface.h"
 #include "OptionModule.h"
 #include <iostream>
-#include "grSim_Packet.pb.h"
-#include "zss_cmd.pb.h"
 #include "staticparams.h"
 #include "game_state.h"
 #include "parammanager.h"
@@ -12,33 +10,25 @@
 #include <QUdpSocket>
 #include "RobotSensor.h"
 #include "VisionModule.h"
-#include <thread>
 CCommandInterface* CCommandInterface::_instance = 0;
-namespace {
-int SIM_PORT = 0;
-int SELF_PORT = 0;
-int CHIP_ANGLE = 1;
-int TEAM;
-bool DEBUG_CMD = false;
-ZSS::Protocol::Robots_Command robots_command;
-std::thread *_thread = nullptr;
-}
 
 CCommandInterface::CCommandInterface(const COptionModule *pOption, QObject *parent)
     : pOption(pOption), QObject(parent),
       receiveSocket(nullptr), command_socket(nullptr) {
-    bool isYellow = false;
+    bool isYellow = false, isRight = false;
     ZSS::ZParamManager::instance()->loadParam(SIM_PORT, "AlertPorts/SimPort", 20011);
     ZSS::ZParamManager::instance()->loadParam(SELF_PORT, "Ports/SimSelfPort", 30015);
     ZSS::ZParamManager::instance()->loadParam(CHIP_ANGLE, "Simulator/ChipAngle", 45);
     ZSS::ZParamManager::instance()->loadParam(isYellow, "ZAlert/IsYellow", false);
+    ZSS::ZParamManager::instance()->loadParam(isRight,"ZAlert/IsRight",false);
 
     ZSS::ZParamManager::instance()->loadParam(DEBUG_CMD,"Debug/DeviceCmd",false);
     TEAM = isYellow ? PARAM::YELLOW : PARAM::BLUE;
+    SIDE = isRight ? PARAM::Field::POS_SIDE_RIGHT : PARAM::Field::POS_SIDE_LEFT;
     command_socket = new QUdpSocket();
     receiveSocket = new QUdpSocket();
     receiveSocket->bind(QHostAddress::AnyIPv4, ZSS::Athena::CONTROL_BACK_RECEIVE[TEAM], QUdpSocket::ShareAddress);
-    _thread = new std::thread([ = ] {receiveInformation();});
+    _thread = new std::thread([&] {receiveInformation();});
     _thread->detach();
 }
 
@@ -78,15 +68,33 @@ void CCommandInterface::setNeedReport(int num, bool needReport){
     }
     commands[number].need_report = needReport;
 }
-
+void CCommandInterface::placeRobot(int num, double x, double y, double dir){
+    std::scoped_lock lock(__placement_mutex);
+    if (num < 0 || num > PARAM::Field::MAX_PLAYER - 1) {
+        return;
+    }
+    auto robot = __robots_command.mutable_replacement()->add_robots();
+    robot->set_x(x*SIDE);
+    robot->set_y(y*SIDE);
+    robot->set_dir(dir+(SIDE==PARAM::Field::POS_SIDE_LEFT?0:PARAM::Math::PI));
+    robot->set_id(num);
+    robot->set_yellowteam(TEAM == PARAM::YELLOW);
+}
+void CCommandInterface::placeBall(double x, double y, double vx, double vy){
+    std::scoped_lock lock(__placement_mutex);
+    auto ball = __robots_command.mutable_replacement()->mutable_ball();
+    ball->set_x(x*SIDE);
+    ball->set_y(y*SIDE);
+    ball->set_vx(vx*SIDE);
+    ball->set_vy(vy*SIDE);
+}
 void CCommandInterface::sendCommands() {
-//    GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(-400,-200),"COMMAND_VALID : ",COLOR_GRAY);
+    std::scoped_lock lock(__placement_mutex);
     for (int i = 0; i < PARAM::Field::MAX_PLAYER; i++) {
-//        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(-216+i*13,-200),VisionModule::Instance()->ourPlayer(i).Valid()?"1":"0",COLOR_GRAY);
         if(!VisionModule::Instance()->ourPlayer(i).Valid()){
             continue;
         }
-        auto robot_command = robots_command.add_command();
+        auto robot_command = __robots_command.add_command();
         robot_command->set_robot_id(i);
         robot_command->set_velocity_x(commands[i].velocity_x);
         robot_command->set_velocity_y(commands[i].velocity_y);
@@ -119,8 +127,8 @@ void CCommandInterface::sendCommands() {
             title_txt += fmt::format(" {:>6s}",title_str);
         }
         GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(DEBUG_X, DEBUG_Y),title_txt,COLOR_PURPLE,0,FONT_SIZE);
-        for(int i=0;i<robots_command.command_size();i++){
-            auto&& cmd = robots_command.command(i);
+        for(int i=0;i<__robots_command.command_size();i++){
+            auto&& cmd = __robots_command.command(i);
             std::array<std::string,DATA_SIZE> info_str{
                 fmt::format("{:>7d}",cmd.robot_id()),
                 fmt::format("{:>7.0f}",cmd.velocity_x()),
@@ -140,11 +148,11 @@ void CCommandInterface::sendCommands() {
             GDebugEngine::Instance()->gui_debug_msg_fix(CGeoPoint(DEBUG_X, DEBUG_Y + DEBUG_Y_STEP * (i+1)),msg_invalid,COLOR_GRAY,0,FONT_SIZE);
         }
     }
-    int size = ::robots_command.ByteSizeLong();
+    int size = __robots_command.ByteSizeLong();
     QByteArray data(size, 0);
-    ::robots_command.SerializeToArray(data.data(), size);
+    __robots_command.SerializeToArray(data.data(), size);
     command_socket->writeDatagram(data.data(), size, QHostAddress(ZSS::LOCAL_ADDRESS), ZSS::Athena::CONTROL_SEND[TEAM]);
-    ::robots_command.Clear();
+    __robots_command.Clear();
     memset(commands,0,sizeof(RobotCommand)*PARAM::Field::MAX_PLAYER);
 }
 

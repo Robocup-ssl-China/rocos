@@ -17,6 +17,10 @@
 #include "ActionModule.h"
 #include <QCoreApplication>
 
+#if USE_TBK
+#include "tbk/tbk.h"
+#endif
+
 /*! \mainpage Zeus - Run for number one
 *
 * \section Introduction
@@ -76,6 +80,10 @@ int runLoop() {
     }
 }
 int main(int argc, char* argv[]) {
+#if USE_TBK
+    std::cout << "Use TBK" << std::endl;
+    tbk::init("Rocos-Core");
+#endif
     QCoreApplication a(argc, argv);
     std::thread t(runLoop);
     t.detach();

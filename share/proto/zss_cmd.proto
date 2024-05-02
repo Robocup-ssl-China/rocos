@@ -1,5 +1,7 @@
 syntax = "proto2";
 
+import "grSim_Replacement.proto";
+
 package ZSS.Protocol;
 
 message Robots_Status{
@@ -17,6 +19,7 @@ message Robots_Command {
 
   // delay * 0.1ms
   optional int32 delay = 2;
+  optional grSim_Replacement replacement = 3;
 }
 
 message Robot_Command {

@@ -14,6 +14,7 @@ class CDealBall {
   public:
     CDealBall();
     void run();
+    void reset();
     void choseBall();
     bool getValid() {
         return validBall;

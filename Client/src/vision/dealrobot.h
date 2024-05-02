@@ -12,6 +12,7 @@ class CDealRobot {
   public:
     CDealRobot();
     void run();
+    void reset();
     void mergeRobot();
     void selectRobot();
     void updateVel(int team, ReceiveVisionMessage& result);
@@ -30,6 +31,7 @@ class CDealRobot {
     bool isOnField(CGeoPoint);
     KalmanFilter _kalmanFilter[2][PARAM::ROBOTMAXID];
     KalmanFilter _dirFilter[2][PARAM::ROBOTMAXID];
+    bool __robotNeedReset[2][PARAM::ROBOTMAXID];
     bool filteDir;
     int validNum[2];
     int minBelieveFrame, ourMaxLostFrame, theirMaxLostFrame, fieldWidth, fieldHeight;

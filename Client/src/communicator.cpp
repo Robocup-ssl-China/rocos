@@ -5,17 +5,18 @@
 #include "zss_cmd.pb.h"
 #include "actionmodule.h"
 #include "simmodule.h"
+#include "visionmodule.h"
 #include "parammanager.h"
 #include "remotesim.h"
 #include "globaldata.h"
 #include "globalsettings.h"
+#include "simulator.h"
 #include <mutex>
 #include <thread>
 namespace {
 int fps[2] = {0, 0};
 std::mutex m_fps;
 std::thread* receiveThread[PARAM::TEAMS];
-bool NoVelY = true;
 }
 int Communicator::getFPS(int t) {
     int res = 0;
@@ -31,7 +32,6 @@ void Communicator::setGrsimInterfaceIndex(const int index) {
 }
 
 Communicator::Communicator(QObject *parent) : QObject(parent) {
-    ZSS::ZParamManager::instance()->loadParam(NoVelY, "Lesson/NoVelY", false);
     if (grsimInterfaceIndex == 0){
         qDebug() << "connect sim";
         QObject::connect(ZSS::ZSimModule::instance(), SIGNAL(receiveSimInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
@@ -43,7 +43,7 @@ Communicator::Communicator(QObject *parent) : QObject(parent) {
 //            receiveCommand(i);
 //        });
         if(connectMedusa(i)) {
-            receiveThread[i] = new std::thread([ = ] {receiveCommand(i);});
+            receiveThread[i] = new std::thread([&,i] {receiveCommand(i);});
             receiveThread[i]->detach();
         }
     }
@@ -86,18 +86,28 @@ void Communicator::receiveCommand(int t) {
             commandBuffer[t].valid = true;
             for(int i = 0; i < commands.command_size(); i++) {
                 auto& command = commands.command(i);
-				auto vy = NoVelY ? 0.0f : command.velocity_y();
+				auto vy = command.velocity_y();
                 RobotSpeed rs(command.velocity_x(), vy, command.velocity_r());
                 commandBuffer[t].robotSpeed[command.robot_id()] = rs;
             }
+            if (commands.has_replacement()){
+                double _r = 1.0/1000.0; // ratio of mm to m
+                auto placement = commands.replacement();
+                for(auto& bot : *placement.mutable_robots()){
+                    Simulator::instance()->setRobot(bot.x()*_r, bot.y()*_r, bot.id(), bot.yellowteam(), bot.dir());
+                }
+                if (placement.has_ball()){
+                    auto ball = placement.ball();
+                    Simulator::instance()->setBall(ball.x()*_r, ball.y()*_r, ball.vx()*_r, ball.vy()*_r);
+                }
+                VisionModule::instance()->reset();
+            }
             if(isSimulation) {
-//                qDebug() << "simulation";
                 if (grsimInterfaceIndex==0)
                     ZSS::ZSimModule::instance()->sendSim(t, commands);
                 else
                     ZSS::ZRemoteSimModule::instance()->sendSim(t, commands);
             } else {
-//                qDebug() << "realreal!";
                 // ZSS::ZActionModule::instance()->sendLegacy(t, commands);
                 ZSS::NActionModule::instance()->sendLegacy(commands);
             }
