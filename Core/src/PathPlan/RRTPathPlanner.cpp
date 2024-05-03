@@ -7,7 +7,6 @@
 #include <GDebugEngine.h>
 #include "cmu/vector.h"
 #include <math.h>
-#include "PlayInterface.h"
 #include <TaskMediator.h>
 
 namespace{

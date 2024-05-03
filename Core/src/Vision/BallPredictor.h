@@ -11,7 +11,6 @@
 #include <geometry.h>
 #include "WorldDefine.h"
 #include <vector>
-#include <server.h>
 #include "staticparams.h"
 #include <ServerInterface.h>
 namespace {
@@ -57,7 +56,6 @@ class CBallPredictor {
     CBallPredictor();
     ~CBallPredictor();
     void updateVision( const CServerInterface::VisualInfo& vInfo, bool invert);// 更新视觉信息
-//    void updateVision(int cycle, const PosT& pos, const CVector& vel, bool invert, bool);
     int ballLostTime() const {
         return _ballLostTime;
     }
@@ -99,7 +97,6 @@ class CBallPredictor {
     int _cycle;
     bool _errorSpeed;
     CGeoPoint _lastRawBallPos; //filted
-    PosT _visionDataQueue[VALID_NUM];  // 历史数据
 };
 #endif // _BALL_PREDICTOR_H_
 

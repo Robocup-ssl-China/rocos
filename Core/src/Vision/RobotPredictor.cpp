@@ -416,70 +416,70 @@ void CRobotPredictor::updateVision(int cycle, const VehicleInfoT& player, const 
 //        _robotRotationFilter.reset();
 //    }
 //}
-bool CRobotPredictor::checkValid(int cycle, const CGeoPoint & pos) {
-    // 通过和上一帧的位置来比较,来确定当前以为的小车位置pos是否有效
-    const double PLAYER_OUT_BUFFER = PARAM::Rule::Version == 2003 ? -20 : -50;
-    if( !Utils::IsInField(pos, PLAYER_OUT_BUFFER) ) {
-        return false; // 队员在边界以外很多
-    }
-    if( _visionLogger.visionValid(cycle - 1) ) {
-        const RobotVisionData& lastRobot = _visionLogger.getVision(cycle - 1);
-        if( lastRobot.Valid() ) {
-            const double MAX_PLAYER_MOVE_DIST_PER_CYCLE = 10;
-            const double MAX_PLAYER_ROTATE_ANGLE_PER_CYCLE = PARAM::Math::PI / 2;
-            const CVector playerMoved = pos - lastRobot.RawPos();
-            if( playerMoved.mod() > MAX_PLAYER_MOVE_DIST_PER_CYCLE ) {
-                return false; // 走得太多，不可能，一定是看错了
-            }
-        }
-    }
-    return true;
-}
-void CRobotPredictor::predictLost(int cycle, const ObjectPoseT & ball) {
-    //cout<<cycle<<" ";
-    // 图像当前帧丢车后的处理办法
-    if( _visionLogger.visionValid(cycle - 1)) {
-        //cout<<"in*****************************************************"<<endl;
-        const RobotVisionData& lastCycle = _visionLogger.getVision(cycle - 1);
-        RobotVisionData& thisCycle = _visionLogger.getVision(cycle);
-        if( !lastCycle.Valid() ) {
-            thisCycle.SetValid(false);
-            return;
-        }
-        thisCycle.SetPos(lastCycle.Pos());
-        //cout<<"x: "<<lastCycle.Pos().x()<<"     "<<"y: "<<lastCycle.Pos().y()<<endl;
-        thisCycle.SetDir(lastCycle.Dir());
-        //cout<<"dir: "<<lastCycle.Dir()<<endl;
-        // 我方用命令代替速度
-        if (_isHasRotation) {
-            if( _commandLogger.commandValid(cycle - 1) ) {
-                // 若上一帧发出过指令,用指令代替速度;
-                const RobotCommandEffect& cmd = _commandLogger.getCommand(cycle - 1);
-                CVector vel = CVector(cmd.vel.rotate(lastCycle.Dir()).x(), cmd.vel.rotate(lastCycle.Dir()).y());
-                thisCycle.SetVel(vel);
-                //cout<<"Vx: "<<cmd.vel.rotate(lastCycle.Dir()).x()<<"     "<<"Vy: "<<cmd.vel.rotate(lastCycle.Dir()).y()<<endl;
-                thisCycle.SetRotVel(cmd.rot_speed);
-                //cout<<"speedW: "<<cmd.rot_speed<<endl;
-            } else {
-                // 上一帧没有发出过指令,继续使用上一帧速度信息
-                thisCycle.SetVel(lastCycle.Vel());
-                thisCycle.SetRotVel(lastCycle.RotVel());
-            }
-        } else {
-            // 对方用前一周期的速度代替当前速度(没有朝向信息)
-            thisCycle.SetVel(lastCycle.Vel());
-            thisCycle.SetRotVel(lastCycle.RotVel());
-        }
+// bool CRobotPredictor::checkValid(int cycle, const CGeoPoint & pos) {
+//     // 通过和上一帧的位置来比较,来确定当前以为的小车位置pos是否有效
+//     const double PLAYER_OUT_BUFFER = PARAM::Rule::Version == 2003 ? -20 : -50;
+//     if( !Utils::IsInField(pos, PLAYER_OUT_BUFFER) ) {
+//         return false; // 队员在边界以外很多
+//     }
+//     if( _visionLogger.visionValid(cycle - 1) ) {
+//         const RobotVisionData& lastRobot = _visionLogger.getVision(cycle - 1);
+//         if( lastRobot.Valid() ) {
+//             const double MAX_PLAYER_MOVE_DIST_PER_CYCLE = 10;
+//             const double MAX_PLAYER_ROTATE_ANGLE_PER_CYCLE = PARAM::Math::PI / 2;
+//             const CVector playerMoved = pos - lastRobot.RawPos();
+//             if( playerMoved.mod() > MAX_PLAYER_MOVE_DIST_PER_CYCLE ) {
+//                 return false; // 走得太多，不可能，一定是看错了
+//             }
+//         }
+//     }
+//     return true;
+// }
+// void CRobotPredictor::predictLost(int cycle, const ObjectPoseT & ball) {
+//     //cout<<cycle<<" ";
+//     // 图像当前帧丢车后的处理办法
+//     if( _visionLogger.visionValid(cycle - 1)) {
+//         //cout<<"in*****************************************************"<<endl;
+//         const RobotVisionData& lastCycle = _visionLogger.getVision(cycle - 1);
+//         RobotVisionData& thisCycle = _visionLogger.getVision(cycle);
+//         if( !lastCycle.Valid() ) {
+//             thisCycle.SetValid(false);
+//             return;
+//         }
+//         thisCycle.SetPos(lastCycle.Pos());
+//         //cout<<"x: "<<lastCycle.Pos().x()<<"     "<<"y: "<<lastCycle.Pos().y()<<endl;
+//         thisCycle.SetDir(lastCycle.Dir());
+//         //cout<<"dir: "<<lastCycle.Dir()<<endl;
+//         // 我方用命令代替速度
+//         if (_isHasRotation) {
+//             if( _commandLogger.commandValid(cycle - 1) ) {
+//                 // 若上一帧发出过指令,用指令代替速度;
+//                 const RobotCommandEffect& cmd = _commandLogger.getCommand(cycle - 1);
+//                 CVector vel = CVector(cmd.vel.rotate(lastCycle.Dir()).x(), cmd.vel.rotate(lastCycle.Dir()).y());
+//                 thisCycle.SetVel(vel);
+//                 //cout<<"Vx: "<<cmd.vel.rotate(lastCycle.Dir()).x()<<"     "<<"Vy: "<<cmd.vel.rotate(lastCycle.Dir()).y()<<endl;
+//                 thisCycle.SetRotVel(cmd.rot_speed);
+//                 //cout<<"speedW: "<<cmd.rot_speed<<endl;
+//             } else {
+//                 // 上一帧没有发出过指令,继续使用上一帧速度信息
+//                 thisCycle.SetVel(lastCycle.Vel());
+//                 thisCycle.SetRotVel(lastCycle.RotVel());
+//             }
+//         } else {
+//             // 对方用前一周期的速度代替当前速度(没有朝向信息)
+//             thisCycle.SetVel(lastCycle.Vel());
+//             thisCycle.SetRotVel(lastCycle.RotVel());
+//         }
 
-        if( (lastCycle.RawPos() - ball.RawPos()).mod2() < 2500) {
-            _collisionSimulator.reset(ball.Pos(), ball.Vel());
-            _collisionSimulator.simulate(thisCycle, 1.0 / PARAM::Vision::FRAME_RATE);
-        }
-        thisCycle.SetPos(lastCycle.Pos() + thisCycle.Vel() / PARAM::Vision::FRAME_RATE);
-        thisCycle.SetDir(Utils::Normalize(lastCycle.Dir() + thisCycle.RotVel() / PARAM::Vision::FRAME_RATE));
-        thisCycle.SetValid(true);
-    }
-}
+//         if( (lastCycle.RawPos() - ball.RawPos()).mod2() < 2500) {
+//             _collisionSimulator.reset(ball.Pos(), ball.Vel());
+//             _collisionSimulator.simulate(thisCycle, 1.0 / PARAM::Vision::FRAME_RATE);
+//         }
+//         thisCycle.SetPos(lastCycle.Pos() + thisCycle.Vel() / PARAM::Vision::FRAME_RATE);
+//         thisCycle.SetDir(Utils::Normalize(lastCycle.Dir() + thisCycle.RotVel() / PARAM::Vision::FRAME_RATE));
+//         thisCycle.SetValid(true);
+//     }
+// }
 void CRobotPredictor::updateCommand(int cycle, const CPlayerCommand * cmd) {
     _commandLogger.setCommand(cycle, cmd->getAffectedVel(), cmd->getAffectedRotateSpeed());
 }

@@ -7,7 +7,6 @@
 #include <PlayerTask.h>
 #include "utils.h"
 #include "Global.h"
-#include <PlayInterface.h>
 #include "parammanager.h"
 /**
 * task协调类.

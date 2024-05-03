@@ -58,8 +58,8 @@ class CRobotPredictor {
     }
   protected:
 //    void updateRawVision(int cycle, double x, double y, double dir, bool seen);
-    bool checkValid(int cycle, const CGeoPoint& pos);
-    void predictLost(int cycle, const ObjectPoseT& ball); // 预测看不到的信息
+    // bool checkValid(int cycle, const CGeoPoint& pos);
+    // void predictLost(int cycle, const ObjectPoseT& ball); // 预测看不到的信息
   private:
 //    FilteredObject _robotFilter; // KalmanFilter
 //    FilteredObject _robotRotationFilter; // 进行robot朝向滤波

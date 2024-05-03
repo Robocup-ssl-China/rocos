@@ -372,31 +372,31 @@ extern "C" int Register_Role(lua_State *L)
 //     return 0;
 // }
 
-extern "C" int FUNC_TimeOut(lua_State* L)
-{
-	bool cond = LuaModule::Instance()->GetBoolArgument(1);
-	int buf = LuaModule::Instance()->GetNumberArgument(2, 0);
-	int cnt = LuaModule::Instance()->GetNumberArgument(3, 9999);
+// extern "C" int FUNC_TimeOut(lua_State* L)
+// {
+// 	bool cond = LuaModule::Instance()->GetBoolArgument(1);
+// 	int buf = LuaModule::Instance()->GetNumberArgument(2, 0);
+// 	int cnt = LuaModule::Instance()->GetNumberArgument(3, 9999);
 
-	if(BufferCounter::Instance()->isClear(vision->getCycle())){
-		BufferCounter::Instance()->startCount(vision->getCycle(), cond, buf, cnt);
-	}
+// 	if(BufferCounter::Instance()->isClear(vision->getCycle())){
+// 		BufferCounter::Instance()->startCount(vision->getCycle(), cond, buf, cnt);
+// 	}
 
-	if(BufferCounter::Instance()->timeOut(vision->getCycle(), cond)){
-		LuaModule::Instance()->PushNumber(1);
-	} else{
-		LuaModule::Instance()->PushNumber(0);
-	}
-	return 1;
-}
+// 	if(BufferCounter::Instance()->timeOut(vision->getCycle(), cond)){
+// 		LuaModule::Instance()->PushNumber(1);
+// 	} else{
+// 		LuaModule::Instance()->PushNumber(0);
+// 	}
+// 	return 1;
+// }
 
-extern "C" int FUNC_GetIsSimulation(lua_State* L)
-{
-    ZSS::ZParamManager::instance()->loadParam(IS_SIMULATION,"Alert/IsSimulation",false);
+// extern "C" int FUNC_GetIsSimulation(lua_State* L)
+// {
+//     ZSS::ZParamManager::instance()->loadParam(IS_SIMULATION,"Alert/IsSimulation",false);
 
-	LuaModule::Instance()->PushBool(IS_SIMULATION);
-	return 1;
-}
+// 	LuaModule::Instance()->PushBool(IS_SIMULATION);
+// 	return 1;
+// }
 
 extern "C" int FUNC_GetSettings(lua_State* L){
     QString key(LuaModule::Instance()->GetStringArgument(1, NULL));
@@ -443,8 +443,8 @@ extern "C" int FUNC_PrintString(lua_State* L) {
 luaDef GUIGlue[] = 
 {
     {"CRegisterRole",		Register_Role},
-    {"CTimeOut",			FUNC_TimeOut},
-	{"CGetIsSimulation",	FUNC_GetIsSimulation},
+    // {"CTimeOut",			FUNC_TimeOut},
+	// {"CGetIsSimulation",	FUNC_GetIsSimulation},
     {"CGetSettings",        FUNC_GetSettings},
     // {"SmartGotoPos",		Skill_SmartGotoPoint},
 	// {"SimpleGotoPos",		Skill_SimpleGotoPoint},

@@ -91,19 +91,14 @@ void CGDebugEngine::gui_debug_arc(const CGeoPoint& p, double r, double start_ang
     ZSS::Protocol::Point
 		*p1 = rec->mutable_point1(),
 		*p2 = rec->mutable_point2();
-	PosT center;
+	CGeoPoint center(p);
 	if ( WorldModel::Instance()->option()->MySide() == PARAM::Field::POS_SIDE_RIGHT ){
-		center.x = -p.x();
-        center.y = -p.y();
+		center = center * -1;
 	}
-	else{
-		center.x = p.x();
-        center.y = p.y();
-	}
-	p1->set_x(center.x - r);
-    p1->set_y((center.y - r));
-	p2->set_x(center.x + r);
-    p2->set_y((center.y + r));
+	p1->set_x(center.x() - r);
+    p1->set_y((center.y() - r));
+	p2->set_x(center.x() + r);
+    p2->set_y((center.y() + r));
     debugMutex.unlock();
 }
 void CGDebugEngine::gui_debug_triangle(const CGeoPoint& p1, const CGeoPoint& p2, const CGeoPoint& p3, int debug_color,int RGB_value){

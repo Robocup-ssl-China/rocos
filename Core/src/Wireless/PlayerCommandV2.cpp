@@ -3,7 +3,6 @@
 #include <sstream>
 #include <CommandInterface.h>
 #include <RobotCapability.h>
-#include "PlayInterface.h"
 #include "TaskMediator.h"
 
 namespace{

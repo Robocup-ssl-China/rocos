@@ -13,7 +13,6 @@
 
 #include "DecisionModule.h"
 #include <TaskMediator.h>
-#include <PlayInterface.h>
 #include "LuaModule.h"
 #include "Semaphore.h"
 extern Semaphore vision_to_decision;

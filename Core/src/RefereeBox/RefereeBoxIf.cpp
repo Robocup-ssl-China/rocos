@@ -50,7 +50,7 @@ CRefereeBoxInterface::CRefereeBoxInterface():_playMode(PMNone) {
 ZSS_THREAD_FUNCTION void CRefereeBoxInterface::start() {
     _alive = true;
     try {
-            auto threadCreator = std::thread([=]{receivingLoop();});
+            auto threadCreator = std::thread([&]{receivingLoop();});
             threadCreator.detach();
     }
     catch(std::exception e) {

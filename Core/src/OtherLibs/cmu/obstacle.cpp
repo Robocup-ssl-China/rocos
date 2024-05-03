@@ -17,7 +17,6 @@
 #include "vector.h"
 #include "constants.h"
 #include "obstacle.h"
-#include "PlayInterface.h"
 #include <TaskMediator.h>
 #include "staticparams.h"
 #include <math.h>

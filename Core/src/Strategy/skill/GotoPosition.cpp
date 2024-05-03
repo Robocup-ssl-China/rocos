@@ -7,7 +7,6 @@
 #include <TaskMediator.h>
 #include <ControlModel.h>
 #include <DribbleStatus.h>
-#include "PlayInterface.h"
 #include <GDebugEngine.h>
 #include "DynamicsSafetySearch.h"
 #include "CMmotion.h"

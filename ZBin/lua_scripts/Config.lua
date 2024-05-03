@@ -1,7 +1,7 @@
 IS_YELLOW = CGetSettings("ZAlert/IsYellow","Bool")
 local team = IS_YELLOW and "Yellow" or "Blue"
 IS_TEST_MODE = CGetSettings("ZAlert/"..team.."_IsTest","Bool")
-IS_SIMULATION = CGetIsSimulation()
+IS_SIMULATION = CGetSettings("Alert/IsSimulation","Bool")
 USE_SWITCH = false
 USE_AUTO_REFEREE = false
 OPPONENT_NAME = "Other"

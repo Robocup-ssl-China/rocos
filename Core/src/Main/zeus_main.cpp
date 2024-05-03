@@ -4,7 +4,6 @@
 #include <WorldModel.h>
 #include <ServerInterface.h>
 #include "DecisionModule.h"
-#include <VisionReceiver.h>
 
 #include <GDebugEngine.h>
 #include "Global.h"

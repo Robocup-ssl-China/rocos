@@ -6,7 +6,6 @@
 #include "KickStatus.h"
 #include "DribbleStatus.h"
 #include "GDebugEngine.h"
-#include "PlayInterface.h"
 #include "BufferCounter.h"
 #include "CommandInterface.h"
 // 默认参数初始化
@@ -65,7 +64,7 @@ void CWorldModel::SPlayFSMSwitchClearAll(bool clear_flag)
     BallStatus::Instance()->clearKickCmd();
 
     // not used, replaced by new lua bufcnt
-    BufferCounter::Instance()->clear();
+    // BufferCounter::Instance()->clear();
     // TODO
     return ;
 }

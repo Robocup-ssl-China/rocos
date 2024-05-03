@@ -8,7 +8,6 @@
 #include "RobotCapability.h"
 #include "TaskMediator.h"
 #include "KickStatus.h"
-#include "PlayInterface.h"
 #include <fstream>
 #include "RobotSensor.h"
 #include "GDebugEngine.h"
