@@ -51,7 +51,7 @@ function gSubPlay.step()
             play.lastState = play.curState
             play.curState = curState
             isStateSwitched = true
-            PlayFSMClearAll()
+            bufcntClear()
         end
         -- print("ID : , play : , curState :", key,  _subPlay.name, play.curState)
         gSubPlay.curScope = ""

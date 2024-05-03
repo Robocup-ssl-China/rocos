@@ -54,20 +54,6 @@ const string CWorldModel::CurrentRefereeMsg()
 {
 	return vision()->getCurrentRefereeMsg();
 }
-void CWorldModel::SPlayFSMSwitchClearAll(bool clear_flag)
-{
-    if (! clear_flag) {
-        return ;
-    }
-    // 暂时只有清理 球被提出的状态
-    KickStatus::Instance()->resetKick2ForceClose(true,this->vision()->getCycle());
-    BallStatus::Instance()->clearKickCmd();
-
-    // not used, replaced by new lua bufcnt
-    // BufferCounter::Instance()->clear();
-    // TODO
-    return ;
-}
 bool CWorldModel::IsBallKicked(int num){
     return (RobotSensor::Instance()->IsKickerOn(num) != 0);
 }

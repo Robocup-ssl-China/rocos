@@ -21,9 +21,6 @@ gLastRefMsg = ""
 gActiveRole = {}
 gIsRefPlayExit = false
 
-gCurrentBallStatus="None"
-gLastBallStatus=""
-
 gExternStopCycle = 0
 gExternExitCycle = 0
 
@@ -148,14 +145,9 @@ function SetNextPlay(name)
 	gNextPlay = name
 end
 
-function PlayFSMClearAll()
-	world:SPlayFSMSwitchClearAll(true)
-	bufcntClear()
-end
-
 function ResetPlay(name)
 	local curPlay = gPlayTable[name]
-	PlayFSMClearAll()
+	bufcntClear()
 	--------------------------------
 	if curPlay.firstState ~= nil then
 		gCurrentState = curPlay.firstState
@@ -168,7 +160,7 @@ end
 
 function ResetPlayWithLastMatch(name)
 	local curPlay = gPlayTable[name]
-	PlayFSMClearAll()
+	bufcntClear()
 	if curPlay.firstState ~= nil then
 		gCurrentState = curPlay.firstState
 	else
@@ -201,7 +193,7 @@ function RunPlay(name)
 			gLastState = gCurrentState
 			gCurrentState = curState
 			isStateSwitched = true
-			PlayFSMClearAll()
+			bufcntClear()
 		end
 		
 --		debugEngine:gui_debug_msg(vision:ourPlayer(gRoleNum[rolename]):Pos(), rolename)

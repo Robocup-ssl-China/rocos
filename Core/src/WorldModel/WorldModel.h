@@ -5,7 +5,6 @@
 #include "VisionModule.h"
 #include "KickStatus.h"
 #include "BufferCounter.h"
-#include "BallStatus.h"
 #include <singleton.hpp>
 extern bool record_run_pos_on;
 ///
@@ -46,6 +45,8 @@ public:
 public:
     void placeRobot(int num, double x, double y, double dir);
     void placeBall(double x, double y, double vx, double vy);
+	void setEnvDone(bool done);
+
 private:
 	const CVisionModule* _pVision;
 	const COptionModule* _pOption;
@@ -72,7 +73,6 @@ private:
 	// 默认对方小车号
     const static int enemyDefaultNum;
 public:
-    void SPlayFSMSwitchClearAll(bool clear_flag=false);
 	// 自己到球的矢量
     const CVector	self2ball					(int current_cycle, int myNum = myDefaultNum);
 	// 自己到球的距离

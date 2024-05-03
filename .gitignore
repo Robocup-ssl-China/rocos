@@ -134,7 +134,7 @@ ZBin/*/*.pth
 ZBin/__pycache__
 ZBin/*.py[cod]
 ZBin/*$py.class
-
+ZBin/model
 build*/
 
 grSim/

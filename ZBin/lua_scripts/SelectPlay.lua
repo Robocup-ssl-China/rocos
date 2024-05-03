@@ -135,14 +135,6 @@ else
 	    	ResetPlay(gCurrentPlay)
 	    end
 	else
-		--add by twj 14/5/12
-		------------------------------------------
-		if gNormalPlay == "NormalPlayPass" or gNormalPlay == "NormalPlayPP" or gNormalPlay == "NormalPlayMessi"then
-			world:setBallHandler(gRoleNum["Leader"])
-			gLastBallStatus=gCurrentBallStatus
-			gCurrentBallStatus=world:getBallStatus(vision:getCycle())
-		end
-		--------------------------------------------
 		if gLastPlay == "" or NeedExit(gCurrentPlay) then
 			if NeedExit(gCurrentPlay) then
 				print("Play: "..gCurrentPlay.." Exit!!")

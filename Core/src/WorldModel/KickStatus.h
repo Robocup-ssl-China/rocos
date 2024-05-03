@@ -114,23 +114,6 @@ public:
 			_direct_kick_no_calibration[vecNum] = false;
 			_direct_kick_power[vecNum] = 0;
 		}
-		_forceClose = false;
-		_forceCloseCycle = 0;
-	}
-
-	void resetKick2ForceClose(bool forceClose = false, int forceCloseCycle = 0){
-		_forceClose = forceClose;
-		_forceCloseCycle = forceCloseCycle;
-	}
-
-	void updateForceClose(int currentCycle){
-		if(currentCycle - _forceCloseCycle >= 7){
-			_forceClose = false;
-		}
-	}
-
-	bool isForceClosed(){
-		return _forceClose;
 	}
 
 private:
@@ -149,10 +132,6 @@ private:
 
 	bool _direct_kick_no_calibration[PARAM::Field::MAX_PLAYER];
 	double _direct_kick_power[PARAM::Field::MAX_PLAYER];
-
-	bool _forceClose;
-
-	int _forceCloseCycle;
 };
 
 /// <summary>	Defines an alias representing the kick status. . </summary>
