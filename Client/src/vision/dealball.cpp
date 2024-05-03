@@ -10,6 +10,7 @@
 
 namespace {
 auto zpm = ZSS::ZParamManager::instance();
+bool VERBOSE = false;
 long long min(long long a, long long b ) {
     if (a < b) return a;
     else return b;
@@ -20,6 +21,7 @@ long long min(long long a, long long b ) {
  */
 CDealBall::CDealBall() {
     zpm->loadParam(minBelieveFrame, "AlertFusion/ballMinBelieveFrame", 10);
+    zpm->loadParam(VERBOSE, "AlertFusion/VERBOSE", false);
     upPossible = 1.0 / minBelieveFrame;
     downPossible = 0.05;
     lastBall.pos.setX(0);
@@ -90,7 +92,7 @@ void CDealBall::mergeBall() {
         if (found) ballSequence[j][result.ball[i].cameraID].fill(result.ball[i]);
         else ballSequence[actualBallNum++][result.ball[i].cameraID].fill(result.ball[i]);
     }
-    if (PARAM::DEBUG) std::cout << "Actually have " << actualBallNum << " balls.\n";
+    if (VERBOSE) std::cout << "Actually have " << actualBallNum << " balls.\n";
 
     result.init();
     if (!validBall && GlobalData::instance()->maintain[-1].ball[0].ball_state_machine.ballState == _struggle)
@@ -105,14 +107,14 @@ void CDealBall::mergeBall() {
                     double _weight;
                     _weight = calculateWeight(j, ballSequence[i][j].pos);
                     _weight = std::pow(posDist(ballSequence[i][j].pos, GlobalData::instance()->cameraMatrix[camera.id].campos) / 1000.0, -2.0);
-                    if (PARAM::DEBUG)std::cout << "camera: " << j << ballSequence[i][j].pos << GlobalData::instance()->cameraMatrix[camera.id].campos << "weight:" << posDist(ballSequence[i][j].pos, GlobalData::instance()->cameraMatrix[camera.id].campos) << std::endl;
+                    if (VERBOSE)std::cout << "camera: " << j << ballSequence[i][j].pos << GlobalData::instance()->cameraMatrix[camera.id].campos << "weight:" << posDist(ballSequence[i][j].pos, GlobalData::instance()->cameraMatrix[camera.id].campos) << std::endl;
                     weight += _weight;
                     average.setX(average.x() + ballSequence[i][j].pos.x() * _weight);
                     average.setY(average.y() + ballSequence[i][j].pos.y() * _weight);
                 }
             }
             if (weight != 0)result.addBall(average.x() / weight, average.y() / weight);
-            if (PARAM::DEBUG) std::cout << "have merged NO. " << i << " ball with" << average << " " << weight << "\n";
+            if (VERBOSE) std::cout << "have merged NO. " << i << " ball with" << average << " " << weight << "\n";
         }
     }
 }
@@ -133,7 +135,7 @@ void CDealBall::init() {
         validBall = false;
     } else validBall = true;
 
-    if (PARAM::DEBUG) std::cout << "Origin vision has " << result.ballSize << " balls.\n";
+    if (VERBOSE) std::cout << "Origin vision has " << result.ballSize << " balls.\n";
 }
 
 
@@ -144,7 +146,7 @@ void CDealBall::choseBall() {
         if (result.ball[i].pos.dist(lastBall.pos) < dis) {
             dis = result.ball[i].pos.dist(lastBall.pos);
             id = i;
-            if (PARAM::DEBUG) std::cout << " the dis=" << dis << std::endl;
+            if (VERBOSE) std::cout << " the dis=" << dis << std::endl;
         }
     }
 

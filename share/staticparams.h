@@ -4,7 +4,6 @@
 //wait for change camera number
 #include <QString>
 namespace PARAM {
-    const bool DEBUG = false;
     const int CAMERA = 8;
     const int ROBOTNUM = 16;// max allow robot on the playgroung
     const int ROBOTMAXID = 16;

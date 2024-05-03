@@ -17,7 +17,7 @@ const float MOV_LATENCY_FRACTION  = TOTAL_MOV_LATED_FRAME - static_cast<float>(N
 const double TOTAL_DIR_LATED_FRAME = 4.0f; //转动的延时
 const int NUM_DIR_LATENCY_FRAMES = static_cast<int>(TOTAL_DIR_LATED_FRAME);
 const float DIR_LATENCY_FRACTION  = TOTAL_DIR_LATED_FRAME - static_cast<float>(NUM_DIR_LATENCY_FRAMES);
-
+bool VERBOSE = false;
 }
 
 CDealRobot::CDealRobot() {
@@ -26,6 +26,7 @@ CDealRobot::CDealRobot() {
     zpm->loadParam(minBelieveFrame, "AlertFusion/carMinBelieveFrame", 3);
     zpm->loadParam(theirMaxLostFrame, "AlertFusion/theirCarMaxLostFrame", 15);
     zpm->loadParam(ourMaxLostFrame, "AlertFusion/ourCarMaxLostFrame", 150);
+    zpm->loadParam(VERBOSE, "AlertFusion/VERBOSE", false);
     upPossible = 0.1;
     decidePossible = minBelieveFrame * upPossible;
     ourDownPossible = (1.0 - decidePossible) / ourMaxLostFrame;
@@ -134,7 +135,7 @@ void CDealRobot::mergeRobot() {
             result.addRobot(PARAM::YELLOW, ave);
         }
     }
-    if (PARAM::DEBUG) std::cout << "have found " << result.robotSize[PARAM::BLUE] << "blue car.\t" << result.robotSize[PARAM::YELLOW] << std::endl;
+    if (VERBOSE) std::cout << "have found " << result.robotSize[PARAM::BLUE] << "blue car.\t" << result.robotSize[PARAM::YELLOW] << std::endl;
 }
 
 void CDealRobot::sortRobot(int color) {

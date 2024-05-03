@@ -1,0 +1,11 @@
+class RLEnvironment{
+public:
+	void setDone(bool done);
+	bool done();
+	void setTrain(bool train);
+	bool train();
+    void setReward(float reward);
+    float reward();
+    void placeRobot(int num, double x, double y, double dir);
+    void placeBall(double x, double y, double vx, double vy);
+};

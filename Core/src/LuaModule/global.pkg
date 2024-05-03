@@ -7,3 +7,4 @@ CGDebugEngine*  debugEngine;
 CWorldModel*	world;
 CSkillAPI*      skillapi;
 CBallSpeedModel* ballModel;
+RLEnvironment* trainEnv;
