@@ -25,6 +25,10 @@ class BallVisionData : public ObjectPoseT {
   public:
     BallVisionData(): cycle(-1) {}
     int cycle;
+    // add according to vision_detection.proto
+    int ball_state;
+    int last_touch;
+    CGeoPoint chip_predict;
 };
 
 class CBallVisionLogger {
@@ -85,6 +89,15 @@ class CBallPredictor {
     }
     bool isSpeedError()const {
         return _errorSpeed;
+    }
+    int getLastTouch(int cycle) const {
+        return _visionLogger.getVision(cycle).last_touch;
+    }
+    int getBallState(int cycle) const {
+        return _visionLogger.getVision(cycle).ball_state;
+    }
+    const CGeoPoint& getChipPredict(int cycle) const {
+        return _visionLogger.getVision(cycle).chip_predict;
     }
   protected:
     void predictLost(int cycle); // 球看不到的时候预测球的位置

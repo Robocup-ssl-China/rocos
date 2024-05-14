@@ -4,7 +4,7 @@
 #include "globaldata.h"
 #include "geometry.h"
 
-#define DETECT_DIST 10 //detect whether the ball in 300mm of vechile
+#define DETECT_DIST 300 //detect whether the ball in 300mm of vechile
 #define SPLIT_THRESHOLD 20  //split
 #define NEAR_VECHILE_MIN_FRAME 5 //keep frame to detect ball SLIGHTLY touch vechile
 #define LENGTH_THERESHOLD 5800

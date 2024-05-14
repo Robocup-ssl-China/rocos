@@ -65,7 +65,7 @@ void CMaintain::run() {  //TODO move to visionmodule
 //        }
 
         //判断碰撞
-//        CollisionDetect::instance()->analyzeData(result);
+        CollisionDetect::instance()->analyzeData(result);
         //ball kalmanfilter FOLLOW
         auto & tempMatrix = ballKalmanFilter.follow(result.ball[0].pos);
         DealBall::instance()->updateVel(tempMatrix, result);

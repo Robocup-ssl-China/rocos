@@ -22,7 +22,7 @@ class CVisionModule{
 	const PlayerVisionT& theirPlayer(int cycle, int num) const;
 	const ObjectPoseT& ball(int cycle) const;
 	const ObjectPoseT& rawBall() const;
-        const CGeoPoint& getBallPlacementPosition() const;
+	const CGeoPoint& getBallPlacementPosition() const;
 	const RobotRawVisionData& ourRawPlayer(int num) const;
 	const RobotRawVisionData& theirRawPlayer(int num) const;
 	void setPlayerCommand(int num, const CPlayerCommand* pCmd);
@@ -39,4 +39,7 @@ class CVisionModule{
 	int getTimeRemain();
 	bool getBallVelStable();
 	bool ballVelValid();
+    int getBallLastTouch() const;
+    int getBallState() const;
+    const CGeoPoint& getBallChipPredict() const;
 };

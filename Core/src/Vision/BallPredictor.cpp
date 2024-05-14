@@ -29,12 +29,17 @@ void CBallPredictor::updateVision( const CServerInterface::VisualInfo& vInfo, bo
     BallVisionData& thisCycle = _visionLogger.getVision(vInfo.cycle);
     const int invertFactor = invert ? -1 : 1;
 
-    thisCycle.SetVel(vInfo.BallVel * invertFactor);
+    thisCycle.SetVel(vInfo.ball_vel * invertFactor);
     thisCycle.SetRawPos(vInfo.rawBall.x * invertFactor, vInfo.rawBall.y * invertFactor);
     thisCycle.SetChipPredict(vInfo.chipPredict.x, vInfo.chipPredict.y);
     thisCycle.SetPos(vInfo.ball.x * invertFactor,  vInfo.ball.y * invertFactor);
     thisCycle.SetValid(vInfo.ball.valid);
     thisCycle.cycle =  vInfo.cycle;
+    
+    // add according to vision_detection.proto
+    thisCycle.ball_state = vInfo.ball_state;
+    thisCycle.last_touch = vInfo.ball_last_touch;
+    thisCycle.chip_predict = CGeoPoint(vInfo.chipPredict.x,vInfo.chipPredict.y);
     return;
 }
 

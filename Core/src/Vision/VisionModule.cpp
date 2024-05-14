@@ -129,9 +129,9 @@ void CVisionModule::receiveVisionMsg() {
                     visionTemp.chipPredict.x = ball.chip_predict_x();
                     visionTemp.chipPredict.y = ball.chip_predict_y();
                     visionTemp.ball.valid = ball.valid();
-                    visionTemp.BallState = (ballState)ball.ball_state();
-                    visionTemp.BallLastTouch = ball.last_touch();
-                    visionTemp.BallVel.setVector(ball.vel_x(), ball.vel_y());
+                    visionTemp.ball_state = (BallState)ball.ball_state();
+                    visionTemp.ball_last_touch = ball.last_touch();
+                    visionTemp.ball_vel.setVector(ball.vel_x(), ball.vel_y());
                 }
             } else {
                 std::cout << "Ball not Found!!!" << std::endl;

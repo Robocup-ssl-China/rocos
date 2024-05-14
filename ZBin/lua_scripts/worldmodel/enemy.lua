@@ -12,6 +12,10 @@ function pos(role)
 	return instance(role):Pos()
 end
 
+function rawPos(role)
+	return instance(role):RawPos()
+end
+
 function posX(role)
 	return instance(role):X()
 end

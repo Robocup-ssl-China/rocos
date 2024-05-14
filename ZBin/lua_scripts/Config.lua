@@ -76,5 +76,4 @@ gTestPlayTable = {
         "Test/TestTuningPID",
 }
 gAutoRefTable = {
-        "Autoref/ZJRoboCon2023TC"
 }

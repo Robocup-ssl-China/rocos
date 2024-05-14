@@ -86,6 +86,18 @@ public:
         return _ballPredictor.getResult(_timeCycle);
     }
 
+    int getBallLastTouch() const {
+        return _ballPredictor.getLastTouch(_timeCycle);
+    }
+
+    int getBallState() const {
+        return _ballPredictor.getBallState(_timeCycle);
+    }
+
+    const CGeoPoint& getBallChipPredict() const {
+        return _ballPredictor.getChipPredict(_timeCycle);
+    }
+
     const PlayerVisionT& ourPlayer(int cycle, int num) const {
         return _ourPlayerPredictor[num].getResult(cycle);
     }
@@ -200,9 +212,6 @@ private:
 	bool _ballKicked;						//判断球是否被踢,用来决定比赛状态.
 	CGeoPoint _ballPosSinceNotKicked;		//球在没有被踢之前的位置.
 	ObjectPoseT _rawBallPos;				//这个周期球的原始数据，用来draw比较.
-	
-	ObjectPoseT _newBallPos; // the most useless varible I have ever seen.
-	CGeoPoint _ballPos[10];  // and this more than the last line.
 
 	ObjectPoseT _lastRawBallPos;			//上帧球的的原始数据
 	// 保存数据

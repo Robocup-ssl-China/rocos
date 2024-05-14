@@ -469,18 +469,18 @@ struct VehicleInfoT {
     CVector accelerate;
     int type;
 };
-enum ballState {received, touched, kicked, struggle, chip_pass, flat_pass};
+enum BallState {_unknown, _touched, _shoot, _struggle, _pass, _dribble, _stop, _outoffied, _control, _undefine, _kicked, _chip_pass, _flat_pass};
 
 struct VisualInfoT {
-    VisualInfoT(): cycle(0), BallState(received), BallLastTouch(0), mode(0) {}
+    VisualInfoT(): cycle(0), ball_state(_unknown), ball_last_touch(-1), mode(0) {}
     unsigned int cycle;
     VehicleInfoT player[PARAM::TEAMS][PARAM::Field::MAX_PLAYER];
     PosT ball;
     PosT rawBall;
     PosT chipPredict;
-    CVector BallVel;
-    ballState BallState;
-    int BallLastTouch;
+    CVector ball_vel;
+    BallState ball_state;
+    int ball_last_touch;
     int mode;
     int next_command;
     //unsigned char ourRobotIndexBefore[ PARAM::Field::MAX_PLAYER] = {};
