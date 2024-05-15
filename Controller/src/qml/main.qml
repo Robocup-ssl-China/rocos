@@ -7,16 +7,9 @@ import QtGamepad 1.0
 import Client.Component 1.0 as Client
 ApplicationWindow{
     visible:true;
-    width:580;
+    width:650;
     height:700;
     color: "#333"
-    /*
-    //固定窗口大小
-    minimumHeight: height;
-    minimumWidth: width;
-    maximumHeight: height;
-    maximumWidth: width;
-    */
     id:window;
     Client.Serial { id : serial; }
     Client.Translator{ id : translator; }
@@ -156,7 +149,8 @@ ApplicationWindow{
                         property int velYStep : 20;//VyStep
                         property int velRStep : 20;//VrStep
                         property bool mode : false;//KickMode
-                        property int dribbleLevel : 2;//DribLevel
+                        property bool needReport : false;
+                        property int dribbleLevel : 3;//DribLevel
                         property int rushSpeed : 20;//RushSpeed
 
                         property int m_VEL : 255//MaxVel
@@ -170,15 +164,25 @@ ApplicationWindow{
                         property int itemWidth : (width-columnSpacing*(columns-1))/columns;
 
                         ZText{ text:qsTr("Robot") + translator.emptyString }
-                        //最多12辆车
                         SpinBox{ minimumValue:0; maximumValue:15; value:parent.robotID; width:parent.itemWidth
                             onEditingFinished:{parent.robotID = value}}
                         ZText{ text:"Stop" }
-                        //有用吗？
-                        Button{ text:qsTr("[Space]") + translator.emptyString;width:parent.itemWidth
+                        Button{ text:qsTr("[Space]") + translator.emptyString;width:parent.itemWidth;
+                            onClicked: { crazyShow.updateStop(); }
                         }
-                        ZText{ text:" " }
-                        ZText{ text:" " }
+                        ZText{ text:"Report [R]" }
+                        Button{ 
+                            text: crazyShow.needReport ? qsTr("True") : qsTr("False") + translator.emptyString;width:parent.itemWidth;
+                            onClicked: {
+                                crazyShow.needReport = !crazyShow.needReport;
+                            }
+                            style: ButtonStyle{
+                                background: Rectangle{
+                                    radius: 2
+                                    color: crazyShow.needReport ? "#9BF80C" : "lightgrey";
+                                }
+                            }
+                        }
                         ZText{ text:qsTr("Vx [W/S]") + translator.emptyString }
                         //Vx:(-m_VEL, m_VEL)
                         SpinBox{ minimumValue:-crazyShow.m_VEL; maximumValue:crazyShow.m_VEL; value:parent.velX;width:parent.itemWidth
@@ -214,14 +218,20 @@ ApplicationWindow{
                         SpinBox{ minimumValue:1; maximumValue:crazyShow.velocityRMax; value:parent.m_VELR;width:parent.itemWidth
                             onEditingFinished:{parent.m_VELR = value;}}
                         ZText{ text:qsTr("Shoot [E]") + translator.emptyString}
-                        Button{ text:(parent.shoot? qsTr("true") : qsTr("false")) + translator.emptyString;width:parent.itemWidth
+                        Button{ text:(parent.shoot? qsTr("True") : qsTr("False")) + translator.emptyString;width:parent.itemWidth
                             onClicked: {
                                 parent.shoot = !parent.shoot;
+                            }
+                            style: ButtonStyle{
+                                background: Rectangle{
+                                    radius: 2
+                                    color: crazyShow.shoot ? "#9BF80C" : "lightgrey";
+                                }
                             }
                         }
 
                         ZText{ text:qsTr("KickMode [Up]")  + translator.emptyString}
-                        Button{ text:(parent.mode?qsTr("chip"):qsTr("flat")) + translator.emptyString;width:parent.itemWidth
+                        Button{ text:(parent.mode?qsTr("Chip"):qsTr("Flat")) + translator.emptyString;width:parent.itemWidth
                             onClicked: {
                                 parent.mode = !parent.mode
                             }
@@ -231,31 +241,37 @@ ApplicationWindow{
                         SpinBox{ minimumValue:0; maximumValue:parent.kickPowerMax; value:parent.power;width:parent.itemWidth
                             onEditingFinished:{parent.power = value;}}
                         ZText{ text:qsTr("Dribb [Q]") + translator.emptyString }
-                        Button{ text:(parent.dribble ? qsTr("true") : qsTr("false")) +translator.emptyString;width:parent.itemWidth
+                        Button{ text:(parent.dribble ? qsTr("True") : qsTr("False")) +translator.emptyString;width:parent.itemWidth
                             onClicked: {
                                 parent.dribble = !parent.dribble;
+                            }
+                            style: ButtonStyle{
+                                background: Rectangle{
+                                    radius: 2
+                                    color: crazyShow.dribble ? "#9BF80C" : "lightgrey";
+                                }
                             }
                         }
                         ZText{ text:qsTr("DribLevel")  + translator.emptyString}
                         //DribLevel:(0, dribbleMaxLevel)
                         SpinBox{ minimumValue:0; maximumValue:crazyShow.dribbleMaxLevel; value:parent.dribbleLevel;width:parent.itemWidth
                             onEditingFinished:{parent.dribbleLevel = value;}}
-                        ZText{ text:" " }
-                        ZText{ text:" " }
-                        ZText{ text:qsTr("Rush [G]") + translator.emptyString }
-                        Button{ text:(parent.rush ? qsTr("true") : qsTr("false")) +translator.emptyString;width:parent.itemWidth;
-                            onClicked: {
-                                parent.rush = !parent.rush;
-                                crazyShow.updateRush();
-                            }
-                        }
-                        ZText{ text:qsTr("RushSpeed")  + translator.emptyString}
-                        //RushSpeed:(0, m_VEL)
-                        SpinBox{ minimumValue:0; maximumValue:crazyShow.m_VEL; value:parent.rushSpeed;width:parent.itemWidth
-                            onEditingFinished:{parent.rushSpeed = value;}}
+                        ZText{ text:"Shooting" }
                         Rectangle{
-                            width:parent.itemWidth; height:20; color:parent.shoot ? "red" : "lightgrey";
+                            width:parent.itemWidth; height:24;radius:3; color:parent.shoot ? "#d9534f" : "lightgrey";
                         }
+                        // ZText{ text:qsTr("Rush [G]") + translator.emptyString }
+                        // Button{ text:(parent.rush ? qsTr("True") : qsTr("False")) +translator.emptyString;width:parent.itemWidth;
+                        //     onClicked: {
+                        //         parent.rush = !parent.rush;
+                        //         crazyShow.updateRush();
+                        //     }
+                        // }
+                        // ZText{ text:qsTr("RushSpeed")  + translator.emptyString}
+                        // //RushSpeed:(0, m_VEL)
+                        // SpinBox{ minimumValue:0; maximumValue:crazyShow.m_VEL; value:parent.rushSpeed;width:parent.itemWidth
+                        //     onEditingFinished:{parent.rushSpeed = value;}}
+
 
                         //键盘响应实现
                         Keys.onPressed:getFocus(event);
@@ -293,6 +309,7 @@ ApplicationWindow{
                         }
                         function handleKeyboardEvent(e){
                             switch(e){
+                            case 'r':{crazyShow.needReport = !crazyShow.needReport;break;}
                             case 'U':{crazyShow.mode = !crazyShow.mode;break;}
                             case 'a':{crazyShow.velY = crazyShow.limitVel(crazyShow.velY-crazyShow.velYStep,-crazyShow.m_VEL,crazyShow.m_VEL);
                                 break;}
@@ -322,7 +339,7 @@ ApplicationWindow{
                         }
                         //serial.updateCommandParams在C++中实现
                         function updateCommand(){
-                            serial.updateCommandParams(crazyShow.robotID,crazyShow.velX,crazyShow.velY,crazyShow.velR,crazyShow.dribble,crazyShow.dribbleLevel,crazyShow.mode,crazyShow.shoot,crazyShow.power);
+                            serial.updateCommandParams(crazyShow.robotID,crazyShow.velX,crazyShow.velY,crazyShow.velR,crazyShow.dribble,crazyShow.dribbleLevel,crazyShow.mode,crazyShow.shoot,crazyShow.power,crazyShow.needReport);
                         }
                         function updateFromGamepad(){
                             crazyShow.velX = -parseInt(gamepad.axisLeftY*10)/10.0*crazyShow.m_VEL;
@@ -358,9 +375,13 @@ ApplicationWindow{
                             if(vel<minValue) return minValue;
                             return vel;
                         }
+                        // Shortcut{
+                        //     sequence:"G";
+                        //     onActivated:crazyShow.handleKeyboardEvent('g');
+                        // }
                         Shortcut{
-                            sequence:"G";
-                            onActivated:crazyShow.handleKeyboardEvent('g');
+                            sequence:"R";
+                            onActivated:crazyShow.handleKeyboardEvent('r');
                         }
                         Shortcut{
                             sequence:"A";

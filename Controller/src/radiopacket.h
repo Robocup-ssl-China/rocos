@@ -10,12 +10,13 @@ public:
     explicit RadioPacket(QSerialPort* serialPtr);
     bool sendStartPacket();
     bool sendCommand();
-    void updateCommandParams(int robotID,int velX,int velY,int velR,bool ctrl,int ctrlLevel,bool mode,bool shoot,int power){
+    void updateCommandParams(int robotID,int velX,int velY,int velR,bool ctrl,int ctrlLevel,bool mode,bool shoot,int power,bool needReport){
         this->robotID = robotID;
         this->velX = velX; this->velY = velY; this->velR = velR;
         this->ctrl = ctrl;
         this->shootMode = mode;this->shoot = shoot; this->shootPowerLevel = power;
         this->ctrlPowerLevel = ctrlLevel;
+        this->needReport = needReport;
     }
     void updateFrequency(int);
 private:
@@ -26,7 +27,7 @@ private:
     QByteArray transmitPacket;
     QSerialPort* serialPtr;
     int frequency;
-    bool encode();
+    bool encode(bool fake=false);
 private:
     QUdpSocket sendSocket;
     bool shoot;
@@ -42,6 +43,7 @@ private:
     qint16 velR;
     quint16 ctrlPowerLevel;
     quint16 shootPowerLevel;
+    bool needReport;
 };
 
 #endif // RADIOPACKET_H

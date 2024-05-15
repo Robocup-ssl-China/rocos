@@ -3,6 +3,7 @@
 #include <QSerialPort>
 #include <QElapsedTimer>
 #include <cstdio>
+#include <thread>
 namespace  {
     struct NJ_Command{
         float power;
@@ -13,6 +14,7 @@ namespace  {
         int id;
         bool valid;
         bool kick_mode;
+        bool need_report;
     };
     void encodeLegacy(const NJ_Command& command,QByteArray& tx,int num);
 }
@@ -74,11 +76,19 @@ bool RadioPacket::sendCommand(){
     static QElapsedTimer timer;
     if(times == 0) timer.start();
     if(serialPtr != NULL){
-        encode();
-//        qDebug() << "0x" << transmitPacket.toHex();
-        //transmitPacket是包含命令的包
-        transmitPacket.data();
+        encode(true);
+        // //transmitPacket是包含命令的包
         serialPtr->write((transmitPacket.data()),TRANSMIT_PACKET_SIZE);
+        // // qDebug() << "sent 0x" << transmitPacket.toHex(); 
+        serialPtr->flush();
+        std::this_thread::sleep_for(std::chrono::milliseconds(4));
+        // serialPtr->write((transmitPacket.data()),TRANSMIT_PACKET_SIZE);
+        // // qDebug() << "sent 0x" << transmitPacket.toHex(); 
+        // serialPtr->flush();
+        encode(false);
+        std::this_thread::sleep_for(std::chrono::milliseconds(4));
+        serialPtr->write((transmitPacket.data()),TRANSMIT_PACKET_SIZE);
+        // qDebug() << "sent 0x" << transmitPacket.toHex(); 
         serialPtr->flush();
 //        sendSocket.writeDatagram(transmitPacket.data(), 25 ,QHostAddress("10.12.225.78"),1030);
         return true;
@@ -86,7 +96,7 @@ bool RadioPacket::sendCommand(){
     return false;
 }
 
-bool RadioPacket::encode(){
+bool RadioPacket::encode(bool fake){
     NJ_Command NJ_CMD;
 
     NJ_CMD.valid = true;
@@ -97,6 +107,7 @@ bool RadioPacket::encode(){
     NJ_CMD.dribble = this->ctrl ? this->ctrlPowerLevel : 0;
     NJ_CMD.power = this->shoot ? this->shootPowerLevel : 0;
     NJ_CMD.kick_mode = this->shootMode;
+    NJ_CMD.need_report = this->needReport;
 
     auto& tx = transmitPacket;
     int count = 0;
@@ -104,31 +115,22 @@ bool RadioPacket::encode(){
     tx[0] = 0xff;
     tx[21] = ((this->frequency&0x0f)<<4) | 0x07;
 
-    encodeLegacy(NJ_CMD,tx,0);
+    if(fake){
+        // NJ_CMD.id = 0;
+        // encodeLegacy(NJ_CMD,tx,0);
+        // NJ_CMD.id = 1;
+        // encodeLegacy(NJ_CMD,tx,1);
+        // NJ_CMD.id = 2;
+        // encodeLegacy(NJ_CMD,tx,2);
+    }else{
+        // NJ_CMD.id = 3;
+        encodeLegacy(NJ_CMD,tx,0);
+        // NJ_CMD.id = 4;
+        // encodeLegacy(NJ_CMD,tx,1);
+        // NJ_CMD.id = 5;
+        // encodeLegacy(NJ_CMD,tx,2);
+    }
 
-//    transmitPacket[0] = packageType | gameStatus;
-//    //RobotID
-//    transmitPacket[1] = (robotID) & 0x0f;
-//    transmitPacket[0] = transmitPacket[0] | 0x08;
-//    //Robot1 Config
-//    //shoot or chip
-//    transmitPacket[1] = transmitPacket[1] | (shootMode << 6 );
-//    //power level
-//    transmitPacket[1] = transmitPacket[1] | (ctrl ? (ctrlPowerLevel << 4):0);
-//    //速度的低位
-//    transmitPacket[2] = ((velX >= 0)?0:0x80) | (abs(velX) & 0x7f);
-//    transmitPacket[3] = ((velY >= 0)?0:0x80) | (abs(velY) & 0x7f);
-//    transmitPacket[4] = ((velR >= 0)?0:0x80) | (abs(velR) & 0x7f);
-//    //Don't understand !
-//    if(transmitPacket[2] == char(0xff)) transmitPacket[4] = 0xfe;
-//    if(transmitPacket[3] == char(0xff)) transmitPacket[5] = 0xfe;
-//    if(transmitPacket[4] == char(0xff)) transmitPacket[6] = 0xfe;
-//    //clear Byte[17-24]
-//    transmitPacket[17] = transmitPacket[18] = transmitPacket[19] = transmitPacket[20] = transmitPacket[21] = transmitPacket[22] = transmitPacket[23] = transmitPacket[24] = 0;
-//    //速度的高位
-//    transmitPacket[17] = ((abs(velX) & 0x180) >> 1) | ((abs(velY) & 0x180) >> 3) | ((abs(velR) & 0x780) >> 7);
-//    //shoot power
-//    transmitPacket[21] = (shoot ? shootPowerLevel:0) & 0x7f;
     return true;
 }
 namespace{
@@ -155,7 +157,7 @@ void encodeLegacy(const NJ_Command& command,QByteArray& tx,int num){
 
     TXBuff[2] =  TXBuff[2] | 0x01 << real_num;
     // dribble & kick_mode
-    TXBuff[6*i + 3] = 0x01 | ((((kick_mode?0x01:0x00)<<2)|(0x03 & dribble))<<4);
+    TXBuff[6*i + 3] = (command.need_report?0x08:0x00) | 0x01 | ((((kick_mode?0x01:0x00)<<2)|(0x03 & dribble))<<4);
 
     // velx
     if(vx < 0) TXBuff[6*i + 4] = TXBuff[6*i + 4] | (0x20);
