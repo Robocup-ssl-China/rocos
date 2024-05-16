@@ -7,6 +7,7 @@
 #include "BufferCounter.h"
 // #include "BallStatus.h"
 #include <singleton.hpp>
+#include "CMmotion.h"
 extern bool record_run_pos_on;
 ///
 /// @file   WoldModel.h
@@ -43,7 +44,9 @@ public:
     int     InfraredOnCount(int);
     int     InfraredOffCount(int);
     bool	KickDirArrived (int current_cycle, double kickdir, double kickdirprecision, int myNum = myDefaultNum);
-
+	double  predictRunTime(const PlayerVisionT& start, const CGeoPoint& Target, const CVector& targetVel = CVector(0, 0)){
+		return predictedTime(start, Target, targetVel);
+	}
 private:
 	const CVisionModule* _pVision;
 	const COptionModule* _pOption;

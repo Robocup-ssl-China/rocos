@@ -13,4 +13,5 @@ class CWorldModel{
     bool    IsInfraredOn(int);
     int     InfraredOnCount(int);
     int     InfraredOffCount(int);
+	double  predictRunTime(const PlayerVisionT& start, const CGeoPoint& Target, const CVector& targetVel);
 }
