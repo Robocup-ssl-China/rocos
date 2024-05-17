@@ -4,7 +4,7 @@ local CYCLE_COUNTDOWN = TEST_TIME * param.frameRate
 local ORIGIN = CGeoPoint:new_local(0,0)
 local CIRCLE_DIST = 1500
 local CIRCLE_RADIUS = 600
-local PLAYER_RADIUS = 90
+local PLAYER_RADIUS = 95
 local BALL_RADIUS = 25
 
 local CIRCLE_COUNT = 3
