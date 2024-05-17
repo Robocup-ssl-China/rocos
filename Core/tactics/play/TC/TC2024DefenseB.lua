@@ -73,8 +73,10 @@ local RUSH_TASK = function()
             minTimePos = targetPos
         end
     end
-    local runDir = (minTimePos - player.pos("a")):dir()
-    return task.goCmuRush(minTimePos,DIR,_,_,Utils.Polar2Vector(2000,runDir))
+    -- local runPos = minTimePos
+    local runPos = CGeoLine(ball, minTimePos):projection(player.pos("a"))
+    local runDir = (runPos - player.pos("a")):dir()
+    return task.goCmuRush(runPos,DIR,_,_,Utils.Polar2Vector(2000,runDir))
 end
 
 return {
