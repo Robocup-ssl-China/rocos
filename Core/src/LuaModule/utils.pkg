@@ -27,4 +27,5 @@ namespace Utils{
 	bool InTheirPenaltyArea(const CGeoPoint& p,const double buffer);
 	bool PlayerNumValid(int num);
 	bool canGo(const CVisionModule* pVision, const int num, const CGeoPoint& target, const int flag, const double avoidBuffer);
+	double angDiff(double angle1, double angle2);
 }

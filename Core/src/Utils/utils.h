@@ -29,6 +29,8 @@
 class CVisionModule;
 struct PlayerPoseT;
 namespace Utils {
+extern double angDiff(double angle1, double angle2);
+
 extern double Normalize(double angle);///<把角度规范化到(-PI,PI]
 extern CVector Polar2Vector(double m, double angle); ///<极坐标转换到直角坐标
 extern double VectorDot(const CVector& v1, const CVector& v2);  // 向量点乘

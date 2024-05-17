@@ -3,8 +3,11 @@
 #include "staticparams.h"
 #include <GDebugEngine.h>
 #include <iostream>
-
+#include "geomcalc.h"
 namespace Utils{
+    double angDiff(double angle1, double angle2){
+        return angleDiff(angle1,angle2);
+    }
     double dirDiff(const CVector& v1, const CVector& v2) { return fabs(Normalize(v1.dir() - v2.dir()));}
 	double Normalize(double angle)
 	{
