@@ -7,16 +7,12 @@ local WAIT_POS = {
     ORIGIN + Utils.Polar2Vector(CIRCLE_DIST, 1*math.pi*2/3+math.pi),
     ORIGIN + Utils.Polar2Vector(CIRCLE_DIST, 2*math.pi*2/3+math.pi),
 }
-local RUN_POS = {
-    ORIGIN + Utils.Polar2Vector(RUN_DIST, 0*math.pi*2/3),
-    ORIGIN + Utils.Polar2Vector(RUN_DIST, 1*math.pi*2/3),
-    ORIGIN + Utils.Polar2Vector(RUN_DIST, 2*math.pi*2/3),
-}
 
 local area = 1
 local minDist = 99999
 local farArea = 1
 local farDist = 0
+local predictNextArea = 1
 local checkClosest = function(pos)
     local tempMinDist = 99999
     local tempArea = -1
@@ -41,18 +37,58 @@ local checkFarthest = function(pos)
     return tempArea, tempMaxDist
 end
 
+local playerNum = {
+    -1,-1,-1
+}
+
 local update = function()
     local b = ball.rawPos()
     area, minDist = checkClosest(b)
     farArea, farDist = checkFarthest(b)
+
+    for i = 1, 3 do
+        for j=0,param.maxPlayer-1 do
+            if enemy.valid(j) and (enemy.pos(j)-WAIT_POS[i]):mod() < CIRCLE_RADIUS then
+                playerNum[i] = j
+                break
+            end
+        end
+    end
+    local DIR = enemy.dir(playerNum[area])
+    if playerNum[area] ~= -1 then
+        local minAngle = 99999
+        local minAngleNum = -1
+        for i=1,3 do
+            if i ~= area then
+                local angle = (WAIT_POS[i]-WAIT_POS[area]):dir()
+                local angDiff = math.abs(Utils.angDiff(DIR,angle))
+                debugEngine:gui_debug_msg(CGeoPoint(0,150*i),"i-"..i.." "..angDiff)
+                if angDiff < minAngle then
+                    minAngle = angDiff
+                    minAngleNum = i
+                end
+            end
+        end
+        debugEngine:gui_debug_msg(CGeoPoint(1000,1000),""..minAngleNum)
+        if minAngle < math.pi/12 then
+            predictNextArea = minAngleNum
+        end
+    end
     debugEngine:gui_debug_msg(CGeoPoint(0,0),"".. ball.velMod())
 end
 
 local dynPos = function()
-    return ORIGIN+Utils.Polar2Vector(500,(ORIGIN-WAIT_POS[farArea]):dir())
-end
-local dynDir = function()
-    return (ORIGIN - WAIT_POS[area]):dir() + math.pi/2
+    local aaa = -1
+    for i=1,3 do
+        if i ~= area and i ~= predictNextArea then
+            aaa = i
+            break
+        end
+    end
+    if aaa == -1 then
+        aaa = farArea
+    end
+    return ORIGIN+Utils.Polar2Vector(550,(ORIGIN-WAIT_POS[aaa]):dir())
 end
 
 local CHECK_POS = {
@@ -96,7 +132,6 @@ local RUSH_TASK = function()
         end
     end
     local interLine = CGeoLine(CHECK_POS[ref],CGeoPoint(0,0))
-        
 
     -- local runPos = minTimePos
     local ballLine = CGeoLine(ball, minTimePos)

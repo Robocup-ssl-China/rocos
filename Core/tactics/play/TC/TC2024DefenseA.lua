@@ -1,5 +1,5 @@
 local ORIGIN = CGeoPoint:new_local(0,0)
-local RUN_DIST = 1150
+local RUN_DIST = 1100
 local RUN_POS = {
     ORIGIN + Utils.Polar2Vector(RUN_DIST, 0*math.pi*2/3),
     ORIGIN + Utils.Polar2Vector(RUN_DIST, 2*math.pi*2/3),
@@ -26,7 +26,7 @@ firstState = "reset",
     switch = function()
         return gSubPlay.getState("TC") == "run" and "run" or "wait"
     end,
-    a = task.runMultiPos(RUN_POS,true,60,0),
+    a = task.runMultiPos(RUN_POS,true,120,0),
     match = "(a)"
 },
 name = "TC2024DefenseA",
