@@ -54,7 +54,7 @@ local checkEnemyRobotInCircle = function(num, circleNum)
     if not enemy.valid(num) then
         return false
     end
-    return checkInCircle(enemy.rawPos(num), circleNum, PLAYER_RADIUS)
+    return checkInCircle(enemy.rawPos(num), circleNum, 0)
 end
 
 local WAIT_START = true

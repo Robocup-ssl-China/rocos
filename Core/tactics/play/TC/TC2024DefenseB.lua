@@ -42,9 +42,10 @@ local checkFarthest = function(pos)
 end
 
 local update = function()
-    local ball = ball.rawPos()
-    area, minDist = checkClosest(ball)
-    farArea, farDist = checkFarthest(ball)
+    local b = ball.rawPos()
+    area, minDist = checkClosest(b)
+    farArea, farDist = checkFarthest(b)
+    debugEngine:gui_debug_msg(CGeoPoint(0,0),"".. ball.velMod())
 end
 
 local dynPos = function()
@@ -54,28 +55,55 @@ local dynDir = function()
     return (ORIGIN - WAIT_POS[area]):dir() + math.pi/2
 end
 
+local CHECK_POS = {
+    ORIGIN + Utils.Polar2Vector(RUN_DIST, 0*math.pi*2/3),
+    ORIGIN + Utils.Polar2Vector(RUN_DIST, 1*math.pi*2/3),
+    ORIGIN + Utils.Polar2Vector(RUN_DIST, 2*math.pi*2/3),
+}
+
 local RUSH_TASK = function()
+    local POS = player.rawPos("a")
     local DIR = player.dir("a")
     local ballVel = ball.vel()
     local ball = ball.pos()
     local targetPos = ball
     local minTimePos = ball
     local minTime = 99999
-    for dist = 0, 1000, 50 do
+    for dist = 50, 500, 50 do
         local targetPos = ball + Utils.Polar2Vector(dist, ballVel:dir())
         local t1 = world:predictRunTime(player.instance("a"), targetPos, CVector(0,0))
         local t2 = ballModel:timeForDist(dist)
         if t1 < t2 then
+            debugEngine:gui_debug_msg(CGeoPoint(100,100),"11111111")
             return task.goCmuRush(targetPos,DIR)
+        end
+        for i=1,3 do
+            if (targetPos - WAIT_POS[i]):mod() < CIRCLE_RADIUS then
+                break
+            end
         end
         if t1 < minTime then
             minTime = t1
             minTimePos = targetPos
         end
     end
+    local ref = -1
+    local ref_dist = 99999
+    for i=1,3 do
+        if (CHECK_POS[i]-ball):mod() < ref_dist then
+            ref_dist = (CHECK_POS[i]-ball):mod()
+            ref = i
+        end
+    end
+    local interLine = CGeoLine(CHECK_POS[ref],CGeoPoint(0,0))
+        
+
     -- local runPos = minTimePos
-    local runPos = CGeoLine(ball, minTimePos):projection(player.pos("a"))
+    local ballLine = CGeoLine(ball, minTimePos)
+    local runPos = CGeoLineLineIntersection(interLine,ballLine):IntersectPoint()
+    -- local runPos = ballLine:projection(player.pos("a"))
     local runDir = (runPos - player.pos("a")):dir()
+    debugEngine:gui_debug_msg(CGeoPoint(100,100),"2222222")
     return task.goCmuRush(runPos,DIR,_,_,Utils.Polar2Vector(2000,runDir))
 end
 
@@ -100,10 +128,10 @@ firstState = "reset",
 ["run"] = {
     switch = function()
         update()
-        if not gSubPlay.getState("TC") == "run" then
+        if gSubPlay.getState("TC") ~= "run" then
             return "wait"
         end
-        if minDist > CIRCLE_RADIUS then
+        if ball.velMod() > 800 then
             return "rush"
         end
     end,
@@ -114,10 +142,11 @@ firstState = "reset",
 ['rush'] = {
     switch = function()
         update()
-        if not gSubPlay.getState("TC") == "run" then
+        debugEngine:gui_debug_msg(CGeoPoint(0,0),"!!!!!!!!" .. gSubPlay.getState("TC"))
+        if gSubPlay.getState("TC") ~= "run" then
             return "wait"
         end
-        if minDist < CIRCLE_RADIUS then
+        if minDist < CIRCLE_RADIUS and ball.velMod() < 800 then
             return "run"
         end
     end,
