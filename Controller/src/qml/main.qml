@@ -31,7 +31,7 @@ ApplicationWindow{
         Rectangle{
             id : radio;
             width:parent.width;
-            height:380;
+            height:420;
             color:"transparent";
             Rectangle{
                 width:parent.width;
@@ -45,7 +45,7 @@ ApplicationWindow{
                     width: parent.width - 15;
                     anchors.horizontalCenter: parent.horizontalCenter;
                     anchors.top: parent.top;
-                    anchors.margins: 10;
+                    anchors.margins: 20;
                     title :qsTr("Sender Setting") + translator.emptyString;
                     Grid{
                         height:parent.height;
@@ -107,7 +107,8 @@ ApplicationWindow{
                     anchors.top: crazyListRectangle.bottom;
                     anchors.right: parent.right;
                     anchors.rightMargin: 20;
-                    anchors.topMargin: 10;
+                    anchors.topMargin: 15;
+                    anchors.bottomMargin: 15;
                     onClicked: clickEvent();
                     function clickEvent(){
                         if(ifConnected){
@@ -127,6 +128,7 @@ ApplicationWindow{
                     width:parent.width - 15;
                     anchors.top:crazyConnect.bottom;
                     anchors.horizontalCenter: parent.horizontalCenter;
+                    anchors.topMargin: 15;
                     id : groupBox2;
                     Grid{
                         id : crazyShow;
@@ -433,7 +435,8 @@ ApplicationWindow{
                     anchors.right:parent.right;
                     anchors.rightMargin: 20;
                     anchors.top:groupBox2.bottom;
-                    anchors.topMargin: 10;
+                    anchors.topMargin: 15;
+                    anchors.bottomMargin: 15;
                     enabled : crazyConnect.ifConnected;//如果连接成功按钮才有效
                     onClicked:{
                         handleClickEvent();

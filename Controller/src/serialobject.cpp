@@ -22,16 +22,10 @@ SerialObject::SerialObject(QObject *parent):QObject(parent),radioPacket(&serial)
     dataBits.append(QSerialPort::Data8);        stringDataBits.append("7");
     parity.append(QSerialPort::NoParity);       stringParity.append("OddParity");
     stopBits.append(QSerialPort::TwoStop);      stringStopBits.append("Two");
-    frequency.append(0);                        stringFrequency.append("0");
-    frequency.append(1);                        stringFrequency.append("1");
-    frequency.append(2);                        stringFrequency.append("2");
-    frequency.append(3);                        stringFrequency.append("3");
-    frequency.append(4);                        stringFrequency.append("4");
-    frequency.append(5);                        stringFrequency.append("5");
-    frequency.append(6);                        stringFrequency.append("6");
-    frequency.append(7);                        stringFrequency.append("7");
-    frequency.append(8);                        stringFrequency.append("8");
-    frequency.append(9);                        stringFrequency.append("9");
+    for (int i = 0; i < 16; i++){
+        frequency.append(i);
+        stringFrequency.append(QString::number(i));
+    }
     connect(&serial, &QSerialPort::readyRead, this, &SerialObject::readData);
 }
 QString SerialObject::getName(int itemIndex) const{
