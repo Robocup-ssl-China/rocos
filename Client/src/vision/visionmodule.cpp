@@ -14,6 +14,7 @@
 #include <QtDebug>
 #include <QTimer>
 #include <thread>
+#include <ranges>
 #include "setthreadname.h"
 #include "sim/sslworld.h"
 namespace {
@@ -314,13 +315,17 @@ void  CVisionModule::udpSend() {
             robot->set_raw_rotate_vel(result.robot[team][i].rawRotateVel);
         }
     }
-    auto selected_points = GlobalData::instance()->selected_points;
-    for (auto& it : selected_points) {
-        auto selected_points_proto = detectionFrame.add_selected_points();
-        selected_points_proto->set_id(it.first);
-        for (auto& xy: it.second) {
-            selected_points_proto->add_x(xy.first);
-            selected_points_proto->add_y(xy.second);
+    for(std::tuple<decltype(GlobalData::instance()->selected_points1), decltype(std::bind(&Vision_DetectionFrame::add_selected_points_positive,detectionFrame))> elem : std::views::zip(
+        std::array{GlobalData::instance()->selected_points1, GlobalData::instance()->selected_points2},
+        std::vector{std::bind(&Vision_DetectionFrame::add_selected_points_positive,detectionFrame), std::bind(&Vision_DetectionFrame::add_selected_points_negative,detectionFrame)})) {
+        auto selected_points = std::get<0>(elem);
+        for (auto& it : selected_points) {
+            auto selected_points_proto = std::get<1>(elem)();
+            selected_points_proto->set_id(it.first);
+            for (auto& xy: it.second) {
+                selected_points_proto->add_x(xy.first);
+                selected_points_proto->add_y(xy.second);
+            }
         }
     }
     int size = detectionFrame.ByteSizeLong();
@@ -336,7 +341,8 @@ void  CVisionModule::udpSend() {
     }
     detectionFrame.clear_robots_blue();
     detectionFrame.clear_robots_yellow();
-    detectionFrame.clear_selected_points();
+    detectionFrame.clear_selected_points_positive();
+    detectionFrame.clear_selected_points_negative();
 }
 
 /**

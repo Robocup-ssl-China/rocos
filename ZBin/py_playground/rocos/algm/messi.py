@@ -5,12 +5,16 @@ from tbkpy.socket.plugins import ProtobufParser
 from tzcp.ssl.rocos.zss_vision_detection_pb2 import Vision_DetectionFrame
 from tzcp.ssl.rocos.zss_debug_pb2 import Debug_Heatmap, Debug_Msgs, Debug_Msg
 from tzcp.ssl.rocos.zss_geometry_pb2 import Point
+import torch
+from torch import nn
 from threading import Event
 import time
 HEATMAP_COLORS = ["gray", "rainbow", "jet", "PiYG", "cool", "coolwarm", "seismic", "default"]
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using {device} device")
+
 class DEF:
-    HEATMAP = "coolwarm"
     FLX = 9000
     FLY = 6000
     PLX = 1000
@@ -22,9 +26,12 @@ class DEF:
 
     MAX_ACC = 4000
     MAX_VEL = 3500
-    MAX_BALL_VEL = 6000
+    MAX_BALL_VEL = 5500
+    MAX_PASS_VEL = 4000
 
-    POINTS_MAX_NUM = 2000
+    POINTS_MAX_NUM = 4000
+
+    SHOOT_SIMULATION_NUM = 6 # N points in goal range to simulate shoot
 
 def get_points_and_sizes(robot):
     points = np.empty((0,2))
@@ -39,7 +46,7 @@ def get_points_and_sizes(robot):
     p = np.mgrid[-DEF.FLX/2-R:0:res, -DEF.FLY/2:DEF.FLY/2:res].reshape(2, -1).T
     points, sizes = np.concatenate((points, p)), np.concatenate((sizes, np.ones(len(p))*res))
     # points in front field
-    res = DEF.STEP*0.8
+    res = DEF.STEP*1.1
     p = np.mgrid[0:DEF.FLX/2:res, -DEF.FLY/2:DEF.FLY/2:res].reshape(2, -1).T
     points, sizes = np.concatenate((points, p)), np.concatenate((sizes, np.ones(len(p))*res))
     # points around robot
@@ -72,7 +79,7 @@ def max_run_dist(t):
     w1 = np.maximum(t - 2*h/DEF.MAX_ACC, 0)
     return 0.5*h*(w1 + t)
 
-def calculate_interception(points, ball, robot, enemy):
+def calculate_interception(points, ball, robot, enemy, shoot_speed=DEF.MAX_BALL_VEL):
     lines = points - ball
     enemy_relative = enemy - ball
     angles = np.arctan2(lines[:,1], lines[:,0])
@@ -86,20 +93,60 @@ def calculate_interception(points, ball, robot, enemy):
     ban2 = projection_x > dist
     projection_y[ban1] = np.linalg.norm(enemy_relative, axis=1)[np.argwhere(ban1)[:,0]]
     projection_y[ban2] = dist_mx[ban2]
-    value = -4*(1/np.clip(projection_y/(max_run_dist(dist / DEF.MAX_BALL_VEL)+DEF.ROBOT_RADIUS), 0.5, 1.5) - 1/1.5)
+
+    max_ratio = 3.0 # max_ratio_for_interception
+    value = -1*(1/np.clip(projection_y/(max_run_dist(projection_x / shoot_speed)+DEF.ROBOT_RADIUS), 0.5, max_ratio) - 1/max_ratio)
     return value.min(axis=0)
 
 def calculate_shoot_angle(points, ball, robot, enemy):
-    pass
+    goal_left = np.array([DEF.FLX/2, -DEF.GL/2])
+    goal_right = np.array([DEF.FLX/2, DEF.GL/2])
+
+    vec1 = goal_left - points
+    vec2 = goal_right - points
+    ang1 = np.arctan2(vec1[:,1], vec1[:,0])
+    ang2 = np.arctan2(vec2[:,1], vec2[:,0])
+    angleRange = np.arctan2(np.sin(ang2 - ang1), np.cos(ang2 - ang1))
+
+    return angleRange
+
+def calculate_shoot_simulation(points, ball, robot, enemy):
+    goal_left = np.array([DEF.FLX/2, -DEF.GL/2])
+    goal_right = np.array([DEF.FLX/2, DEF.GL/2])
+    goal_simulation = np.linspace(goal_left, goal_right, DEF.SHOOT_SIMULATION_NUM)
+
+    shoot_range = calculate_shoot_angle(points, ball, robot, enemy)
+
+    sim_result = np.zeros(len(points))
+    for goal in goal_simulation:
+        sim_result += calculate_interception(points, goal, robot, enemy, shoot_speed=DEF.MAX_PASS_VEL)
+    return sim_result*(1/len(goal_simulation))*shoot_range/shoot_range.max()
+
 class Messi:
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.f = nn.Sequential(
+                nn.Linear(8, 8),
+                nn.ReLU(),
+                nn.Linear(8, 1),
+            ).to(device)
+        def forward(self, x):
+            assert(x.shape[-1] <= 8)
+            sensor = torch.zeros((*x.shape[:-1], 8), device=x.device)
+            sensor[..., :x.shape[-1]] = x
+            return self.f(sensor)
     def __init__(self):
         self.signal = Event()
         self.receiver = UDPMultiCastReceiver("233.233.233.233", 41001, callback=self.callback, plugin = ProtobufParser(Vision_DetectionFrame))
         self.sender = UDPSender(plugin=ProtobufParser(Debug_Heatmap))
         self.heatmap_endpoint = ("127.0.0.1", 20003)
         self.debug_endpoint = ("127.0.0.1", 20001)
-        self.heatmap_name = DEF.HEATMAP
         self.step = 1
+        self.model = self.Model()
+        
+        self.heatmap_name = "coolwarm"
+        self.choice_index = 0
     def callback(self, recv):
         self.vision = recv[0]
         self.signal.set()
@@ -136,7 +183,6 @@ class Messi:
         self.signal.clear()
     def calculate(self):
         self.signal.wait()
-        starttime = time.time()
         robot = np.array([(robot.x, robot.y) for robot in self.vision.robots_blue])
         enemy = np.array([(robot.x, robot.y) for robot in self.vision.robots_yellow])
         ball = np.array([self.vision.balls.x, self.vision.balls.y])
@@ -144,23 +190,44 @@ class Messi:
         points, sizes = get_points_and_sizes(robot)
 
         value = np.zeros(len(points))
+        data = torch.empty((0,len(points)))
 
         # near to goal
-        value += 1.0*-np.clip(dist(points, DEF.GOAL),2000, 5000) / 3000
+        x = -np.clip(dist(points, DEF.GOAL), 2000, 5000) / 3000
+        data = torch.cat((torch.from_numpy(x).reshape(1,-1),data))
+        value += 1.0*x
         # near to robot
-        value += -0.5*np.clip(distance_matrix(points, robot).min(axis=1) / 3000, 0.3, 1.0)
+        x = -np.clip(distance_matrix(points, robot).min(axis=1) / 3000, 0.3, 1.0)
+        data = torch.cat((torch.from_numpy(x).reshape(1,-1),data))
+        value += 1*x
         # far from enemy
-        value += 2*(np.clip(distance_matrix(points, enemy).min(axis=1) / 3000, 0.0, 0.3))
+        x = (np.clip(distance_matrix(points, enemy).min(axis=1) / 3000, 0.0, 0.3))
+        data = torch.cat((torch.from_numpy(x).reshape(1,-1),data))
+        value += 1*x
         # dist to ball
-        value += -1/np.clip(dist(points, ball) / 2000, 0.2, 1.0)
+        x = -1.0/np.clip(dist(points, ball) / 2000, 0.2, 1.0)
+        data = torch.cat((torch.from_numpy(x).reshape(1,-1),data))
+        value += 1.0*x
         # intercept by enemy
-        value += 0.7*calculate_interception(points, ball, robot, enemy)
-        # value += 0.7*calculate_shoot_angle(points, ball, robot, enemy)
+        x = calculate_interception(points, ball, robot, enemy)
+        data = torch.cat((torch.from_numpy(x).reshape(1,-1),data))
+        value += 1.0*x
+        # shoot angle
+        x = calculate_shoot_angle(points, ball, robot, enemy)
+        data = torch.cat((torch.from_numpy(x).reshape(1,-1),data))
+        value += 1.2*x
+        # available shoot simulation
+        x = calculate_shoot_simulation(points, ball, robot, enemy)
+        data = torch.cat((torch.from_numpy(x).reshape(1,-1),data))
+        value += 5*x
 
-        self.send_heatmap(points, value, sizes)
+        data = data.T.to(device)
+        model_res = self.model(data).detach().cpu().numpy().reshape(-1)
+
+        data_list = [value, model_res]
+
+        self.send_heatmap(points, data_list[self.choice_index], sizes)
         self.signal.clear()
-
-        print("time", time.time()-starttime)
 
     def histogram_equalization(self, values):
         hist, bins = np.histogram(values, bins=256, range=(0,1))
@@ -191,16 +258,15 @@ class Messi:
 def main():
     import time
     messi = Messi()
-    def changeCMAP():
+    def calculate():
         while True:
-            time.sleep(1)
-            messi.heatmap_name = HEATMAP_COLORS[np.random.randint(0, len(HEATMAP_COLORS))]
+            time.sleep(0.001)
+            messi.calculate()
     import threading
-    # threading.Thread(target=changeCMAP).start()
+    threading.Thread(target=calculate).start()
     while True:
-        time.sleep(0.01)
-        messi.calculate()
-        # messi.test_heatmap()
+        time.sleep(1)
+
 
 def get_cmap(cmap_name):
     import matplotlib.cm as cm

@@ -61,7 +61,8 @@ class CGlobalData {
     void CameraInit();
 
     std::mutex selected_points_mutex;
-    std::map<int, std::vector<std::pair<int, int>>> selected_points;
+    std::map<int, std::vector<std::pair<int, int>>> selected_points1;
+    std::map<int, std::vector<std::pair<int, int>>> selected_points2;
 private:
     CGeoPoint saoConvert(CGeoPoint);
     void  saoConvertEdge();

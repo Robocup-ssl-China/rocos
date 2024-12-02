@@ -14,6 +14,7 @@
 #include "geometry.h"
 #include <QElapsedTimer>
 #include <thread>
+#include <ranges>
 using namespace ZSS::Protocol;
 namespace {
 const static float MIN_LENGTH = 500;//area length : mm
@@ -196,8 +197,10 @@ void Field::setType(int t){
     this->_type = t;
     // check if type in selected_points(type:map<int, vector<pair<int, int>>>)
     std::scoped_lock lock(_G->selected_points_mutex);
-    if(_G->selected_points.find(t) == _G->selected_points.end()) {
-        _G->selected_points[t] = std::vector<std::pair<int, int>>();
+    for(auto points : {_G->selected_points1, _G->selected_points2}) {
+        if(points.find(_type) == points.end()) {
+            points[_type] = std::vector<std::pair<int, int>>();
+        }
     }
 }
 
@@ -449,18 +452,13 @@ void Field::rightPressEvent(QMouseEvent *e){
     }
 }
 void Field::rightReleaseEvent(QMouseEvent *e){
-    switch(mouse_modifiers) {
-    case Qt::NoModifier:
+    if(mouse_modifiers & Qt::NoModifier){
         rightNoModifierReleaseEvent(e);
-        break;
-    case Qt::ControlModifier:
+    }else if(mouse_modifiers & Qt::ControlModifier){
         rightCtrlModifierReleaseEvent(e);
-        break;
-    case Qt::AltModifier:
+    }else if(mouse_modifiers & Qt::AltModifier){
         rightAltModifierReleaseEvent(e);
-        break;
-    default:
-        break;
+    }else{
     }
 }
 void Field::rightCtrlModifierMoveEvent(QMouseEvent *e){
@@ -469,11 +467,12 @@ void Field::rightCtrlModifierPressEvent(QMouseEvent *e){
 }
 void Field::rightCtrlModifierReleaseEvent(QMouseEvent *e){
     std::scoped_lock lock(_G->selected_points_mutex);
-    if(_G->selected_points.find(_type) == _G->selected_points.end()) {
-        _G->selected_points[_type] = std::vector<std::pair<int, int>>();
+    auto&& points = (mouse_modifiers & Qt::ShiftModifier) ? _G->selected_points2 : _G->selected_points1;
+    if(points.find(_type) == points.end()) {
+        points[_type] = std::vector<std::pair<int, int>>();
     }
     auto pos = rp(e->pos());
-    _G->selected_points[_type].push_back(std::pair<int, int>(pos.x(), pos.y()));
+    points[_type].push_back(std::pair<int, int>(pos.x(), pos.y()));
 }
 void Field::rightAltModifierMoveEvent(QMouseEvent *e){
 }
@@ -481,10 +480,12 @@ void Field::rightAltModifierPressEvent(QMouseEvent *e){
 }
 void Field::rightAltModifierReleaseEvent(QMouseEvent *e){
     std::scoped_lock lock(_G->selected_points_mutex);
-    if(_G->selected_points.find(_type) == _G->selected_points.end()) {
-        _G->selected_points[_type] = std::vector<std::pair<int, int>>();
+    for(auto points : {&_G->selected_points1, &_G->selected_points2}) {
+        if(points->find(this->_type) == points->end()) {
+            (*points)[this->_type] = std::vector<std::pair<int, int>>();
+        }
+        (*points)[this->_type].clear();
     }
-    _G->selected_points[_type].clear();
 }
 
 void Field::middleMoveEvent(QMouseEvent *e) {
@@ -767,17 +768,22 @@ void Field::paintSelectedCar() {
     }
 }
 void Field::paintSelectedPoints(){
-    pixmapPainter.setBrush(QBrush(COLOR_GREEN));
-    pixmapPainter.setPen(QPen(COLOR_GREEN, ::w(50)));
     float size = 20;
     std::scoped_lock lock(_G->selected_points_mutex);
-    if(_G->selected_points.find(_type) == _G->selected_points.end()) {
-        _G->selected_points[_type] = std::vector<std::pair<int, int>>();
+    for (std::tuple<decltype(_G->selected_points1)&, decltype(COLOR_GREEN)&> elem : std::views::zip(std::array{_G->selected_points1, _G->selected_points2},std::array{COLOR_GREEN, COLOR_RED})) {
+        auto&& points = std::get<0>(elem);
+        auto color = std::get<1>(elem);
+        pixmapPainter.setBrush(QBrush(color));
+        pixmapPainter.setPen(QPen(color, ::w(50)));
+        if(points.find(_type) == points.end()) {
+            points[_type] = std::vector<std::pair<int, int>>();
+        }
+        auto ps = points[_type];
+        for (auto& p : ps) {
+            pixmapPainter.drawEllipse(QRectF(::x(p.first-size/2), ::y(p.second+size/2), ::w(size), ::h(-size)));
+        }
     }
-    auto points = _G->selected_points[_type];
-    for (auto& p : points) {
-        pixmapPainter.drawEllipse(QRectF(::x(p.first-size/2), ::y(p.second+size/2), ::w(size), ::h(-size)));
-    }
+
 }
 void Field::paintCarShadow(const QColor& color,qreal x, qreal y, qreal radian) {
     static qreal radius = carDiameter / 2.0;

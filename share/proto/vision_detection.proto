@@ -45,5 +45,6 @@ message Vision_DetectionFrame {
   required Vision_DetectionBall  balls         = 1;
   repeated Vision_DetectionRobot robots_yellow = 2;
   repeated Vision_DetectionRobot robots_blue   = 3;
-  repeated SelectedPoint selected_points = 4;
+  repeated SelectedPoint selected_points_positive = 4;
+  repeated SelectedPoint selected_points_negative = 5;
 }
