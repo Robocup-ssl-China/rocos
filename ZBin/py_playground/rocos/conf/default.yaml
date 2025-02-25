@@ -1,0 +1,23 @@
+ssl:
+  addr:
+    local: 127.0.0.1
+    ref: 224.5.23.1
+    vision: 224.5.23.2
+    zss: 233.233.233.233
+  port:
+    # ssl
+    vision: 10005
+    ref: 10003
+    # grSim
+    sim_cmd: 20011
+    sim_status: [30011, 30012]
+    sim_control: 10300
+    sim_blue_control: 10301
+    sim_yellow_control: 10302
+    # rocos : Core <> Client
+    cmd: [50011, 50012]
+    status: [60001, 60002]
+    fusion_vision: [23333, 23334]
+    fusion_vision_py: [41001, 41002]
+    debug_msg: [20001, 20002]
+    debug_heapmap: [20003, 20004]
