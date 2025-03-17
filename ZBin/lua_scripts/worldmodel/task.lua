@@ -25,7 +25,7 @@ function touchKick(p,ifInter,power,mode)
 	local ipower = function()
 		return power or 127
 	end
-	return {mexe, mpos, mode and kick.flat or kick.chip, idir, pre.low, ipower, cp.full, flag.nothing}
+	return {mexe, mpos, type(mode) == "function" and mode or (mode and kick.flat or kick.chip), idir, pre.low, ipower, cp.full, flag.nothing}
 end
 function goSpeciPos(p, d, f, a) -- 2014-03-26 增加a(加速度参数)
 	local idir
@@ -130,6 +130,10 @@ end
 ------------------------------------ 防守相关的skill ---------------------------------------
 -- TODO
 ----------------------------------------- 其他动作 --------------------------------------------
+function placeBall(target)
+	local mexe, mpos =PlaceBall{pos = target}
+	return {mexe, mpos}
+end
 
 -- p为朝向，如果p传的是pos的话，不需要根据ball.antiY()进行反算
 function goBackBall(p, d)

@@ -41,7 +41,7 @@ function valid()
 end
 
 function placementPos()
-    return vision:getBallPlacementPosition()
+    return CGeoPoint(vision:getBallPlacementPosition())
 end
 
 function toPlayerDir(role)

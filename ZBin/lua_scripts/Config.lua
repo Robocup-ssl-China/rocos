@@ -44,7 +44,7 @@ gRefPlayTable = {
         "Ref/GameStop/Ref_StopV1",
         "Ref/GameStop/Ref_StopV2",
 -- BallPlacement
-        -- "Ref/BallPlacement/Ref_BallPlace2Stop",
+        "Ref/BallPlacement/Ref_BallPlace2Stop",
 -- Penalty
         "Ref/PenaltyDef/Ref_PenaltyDefV1",
         "Ref/PenaltyKick/Ref_PenaltyKickV1",

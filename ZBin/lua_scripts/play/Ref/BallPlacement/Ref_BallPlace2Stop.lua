@@ -1,138 +1,27 @@
-local COR_DEF_POS1 = CGeoPoint:new_local(-50*param.lengthRatio,-50*param.widthRatio)
-local SIDE_POS, MIDDLE_POS, INTER_POS = pos.refStopAroundBall()
-
-local LEADER_TASK = function()
-	if cond.ourBallPlace() then
-		return task.fetchBall(ball.placementPos,0,true)
-	end
-	return task.goCmuRush(pos.LEADER_STOP_POS, player.toBallDir, _, flag.dodge_ball+flag.allow_dss)
+local POS_X = -3500
+local POS_X_STEP = 1000
+local POS_Y = 800
+local getPos = function(i,j)
+	return CGeoPoint(POS_X + i * POS_X_STEP, POS_Y*j)
 end
-
 gPlayTable.CreatePlay{
 
-firstState = "beginning",
+firstState = "stop",
 
-switch = function()	
-	if gCurrentState == "beginning" and 
-		enemy.attackNum() <= 8 and enemy.attackNum() > 0 then
-		return "attacker"..enemy.attackNum()
-	else
-		if cond.isGameOn() then
-			return "finish"
-		elseif enemy.situChanged() and
-			enemy.attackNum() <= 8 and enemy.attackNum() > 0 then
-			return "attacker"..enemy.attackNum()
-		end
-	end
+switch = function()
 end,
 
 -- headback sideback defend middle
-["beginning"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.goPassPos("Leader"),
-	Middle   = task.goCmuRush(COR_DEF_POS1, player.toBallDir, _, flag.dodge_ball+flag.allow_dss),
-	Fronter  = task.goCmuRush(INTER_POS, player.toBallDir, _, flag.dodge_ball+flag.allow_dss),
-	Center   = task.sideBack(),
-	Defender = task.leftBack(),
-	Assister = task.rightBack(),
-	Goalie   = task.zgoalie(),
-	match    = "(L)[SMDFCA]"
-},
-
-["attacker1"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.goPassPos("Leader"),
-	Middle   = task.goCmuRush(COR_DEF_POS1, player.toBallDir, _, flag.dodge_ball+flag.allow_dss),
-	Fronter  = task.goCmuRush(INTER_POS, player.toBallDir, _, flag.dodge_ball+flag.allow_dss),
-	Center   = task.sideBack(),
-	Defender = task.leftBack(),
-	Assister = task.rightBack(),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
-},
-
-["attacker2"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.goPassPos("Leader"),
-	Middle   = task.goCmuRush(COR_DEF_POS1, player.toBallDir, _, flag.dodge_ball+flag.allow_dss),
-	Center   = task.zmarking("First"),
-	Fronter  = task.leftBack(),
-	Defender = task.defendHead(),
-	Assister = task.rightBack(),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
-},
-
-["attacker3"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.zmarking("First"),
-	Middle   = task.zmarking("Second"),
-	Defender = task.goCmuRush(COR_DEF_POS1, player.toBallDir, _, flag.dodge_ball+flag.allow_dss),
-	Center   = task.leftBack(),
-	Fronter  = task.rightBack(),
-	Assister = task.defendHead(),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
-},
-
-["attacker4"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.zmarking("First"),
-	Middle   = task.zmarking("Second"),
-	Defender = task.zmarking("Third"),
-	Center   = task.leftBack(),
-	Fronter  = task.rightBack(),
-	Assister = task.defendHead(),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
-},
-
-["attacker5"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.zmarking("First"),
-	Middle   = task.zmarking("Second"),
-	Defender = task.zmarking("Third"),
-	Center   = task.zmarking("Fourth"),
-	Fronter  = task.singleBack(),
-	Assister = task.defendHead(),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
-},
-
-["attacker6"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.zmarking("First"),
-	Middle   = task.zmarking("Second"),
-	Defender = task.zmarking("Third"),
-	Center   = task.zmarking("Fourth"),
-	Fronter  = task.zmarking("Fifth"),
-	Assister = task.defendHead(),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
-},
-
-["attacker7"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.zmarking("First"),
-	Middle   = task.zmarking("Second"),
-	Defender = task.zmarking("Third"),
-	Center   = task.zmarking("Fourth"),
-	Fronter  = task.zmarking("Fifth"),
-	Assister = task.zmarking("Sixth"),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
-},
-
-["attacker8"] = {
-	Leader   = LEADER_TASK,
-	Special  = task.zmarking("First"),
-	Middle   = task.zmarking("Second"),
-	Defender = task.zmarking("Third"),
-	Center   = task.zmarking("Fourth"),
-	Fronter  = task.zmarking("Fifth"),
-	Assister = task.defendHead(),
-	Goalie   = task.zgoalie(),
-	match    = "{L}[SMDFCA]"
+["stop"] = {
+	Leader = task.placeBall(ball.placementPos,_,true),
+	a = task.goCmuRush(getPos(1, 1),0),
+	b = task.goCmuRush(getPos(1,-1),0),
+	c = task.goCmuRush(getPos(2, 1),0),
+	d = task.goCmuRush(getPos(2,-1),0),
+	e = task.goCmuRush(getPos(3, 1),0),
+	f = task.goCmuRush(getPos(3,-1),0),
+	Goalie   = task.goCmuRush(CGeoPoint(POS_X, 0)),
+	match    = "(L)[abcdef]"
 },
 
 name = "Ref_BallPlace2Stop",

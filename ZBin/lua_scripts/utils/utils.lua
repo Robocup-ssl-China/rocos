@@ -3,10 +3,11 @@ function warning(msg)
     debugEngine:warning(msg)
 end
 function _c(f,...) -- auto convert for closure
+    local res = f
 	if type(f) == "function" then
-		return f(...)
+		res = f(...)
 	end
-	return f
+	return res
 end
 
 function serializeTable(val, name, skipnewlines, depth)
