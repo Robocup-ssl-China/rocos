@@ -1,6 +1,6 @@
 #ifndef __GLOBAL_DATA__
 #define __GLOBAL_DATA__
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include "dataqueue.hpp"
 #include "messageformat.h"
 #include "ballrecords.h"
@@ -32,20 +32,17 @@ struct RobotCommands {
 };
 
 class CGlobalData {
-  public:
+public:
     CGlobalData();
-    void setCameraMatrix(bool);
     bool cameraUpdate[PARAM::CAMERA];
     bool cameraControl[PARAM::CAMERA];
-    bool processControl[3];
     int cameraID[PARAM::CAMERA];//show the mapping of cameras  id
     double robotPossible[2][PARAM::ROBOTMAXID];
     RobotInformation robotInformation[PARAM::TEAMS][PARAM::ROBOTMAXID];
     QMutex robotInfoMutex;
     DataQueue<RobotCommands> robotCommand[PARAM::TEAMS];
     int commandMissingFrame[PARAM::TEAMS];//team command VALID  --> commandMissingFrame<20
-    CameraFix cameraFixMatrix[PARAM::CAMERA];
-    SingleCamera cameraMatrix[PARAM::CAMERA];
+    Msg::CameraEdge cameraAnchor[PARAM::CAMERA];
     DataQueue<ReceiveVisionMessage> camera[PARAM::CAMERA];
     DataQueue<ReceiveVisionMessage> processBall;
     DataQueue<ReceiveVisionMessage> processRobot;
@@ -57,13 +54,7 @@ class CGlobalData {
     QMutex debugMutex;// debugMessages;
     bool ctrlC;
     QMutex ctrlCMutex;
-
-    void CameraInit();
-
-private:
-    CGeoPoint saoConvert(CGeoPoint);
-    void  saoConvertEdge();
-    int saoAction;
+    double calculateWeight(const int camID, const CGeoPoint&);
 };
 typedef Singleton<CGlobalData> GlobalData;
 #endif // __GLOBAL_DATA__

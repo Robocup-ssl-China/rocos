@@ -4,7 +4,7 @@
 #include <QMutex>
 #include <QUdpSocket>
 #include <QSerialPort>
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include "zss_cmd.pb.h"
 #include "staticparams.h"
 namespace ZSS {

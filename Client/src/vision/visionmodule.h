@@ -3,46 +3,63 @@
 
 #include <QObject>
 #include <QUdpSocket>
-#include "singleton.hpp"
-#include "vision_detection.pb.h"
+#include <atomic>
+#include "zos/utils/singleton.h"
 #include "staticparams.h"
 #include "messageformat.h"
-#include "zsplugin.hpp"
-class CVisionModule : public QObject,public ZSPlugin  {
+#include "zos/core.h"
+#include "zos/socketplugin.h"
+#include "vision_detection.pb.h"
+#include "zss_cmd.pb.h"
+class VisionModule : public QObject,public Singleton<VisionModule>{
     Q_OBJECT
-  public:
-    CVisionModule(QObject *parent = 0);
+public:
+    VisionModule();
+    ~VisionModule()=default;
+    // UDP
     void udpSocketConnect(bool);
     void udpSocketDisconnect();
+
+    // Vision parse
     void parse(void *, int);
-    void setIfEdgeTest(bool);
-    bool showIfEdgeTest();
-    void run(){};
-    quint16 getFPS();
+    bool collectNewVision();
     bool dealWithData();
-    void setInterfaceIndex(const int);
-  signals:
-    void needDraw();
-  public slots:
+    quint16 getFPS();
+    zos::Publisher p_draw_signal;
+
+    double calculateWeight(const int camID, const CGeoPoint&);
+
+    std::atomic_bool _running = false;
+public slots:
     void storeData();
     void oneStepSimData();
-  private:
+private:
     void readSimData();
-    void readRemoteSimData();
-    CGeoPoint saoConvert(CGeoPoint);
-    double saoConvert(double);
-    void edgeTest();
     void udpSend();
     void checkCommand();
-    QUdpSocket udpReceiveSocket, udpSendSocket;
+    QUdpSocket udpReceiveSocket;
+    zos::udp::Plugin<Vision_DetectionFrame> udpSender;
+
+    zos::Publisher p_sim_signal;
+    zos::Subscriber<10> s_ssl_vision;
+
     QHostAddress groupAddress;
     quint64 counter;
-    int _interface;
     int vision_port;
-    int saoAction;
-    bool collectNewVision();
-    bool IF_EDGE_TEST;
-    Vision_DetectionFrame detectionFrame;
+
+    // vision parse
+    bool _camera_control[PARAM::CAMERA];
+    Vision_DetectionFrame _detectionFrame;
+    std::shared_mutex _visionmutex;
+    void resetVision();
+    void updateEdge();
+public:
+    struct CheckRobotResult{
+        bool res;
+        int team;
+        unsigned int id;
+        double x,y,orientation;
+    };
+    CheckRobotResult checkRobot(double x,double y);
 };
-typedef Singleton <CVisionModule> VisionModule;
 #endif // __VISIONMODULE_H__

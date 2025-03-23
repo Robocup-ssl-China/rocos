@@ -19,7 +19,7 @@
 
 #include "staticparams.h"
 #include <geometry.h>
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 
 /// <summary>	Dribble status, for dribble handling.  </summary>
 ///

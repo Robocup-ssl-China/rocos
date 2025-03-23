@@ -62,33 +62,16 @@ Interaction::~Interaction() {
     }
 }
 void Interaction::updateInterfaces(){
-    ZNetworkInterfaces::instance()->updateInterfaces();
+    NetworkInterfaces::instance()->updateInterfaces();
 }
 QStringList Interaction::getInterfaces(){
-    return ZNetworkInterfaces::instance()->getInterfaces();
-}
-QStringList Interaction::getGrsimInterfaces(){
-    return ZNetworkInterfaces::instance()->getGrsimInterfaces();
+    return NetworkInterfaces::instance()->getInterfaces();
 }
 void Interaction::changeVisionInterface(int index){
-//    if(portNum < ports.size() && portNum >= 0){
-//        serial.setPortName(ports[portNum]);
-//        return true;
-//    }
-    VisionModule::instance()->setInterfaceIndex(index);
-//    qDebug() << "vision interface : " << index;
-}
-void Interaction::changeGrsimInterface(int index){
-    ZCommunicator::instance()->setGrsimInterfaceIndex(index);
+    NetworkInterfaces::instance()->set("vision",index);
 }
 void Interaction::changeRadioInterface(bool ifBlue,bool ifSender,int index){
 //    qDebug() << "radio  interface : " << ifBlue << ifSender << index;
-}
-void Interaction::setIfEdgeTest(bool ifEdgeTest) {
-    VisionModule::instance()->setIfEdgeTest(ifEdgeTest);
-}
-void Interaction::showIfEdgeTest() {
-    std::cout << VisionModule::instance()->showIfEdgeTest() << std::endl;
 }
 void Interaction::setVision(bool needStart, bool real) {
     // ZSS::ZActionModule::instance()->setSimulation(!real);
@@ -109,9 +92,6 @@ void Interaction::setVision(bool needStart, bool real) {
 void Interaction::controlCamera(int index, bool state) {
     GlobalData::instance()->cameraControl[index] = state;
 }
-void Interaction::controlProcess(int index, bool state) {
-    GlobalData::instance()->processControl[index] = state;
-}
 bool Interaction::connectRadio(bool sw, int id, int frq) {
     if(sw) {
         ZCommunicator::instance()->disconnectMedusa(id);
@@ -120,6 +100,7 @@ bool Interaction::connectRadio(bool sw, int id, int frq) {
         // return ZSS::ZActionModule::instance()->connectRadio(id, frq);
     } else {
 //        return ZSS::ZActionModule::instance()->disconnectRadio(id);
+        return true;
     }
     return false;
 }
@@ -127,10 +108,10 @@ bool Interaction::connectSim(bool sw, int id, bool color) {
     if(sw) {
         ZCommunicator::instance()->disconnectMedusa(id);
         ZCommunicator::instance()->connectMedusa(id);
-        ZSS::ZSimModule::instance()->disconnectSim(color);
-        return ZSS::ZSimModule::instance()->connectSim(color);
+        ZSS::SimModule::instance()->disconnectSim(color);
+        return ZSS::SimModule::instance()->connectSim(color);
     } else {
-//        return ZSS::ZSimModule::instance()->disconnectSim(color); //fix a bug for Medusa out of Athena
+        return ZSS::SimModule::instance()->disconnectSim(color);
     }
 }
 bool Interaction::controlMonitor(bool control) {
@@ -383,15 +364,6 @@ QStringList Interaction::getSerialPortsList(){
 int Interaction::getFrequency(){
     return ZSS::NActionModule::instance()->getFrequency();
 }
-void Interaction::changeAddress(int team, int index){
-    // ZSS::ZActionModule::instance()->changeAddress(team,index);
-}
-QStringList Interaction::getAllAddress(){
-    // return ZSS::ZActionModule::instance()->getAllAddress();
-}
-QString Interaction::getRealAddress(int index){
-    // return ZSS::ZActionModule::instance()->getRealAddress(index);
-};
 
 void Interaction::updateTestScriptList(){
     QProcess process;
@@ -409,4 +381,34 @@ void Interaction::updateRefConfigList(){
     QString stdout = process.readAllStandardOutput();
     _ref_config_show_name_list = (stdout).split('\n');
     _ref_config_show_name_list.removeAll(QString(""));
+}
+
+
+/*
+ * CInteraction
+ */
+CInteraction::CInteraction():_draw_signal("need_draw"),_extra_draw_signal("extra_need_draw"){
+    runUDPContext();
+}
+CInteraction::~CInteraction(){
+}
+void CInteraction::killProcess(const QString& name){
+#ifdef WIN32
+    auto cmd = "taskkill -im " + name + ".exe -f";
+#else
+    auto cmd = "pkill " + name;
+#endif
+    QProcess::execute(cmd);
+}
+void CInteraction::runUDPContext(){
+    if(running) {
+        return;
+    }
+    _asio_context = std::thread([this]{
+        running = true;
+        zos::__io::GetInstance()->run();
+        zos::__io::GetInstance()->reset();
+        running = false;
+    });
+    _asio_context.detach();
 }

@@ -4,7 +4,7 @@
 #include "geometry.h"
 #include "parammanager.h"
 #include "VisionModule.h"
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 class CBallModel
 {
 

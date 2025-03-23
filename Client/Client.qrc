@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>src/qml/main.qml</file>
+        <file>src/qml/main_test.qml</file>
+        <file>src/qml/Field.qml</file>
         <file>src/qml/ControlBoard.qml</file>
         <file>src/qml/Settings.qml</file>
         <file>qtquickcontrols2.conf</file>
@@ -86,5 +88,22 @@
         <file>source/scissors2.png</file>
         <file>source/refresh.png</file>
         <file>src/qml/ZComboBox.qml</file>
+        <file>src/qml/CustomDW/DockWidget.qml</file>
+        <file>src/qml/CustomDW/FloatingWindow.qml</file>
+        <file>src/qml/CustomDW/Frame.qml</file>
+        <file>src/qml/CustomDW/TitleBar.qml</file>
+        <file>src/qml/Components/CButton.qml</file>
+        <file>src/qml/Components/CColumn.qml</file>
+        <file>src/qml/Components/CComboBox.qml</file>
+        <file>src/qml/Components/CGridScroll.qml</file>
+        <file>src/qml/Components/CGroupBox.qml</file>
+        <file>src/qml/Components/CLight.qml</file>
+        <file>src/qml/Components/CSpinBox.qml</file>
+        <file>src/qml/Components/CSwitch.qml</file>
+        <file>src/qml/Components/CText.qml</file>
+        <file>src/qml/Components/LayoutItem.qml</file>
+        <file>src/qml/Components/qmldir</file>
+        <file>src/qml/Theme/qmldir</file>
+        <file>src/qml/Theme/Theme.qml</file>
     </qresource>
 </RCC>

@@ -1,8 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Window 2.3
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Layouts 1.0
+import QtQuick.Controls
+import QtQuick.Layouts
 import QtQml 2.2
 import ZSS 1.0 as ZSS
 Window {
@@ -54,11 +53,19 @@ Window {
     Row {
         spacing: 0;
 
-        TabView{
+        TabBar{
+            id:bar;
+            width:(roots.height)*4/3;
+            height:20;
+            TabButton{ text: "Origin"; }
+            TabButton{ text: "Filtered B"; }
+            TabButton{ text: "Filtered Y"; }
+        }
+        StackLayout{
             id:fields;
             width:(roots.height)*4/3;
             height:roots.height;
-            currentIndex:1;
+            currentIndex: bar.currentIndex
             onWidthChanged: {
                 interaction.setSize(width,height - 20);
             }
@@ -67,7 +74,7 @@ Window {
             }
             Repeater{
                 model:["Origin","Filtered B","Filtered Y"];
-                Tab{
+                Item{
                     anchors.fill: parent;
                     title:modelData;
 //                    title:"Vision"
@@ -88,21 +95,21 @@ Window {
                     }
                 }
             }
-            style: TabViewStyle {
-                frameOverlap: 0
-                tabOverlap: 0
-                tab: Rectangle {
-                    color: styleData.selected ? "#303030" : "grey"
-                    implicitWidth: fields.width/fields.count;
-                    implicitHeight: 20
-                    Text {
-                        id: text
-                        anchors.centerIn: parent
-                        text: styleData.title
-                        color: styleData.selected ? "#dddddd" : "black"
-                    }
-                }
-            }
+            // style: TabViewStyle {
+            //     frameOverlap: 0
+            //     tabOverlap: 0
+            //     tab: Rectangle {
+            //         color: styleData.selected ? "#303030" : "grey"
+            //         implicitWidth: fields.width/fields.count;
+            //         implicitHeight: 20
+            //         Text {
+            //             id: text
+            //             anchors.centerIn: parent
+            //             text: styleData.title
+            //             color: styleData.selected ? "#dddddd" : "black"
+            //         }
+            //     }
+            // }
             Text{
                id : fpsWord;
                text : qsTr("FPS");

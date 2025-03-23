@@ -32,7 +32,7 @@ QHash<int,QByteArray> ParamInterface::roleNames() const {
 }
 Qt::ItemFlags ParamInterface::flags(const QModelIndex &index) const {
     if (!index.isValid())
-        return 0;
+        return static_cast<Qt::ItemFlag>(0);
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
 bool ParamInterface::setData(const QModelIndex &index, const QVariant &value,int role){

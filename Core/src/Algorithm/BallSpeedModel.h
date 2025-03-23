@@ -1,7 +1,7 @@
 #ifndef _BALL_SPEED_MODEL_H_
 #define _BALL_SPEED_MODEL_H_
 #include <tuple>
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include "WorldDefine.h"
 
 class CVisionModule;

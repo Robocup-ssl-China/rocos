@@ -10,7 +10,7 @@
 #include "OptionModule.h"
 #include "utils.h"
 #include <vector>
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include <QUdpSocket>
 #include "vision_detection.pb.h"
 using namespace std;

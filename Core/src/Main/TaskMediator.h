@@ -1,7 +1,7 @@
 #ifndef _TASK_MEDIATOR_H_
 #define _TASK_MEDIATOR_H_
 
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include <geometry.h>
 #include "staticparams.h"
 #include <PlayerTask.h>

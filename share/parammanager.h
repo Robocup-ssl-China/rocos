@@ -2,14 +2,14 @@
 #define PARAMMANAGER_H
 #include <QSettings>
 #include <QDebug>
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 namespace ZSS {
 class ParamManager {
   public:
     ParamManager();
     ParamManager(const QString&);
     ~ParamManager();
-    bool loadParam(QChar&, const QString&, QChar d = 0);
+    bool loadParam(QChar&, const QString&, QChar d = '\0');
     bool loadParam(int&, const QString&, int d = 0);
     bool loadParam(double&, const QString&, double d = 0);
     bool loadParam(QString&, const QString&, QString d = "");

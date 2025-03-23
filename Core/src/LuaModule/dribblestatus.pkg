@@ -1,6 +1,5 @@
 $#include "staticparams.h"
 $#include <geometry.h>
-$#include <singleton.hpp>
 $#include <DribbleStatus.h>
 
 class CDribbleStatus {

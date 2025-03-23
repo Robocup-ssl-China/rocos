@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QMutex>
 #include <QUdpSocket>
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include "staticparams.h"
 #include "globaldata.h"
 class Communicator : public QObject {

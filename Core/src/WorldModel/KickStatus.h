@@ -14,7 +14,7 @@
 #define _KICK_STATUS_H_
 
 #include "staticparams.h"
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 
 /// <summary>	Kick status, for kick handling.  </summary>
 ///

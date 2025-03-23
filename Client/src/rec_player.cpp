@@ -5,7 +5,7 @@
 #include "globalsettings.h"
 #include <QIODevice>
 #include <QDataStream>
-#include <QTime>
+#include <QElapsedTimer>
 using namespace ZSS::Protocol;
 namespace  {
 auto GS = GlobalSettings::instance();
@@ -137,7 +137,7 @@ void RecPlayer::sendMessage(const QByteArray& packet) {
 }
 
 void RecPlayer::run() {
-    QTime timer;
+    QElapsedTimer timer;
     timer.start();
     sendMessage(packets.at(_currentFrame));
     emit positionChanged(_currentFrame);

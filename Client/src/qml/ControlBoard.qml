@@ -1,8 +1,7 @@
 ﻿import QtQuick 2.10
-import QtQuick.Controls 2.3
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.3
+import QtQuick.Controls
+import QtQuick.Dialogs
+import QtQuick.Layouts
 import ZSS 1.0 as ZSS
 Page{
     id:control;
@@ -12,7 +11,6 @@ Page{
     property bool medusaConnect2 : false;
     property bool simConnect : false;
     property bool crazyConnect : false;
-    property bool ifEdgeTest : false;
     property bool isRecoring: true;
     property bool monitorConnect : false;
     property bool isLogPlay: false;
@@ -30,10 +28,6 @@ Page{
             interaction.updateInterfaces();
             interfaces4vision.updateModel();
             radioComboBox.updateModel();
-//            interfaces4BlueSender.updateModel();
-//            interfaces4BlueReceiver.updateModel();
-//            interfaces4YellowSender.updateModel();
-//            interfaces4YellowReceiver.updateModel();
         }
     }
 
@@ -123,19 +117,6 @@ Page{
                             interaction.getInterfaces();
                         }
                     }
-//                    ZComboBox{
-//                        id:grsimInterface;
-//                        model:interaction.getGrsimInterfaces();
-//                        onActivated: interaction.changeGrsimInterface(currentIndex);
-//                        function updateModel(){
-//                            model = interaction.getGrsimInterfaces();
-//                            if(currentIndex >= 0)
-//                                interaction.changeGrsimInterface(currentIndex);
-//                        }
-//                        Component.onCompleted: {
-//                            interaction.getGrsimInterfaces();
-//                        }
-//                    }
                     ZSwitch{
                         id:simulation;
                         width:parent.itemWidth;
@@ -280,80 +261,6 @@ Page{
                         rowSpacing: 0;
                         columns:2;
                         property int itemWidth : (width - (columns-1) * columnSpacing - 2*padding)/columns;
-                        // SpinBox{
-                        //     id:medusaFrq1;
-                        //     width:parent.itemWidth;
-                        //     from:0;to:15;
-                        //     wrap:true;
-                        //     value:8
-                        // }
-                        // SpinBox{
-                        //     id:medusaFrq2;
-                        //     width:parent.itemWidth;
-                        //     from:0;to:15;
-                        //     wrap:true;
-                        //     value:6
-                        // }
-                        // ZComboBox{
-                        //     enabled: !control.autoIMUBlue;
-                        //     id:buleAdderss;
-                        //     model:interaction.getAllAddress();
-                        //     contentItem: Text {
-                        //                   id:blueText
-                        //                   text: interaction.getRealAddress(0)
-                        //                   color: enabled ? "#ffffff" : "#888"
-                        //                   font: buleAdderss.font
-                        //                   elide: Text.ElideNone
-                        //                   wrapMode: Text.WordWrap
-                        //                   verticalAlignment: Text.AlignVCenter
-                        //                   horizontalAlignment: Text.AlignHCenter
-                        //               }
-                        //     onActivated:{
-                        //         interaction.changeAddress(0,currentIndex);
-                        //         blueText.text = interaction.getRealAddress(0);
-                        //     }
-                        //     function updateModel(){
-                        //         model = interaction.getAllAddress();
-                        //         if(currentIndex >= 0){
-                        //             interaction.changeAddress(0,currentIndex);
-                        //             blueText.text = interaction.getRealAddress(0);
-                        //         }
-                        //     }
-                        //     Component.onCompleted: {
-                        //         interaction.getAllAddress();
-                        //         blueText.text = interaction.getRealAddress(0);
-                        //     }
-                        // }
-                        // ZComboBox{
-                        //     enabled: !control.autoIMUYellow;
-                        //     id:yellowAdderss;
-                        //     model:interaction.getAllAddress();
-                        //     contentItem: Text {
-                        //                   id:yellowText
-                        //                   text: interaction.getRealAddress(1)
-                        //                   color: enabled ? "#ffffff" : "#888"
-                        //                   font: yellowAdderss.font
-                        //                   elide: Text.ElideNone
-                        //                   wrapMode: Text.WordWrap
-                        //                   verticalAlignment: Text.AlignVCenter
-                        //                   horizontalAlignment: Text.AlignHCenter
-                        //               }
-                        //     onActivated:{
-                        //         interaction.changeAddress(1,currentIndex);
-                        //         yellowText.text = interaction.getRealAddress(1);
-                        //     }
-                        //     function updateModel(){
-                        //         model = interaction.getAllAddress();
-                        //         if(currentIndex >= 0){
-                        //             interaction.changeAddress(1,currentIndex);
-                        //             yellowText.text = interaction.getRealAddress(1);
-                        //         }
-                        //     }
-                        //     Component.onCompleted: {
-                        //         model = interaction.getAllAddress();
-                        //         yellowText.text = interaction.getRealAddress(1);
-                        //     }
-                        // }
                         ZButton{
                             text: "<font color='#2976ca'>" + (medusaSide.checked ? "Right → Left" : "Left → Right") + "</font>";
                             icon.source:control.medusaConnect ? "/source/stop.png" : "/source/start.png";
@@ -550,7 +457,7 @@ Page{
                     }
                 }
             }
-            ZSS.Display{
+            ZSS.PlotDisplay{
                 type:1;
                 width:parent.width - 2*parent.padding;
                 height:300;
@@ -577,46 +484,6 @@ Page{
            spacing: 5;
            columns:1;
            property int itemWidth : width - 2*padding;
-        //    ZGroupBox{
-        //        title: qsTr("Crazy")
-        //        Grid{
-        //            width:parent.width;
-        //            verticalItemAlignment: Grid.AlignVCenter;
-        //            horizontalItemAlignment: Grid.AlignHCenter;
-        //            spacing: 0;
-        //            rowSpacing: 5;
-        //            columns:1;
-        //            property int itemWidth : width - 2*padding;
-        //            Button{
-        //                width:parent.itemWidth;
-        //                icon.source:control.crazyConnect ? "/source/stop.png" : "/source/start.png";
-        //                onClicked: {
-        //                    control.crazyConnect = !control.crazyConnect;
-        //                    interaction.controlCrazy(control.crazyConnect)
-        //                }
-        //            }
-        //        }
-        //    }
-        //    ZGroupBox{
-        //        title: qsTr("Camera Edge Test")
-        //        Grid{
-        //            width:parent.width;
-        //            verticalItemAlignment: Grid.AlignVCenter;
-        //            horizontalItemAlignment: Grid.AlignHCenter;
-        //            spacing: 0;
-        //            rowSpacing: 5;
-        //            columns:1;
-        //            property int itemWidth : width - 2*padding;
-        //            Button{
-        //                width:parent.itemWidth;
-        //                icon.source:control.ifEdgeTest ? "/source/stop.png" : "/source/start.png";
-        //                onClicked: {
-        //                    control.ifEdgeTest = !control.ifEdgeTest;
-        //                    interaction.setIfEdgeTest(control.ifEdgeTest);
-        //                }
-        //            }
-        //        }
-        //    }
            ZGroupBox{
                title: qsTr("Rec")
                Grid{

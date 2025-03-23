@@ -7,7 +7,7 @@
 #ifndef __COMMAND_INTERFACE_H__
 #define __COMMAND_INTERFACE_H__
 
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include "staticparams.h"
 #include <QObject>
 #include <OptionModule.h>

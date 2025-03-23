@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include "rec_player.h"
 
 class rec_slider: public QObject

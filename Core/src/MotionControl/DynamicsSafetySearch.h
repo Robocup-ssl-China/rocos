@@ -7,7 +7,7 @@
 #include <math.h>
 #include <utils.h>
 #include <geometry.h>
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include "QuadraticEquation.h"
 #include "CubicEquation.h"
 #include "QuarticEquation.h"

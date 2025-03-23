@@ -1,7 +1,6 @@
 // #ifndef _BALL_STATUS_H_
 // #define _BALL_STATUS_H_
 
-// #include "singleton.hpp"
 // #include "VisionModule.h"
 // #include "ContactChecker.h"
 

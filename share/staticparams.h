@@ -13,6 +13,7 @@ namespace PARAM {
     const int YELLOW = 1;
     const int BALLMERGEDISTANCE = 0;
     const int TEAMS = 2;
+    const int GUI_DRAW_RATE = 40;
 
     namespace Field{
         const int POS_SIDE_LEFT = 1;

@@ -1,7 +1,7 @@
 //#ifndef _PLAY_INTERFACE_H_
 //#define _PLAY_INTERFACE_H_
 //#include "staticparams.h"
-//#include <singleton.hpp>
+//#include <zos/utils/singleton.h>
 //#include <misc_types.h>
 //#include <map>
 //#include <string>

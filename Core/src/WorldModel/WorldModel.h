@@ -6,7 +6,7 @@
 #include "KickStatus.h"
 #include "BufferCounter.h"
 // #include "BallStatus.h"
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include "CMmotion.h"
 extern bool record_run_pos_on;
 ///

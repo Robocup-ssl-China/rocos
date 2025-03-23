@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QUdpSocket>
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 // temp before merge medusa TODO
 class Debugger : public QObject
 {

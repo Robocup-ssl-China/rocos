@@ -106,7 +106,7 @@ void Player::sendMessage(const Frame* packet) {
 }
 
 void Player::run() {
-    emit VisionModule::instance()->needDraw();
+    // MARKTODO test if field draw
     sendMessage(packets.at(m_currentFrame));
 
     const qint64 startTime = Timer::systemTime();

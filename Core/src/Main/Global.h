@@ -5,7 +5,7 @@
 #include "DribbleStatus.h"
 #include "KickStatus.h"
 #include "GDebugEngine.h"
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include "WorldModel.h"
 #include "skillapi.h"
 #include "BallSpeedModel.h"

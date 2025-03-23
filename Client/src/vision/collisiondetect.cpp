@@ -28,7 +28,7 @@ void CCollisionDetect::analyzeData(ReceiveVisionMessage & result) {
         bool foundBlue = true, foundYellow = true;
         for (int frame = 0; frame > -NEAR_VECHILE_MIN_FRAME; frame--) {
             bool foundBlueCar = false, foundYellowCar = false;
-            Ball ball = GlobalData::instance()->maintain[frame].ball[0];
+            Msg::Ball ball = GlobalData::instance()->maintain[frame].ball[0];
             for (int i = 0; i < GlobalData::instance()->maintain[frame].robotSize[PARAM::BLUE]; i++)
                 if (GlobalData::instance()->maintain[frame].robot[PARAM::BLUE][i].id == roboId
                         && GlobalData::instance()->maintain[frame].robot[PARAM::BLUE][i].pos.dist(ball.pos) >= 85

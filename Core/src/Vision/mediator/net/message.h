@@ -20,8 +20,6 @@ const int MaxValidWidth=4800;
 
 #define  CALIERROR 100
 #define  BALLCALIERROR 200
-enum COURT{LeftUp,RightUp,LeftDown,RightDown};
-enum CAMERAMODE{SingleCamLeftUp,SingleCamRightUp,SingleCamLeftDown,SingleCamRightDown,TwoCamUp,TwoCamDown,FourCamera};
 
 typedef struct SENDVISIONMESSAGE
 {

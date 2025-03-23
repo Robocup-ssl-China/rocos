@@ -1,6 +1,6 @@
 #ifndef MAINTAIN_H
 #define MAINTAIN_H
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include "vision_detection.pb.h"
 #include "kalmanfilter.h"
 #include <messageformat.h>

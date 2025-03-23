@@ -1,4 +1,4 @@
-#include "display.h"
+#include "plotdisplay.h"
 #include "visionmodule.h"
 #include "parammanager.h"
 #include "globaldata.h"
@@ -20,7 +20,7 @@ float y(float a){return (1 - limitRange(a,0.0f,MAX_SPEED)/MAX_SPEED)*MAP_HEIGHT;
 float w(float a){return a*MAP_WIDTH;};
 float h(float a){return -a/MAX_SPEED*MAP_HEIGHT;};
 }
-Display::Display(QQuickItem *parent)
+PlotDisplay::PlotDisplay(QQuickItem *parent)
     : QQuickPaintedItem (parent)
     , pixmap(nullptr){
     connect(VisionModule::instance(), SIGNAL(needDraw()), this, SLOT(draw()));
@@ -29,21 +29,21 @@ Display::Display(QQuickItem *parent)
     pixmap = new QPixmap(QSize(200, 300));
     pixmapPainter.begin(pixmap);
     pixmapPainter.setPen(Qt::NoPen);
-    pixmapPainter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+    pixmapPainter.setRenderHint(QPainter::Antialiasing, true);
     pixmapPainter.setRenderHint(QPainter::TextAntialiasing, true);
     init();
 }
-void Display::paint(QPainter* painter) {
+void PlotDisplay::paint(QPainter* painter) {
     painter->drawPixmap(area, *pixmap);
 }
-void Display::draw() {
+void PlotDisplay::draw() {
     repaint();
 }
-void Display::init(){
+void PlotDisplay::init(){
     initAxes();
     repaint();
 }
-void Display::initAxes(){
+void PlotDisplay::initAxes(){
     MAX_SPEED = zpm->value("BallSpeed/maxSpeed",QVariant(8.0f)).toFloat();// m/s
     LIMIT_SPEED = zpm->value("BallSpeed/limitSpeed",QVariant(6.5f)).toFloat();// m/s
     MAP_WIDTH = this->property("width").toReal();
@@ -59,7 +59,7 @@ void Display::initAxes(){
 //        axesPath.addText(QPointF(x(0),y(maxSpeed/displayColumn*i)),font,QString::number(maxSpeed/displayColumn*i,'g',2));
 //    }
 }
-void Display::repaint(){
+void PlotDisplay::repaint(){
     if(repaint_mutex.try_lock()){
         pixmap->fill(COLOR_BACKGROUND);
         paintAxes();
@@ -68,7 +68,7 @@ void Display::repaint(){
         repaint_mutex.unlock();
     }
 }
-void Display::paintAxes(){
+void PlotDisplay::paintAxes(){
 //    pen.setColor(COLOR_AXES);
 //    pen.setWidth(1);
 //    pixmapPainter.setPen(pen);
@@ -88,7 +88,7 @@ void Display::paintAxes(){
     pixmapPainter.drawLine(::x(0),::y(height),::x(1),::y(height));
     pixmapPainter.drawText(QPointF(::x(0),::y(height+0.1)),QString::number(height,'g',2));
 }
-void Display::paintData(){
+void PlotDisplay::paintData(){
     pixmapPainter.setPen(QColor(200,200,200));
     auto gd = GlobalData::instance()->maintain;
     QPoint lastPoint(::x(0.0f),::y(0.0f));
@@ -101,7 +101,7 @@ void Display::paintData(){
         lastPoint = newPoint;
     }
 }
-void Display::resetSize(int width,int height){
+void PlotDisplay::resetSize(int width,int height){
     pixmapPainter.end();
     delete pixmap;
     pixmap = new QPixmap(QSize(this->property("width").toReal(), this->property("height").toReal()));

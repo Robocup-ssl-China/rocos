@@ -1,6 +1,6 @@
 #ifndef COLLISIONDETECT_H
 #define COLLISIONDETECT_H
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include "globaldata.h"
 #include "geometry.h"
 

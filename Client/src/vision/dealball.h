@@ -1,7 +1,7 @@
 #ifndef DEALBALL_H
 #define DEALBALL_H
 
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include "globaldata.h"
 #include "messageformat.h"
 #include "geometry.h"
@@ -24,12 +24,11 @@ class CDealBall {
     void updateVel(const Matrix2d& tempMatrix, ReceiveVisionMessage& result);
   private:
     double posDist(CGeoPoint, CGeoPoint);
-    bool ballNearVechile(Ball, double);
+    bool ballNearVechile(Msg::Ball, double);
     void init();
     void mergeBall();
-    double calculateWeight(int camID, CGeoPoint);
-    Ball ballSequence[PARAM::BALLNUM][PARAM::CAMERA];
-    Ball lastBall, currentBall;
+    Msg::Ball ballSequence[PARAM::BALLNUM][PARAM::CAMERA];
+    Msg::Ball lastBall, currentBall;
     double lastPossible, currentPossible;
     ReceiveVisionMessage result;
     int actualBallNum = 0;

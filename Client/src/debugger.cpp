@@ -8,12 +8,12 @@ std::thread* yellowDebuggerThread = nullptr;
 Debugger::Debugger(QObject *parent) : QObject(parent){
 //    QObject::connect(&receiverBlue,SIGNAL(readyRead()),this,SLOT(receiveBlue()),Qt::DirectConnection);
     if(receiverBlue.bind(QHostAddress::AnyIPv4,ZSS::Athena::DEBUG_MSG_RECEIVE[0], QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)){
-        blueDebuggerThread = new std::thread([=] {receiveBlue();});
+        blueDebuggerThread = new std::thread([=,this] {receiveBlue();});
         blueDebuggerThread->detach();
     }
 //    QObject::connect(&receiverYellow,SIGNAL(readyRead()),this,SLOT(receiveYellow()),Qt::DirectConnection);
     if(receiverYellow.bind(QHostAddress::AnyIPv4,ZSS::Athena::DEBUG_MSG_RECEIVE[1], QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint)){
-        yellowDebuggerThread = new std::thread([=] {receiveYellow();});
+        yellowDebuggerThread = new std::thread([=,this] {receiveYellow();});
         yellowDebuggerThread->detach();
     }
 }

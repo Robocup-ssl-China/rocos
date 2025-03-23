@@ -2,7 +2,7 @@
 #define REC_RECORDER_H
 #include "zss_rec_old.pb.h"
 #include "globaldata.h"
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 //struct RecMsg {
 //    //ctrlc
 //    bool ctrlc;

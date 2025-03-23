@@ -1,0 +1,2 @@
+module Theme
+singleton T 1.0 Theme.qml

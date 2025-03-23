@@ -34,10 +34,6 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "setthreadname.h"
 #include "zss_cmd.pb.h"
 
-#ifdef SIM_TIME_DEBUG
-#include <QElapsedTimer>
-#endif
-
 #define ROBOT_GRAY 0.4
 #define WHEEL_COUNT 4
 
@@ -138,13 +134,12 @@ bool ballCallBack(dGeomID o1,dGeomID o2,PSurface* s, int /*robots_count*/)
 }
 
 SSLWorld::SSLWorld()
-    : QObject(nullptr),ZSPlugin("SSLWorld")
-{
-    declare_receive("sim_signal");
-    declare_receive("sim_packet",false);
-    declare_publish("ssl_vision");
-    declare_publish("blue_status");
-    declare_publish("yellow_status");
+    : QObject(nullptr)
+    , s_sim_signal("sim_signal", [this](const zos::Data& data){run(data);})
+    , s_sim_packet("sim_packet", [this](const zos::Data& data){recvActions(data);})
+    , p_ssl_vision("ssl_vision")
+    , p_blue_status("blue_status")
+    , p_yellow_status("yellow_status"){
     isGLEnabled = false;
     customDT = -1;
     cfg = new ConfigWidget();
@@ -309,7 +304,7 @@ SSLWorld::SSLWorld()
         }
     }
     sendGeomCount = 0;
-    timer = new QTime();
+    timer = new QElapsedTimer();
     timer->start();
     // initialize robot state
     for (int team = 0; team < 2; ++team)
@@ -322,21 +317,15 @@ SSLWorld::SSLWorld()
     }
 }
 
-void SSLWorld::run(){
-    SetThreadName("SimPlugin");
-    std::cout << "SSLWorld plugin start!" << std::endl;
-    std::thread rec([=]{recvActions();});
+void SSLWorld::run(const zos::Data& data){
+//    std::thread rec([this]{recvActions();});
     double time = this->cfg->DeltaTime();
-    while(true){
-        ode_mutex.lock();
-        this->step(time);
-        ode_mutex.unlock();
-        receive("sim_signal");
-        ode_mutex.lock();
-        sendVisionBuffer();
-        ode_mutex.unlock();
-        std::this_thread::sleep_for(std::chrono::microseconds(500));
-    }
+    ode_mutex.lock();
+    this->step(time);
+    ode_mutex.unlock();
+    ode_mutex.lock();
+    sendVisionBuffer();
+    ode_mutex.unlock();
 }
 
 int SSLWorld::robotIndex(int robot,int team)
@@ -433,15 +422,10 @@ void SSLWorld::step(dReal dt)
 }
 
 
-void SSLWorld::recvActions()
+void SSLWorld::recvActions(const zos::Data& data)
 {
-    SetThreadName("SimRecv");
     grSim_Packet packet;
-    ZSData data;
-    ZSData robot_status;
-    while (true)
-    {
-        receive("sim_packet",data);
+    zos::Data robot_status;
         #ifdef SIM_TIME_DEBUG
         QElapsedTimer timer;
         timer.start();
@@ -541,7 +525,10 @@ void SSLWorld::recvActions()
                 int size = robotsPacket.ByteSizeLong();
                 robot_status.resize(size);
                 robotsPacket.SerializeToArray(robot_status.ptr(),size);
-                    publish(team==0?"blue_status":"yellow_status",robot_status);
+                if(team==0)
+                    p_blue_status.publish(robot_status);
+                else
+                    p_yellow_status.publish(robot_status);
             }
 //                sendRobotStatus(robotsPacket, sender, team);
         }
@@ -550,7 +537,6 @@ void SSLWorld::recvActions()
         #ifdef SIM_TIME_DEBUG
         qDebug() << "sim callback function : " << timer.nsecsElapsed()/1000000.0 << "milliseconds";
         #endif
-    }
 }
 void SSLWorld::addRobotStatus(ZSS::Protocol::Robots_Status& robotsPacket, int robotID, int team, bool infrared, KickStatus kickStatus)
 {
@@ -702,7 +688,7 @@ void SSLWorld::publishPacket(int cam_id){
     int size = packet.ByteSizeLong();
     data.resize(size);
     packet.SerializeToArray(data.data(),size);
-    publish("ssl_vision",data.data(),size);
+    p_ssl_vision.publish(data.data(),size);
     packet.Clear();
 }
 void SSLWorld::addFieldLinesArcs(SSL_GeometryFieldSize *field) {

@@ -9,7 +9,7 @@ DATA: 2009.2.10
 EMAIL: qxzzju@gmail.com
 ***********************************************/
 
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include <geometry.h>
 #include <QUdpSocket>
 #include <QMutex>

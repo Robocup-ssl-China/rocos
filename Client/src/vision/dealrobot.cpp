@@ -43,22 +43,6 @@ bool CDealRobot::isOnField(CGeoPoint p) {
         return false;
 }
 
-double CDealRobot::calculateWeight(int camID, CGeoPoint roboPos) {
-    SingleCamera camera = GlobalData::instance()->cameraMatrix[camID];
-    if (roboPos.x() > camera.leftedge.max && roboPos.x() < camera.rightedge.max &&
-            roboPos.y() > camera.downedge.max && roboPos.y() < camera.upedge.max)
-        return 1;
-    else if (roboPos.x() < camera.leftedge.max && roboPos.x() > camera.leftedge.min)
-        return abs(roboPos.x() - camera.leftedge.min) / abs(camera.leftedge.max - camera.leftedge.min);
-    else if (roboPos.x() > camera.rightedge.max && roboPos.x() < camera.rightedge.min)
-        return abs(roboPos.x() - camera.rightedge.min) / abs(camera.rightedge.max - camera.rightedge.min);
-    else if (roboPos.y() < camera.downedge.max && roboPos.y() > camera.downedge.min)
-        return abs(roboPos.y() - camera.downedge.min) / abs(camera.downedge.max - camera.downedge.min);
-    else if (roboPos.y() > camera.upedge.max && roboPos.y() < camera.upedge.min)
-        return abs(roboPos.y() - camera.upedge.min) / abs(camera.upedge.max - camera.upedge.min);
-    else return 0.0001;//to deal with can see out of border situation
-}
-
 void CDealRobot::init() {
     zpm->loadParam(filteDir, "Vision/FilteDirection", false);
     result.init();
@@ -71,7 +55,7 @@ void CDealRobot::init() {
     for (int i = 0; i < PARAM::CAMERA; i++) {
         if(GlobalData::instance()->cameraUpdate[i]) {
             for (int j = 0; j < GlobalData::instance()->camera[i][0].robotSize[PARAM::BLUE]; j++) {
-                Robot robot = GlobalData::instance()->camera[i][0].robot[PARAM::BLUE][j];
+                Msg::Robot robot = GlobalData::instance()->camera[i][0].robot[PARAM::BLUE][j];
                 if ( GlobalData::instance()->robotPossible[PARAM::BLUE][robot.id] < decidePossible)
                     //当这是新车的时候
                     robotSeqence[PARAM::BLUE][robot.id][i] = robot;
@@ -79,7 +63,7 @@ void CDealRobot::init() {
                     robotSeqence[PARAM::BLUE][robot.id][i] = robot;
             }
             for (int j = 0; j < GlobalData::instance()->camera[i][0].robotSize[PARAM::YELLOW]; j++) {
-                Robot robot = GlobalData::instance()->camera[i][0].robot[PARAM::YELLOW][j];
+                Msg::Robot robot = GlobalData::instance()->camera[i][0].robot[PARAM::YELLOW][j];
                 if ( GlobalData::instance()->robotPossible[PARAM::YELLOW][robot.id] < decidePossible)
                     robotSeqence[PARAM::YELLOW][robot.id][i] = robot;
                 else if  (lastRobot[PARAM::YELLOW][robot.id].pos.dist(robot.pos) < DIFF_VECHILE_MAX_DIFF)
@@ -88,7 +72,7 @@ void CDealRobot::init() {
         }
     }
     for (int i = 0; i < PARAM::ROBOTMAXID - 1; i++) {
-        Robot temp(-32767, -32767, 0, -1);
+        Msg::Robot temp(-32767, -32767, 0, -1);
         sortTemp[PARAM::BLUE][i] = temp;
         sortTemp[PARAM::YELLOW][i] = temp;
     }
@@ -104,7 +88,7 @@ void CDealRobot::mergeRobot() {
             double _weight = 0;
             if(robotSeqence[PARAM::BLUE][roboId][camId].pos.x() > -30000 && robotSeqence[PARAM::BLUE][roboId][camId].pos.y() > -30000) {
                 foundBlue = true;
-                _weight = calculateWeight(camId, robotSeqence[PARAM::BLUE][roboId][camId].pos);
+                _weight = GlobalData::instance()->calculateWeight(camId, robotSeqence[PARAM::BLUE][roboId][camId].pos);
                 blueWeight += _weight;
                 blueAverage.setX(blueAverage.x() + robotSeqence[PARAM::BLUE][roboId][camId].pos.x() * _weight);
                 blueAverage.setY(blueAverage.y() + robotSeqence[PARAM::BLUE][roboId][camId].pos.y() * _weight);
@@ -116,7 +100,7 @@ void CDealRobot::mergeRobot() {
             double _weight = 0;
             if(robotSeqence[PARAM::YELLOW][roboId][camId].pos.x() > -30000 && robotSeqence[PARAM::YELLOW][roboId][camId].pos.y() > -30000) {
                 foundYellow = true;
-                _weight = calculateWeight(camId, robotSeqence[PARAM::YELLOW][roboId][camId].pos);
+                _weight = GlobalData::instance()->calculateWeight(camId, robotSeqence[PARAM::YELLOW][roboId][camId].pos);
                 yellowWeight += _weight;
                 yellowAverage.setX(yellowAverage.x() + robotSeqence[PARAM::YELLOW][roboId][camId].pos.x() * _weight);
                 yellowAverage.setY(yellowAverage.y() + robotSeqence[PARAM::YELLOW][roboId][camId].pos.y() * _weight);
@@ -125,11 +109,11 @@ void CDealRobot::mergeRobot() {
             }
         }
         if (foundBlue) {
-            Robot ave(blueAverage.x() / blueWeight, blueAverage.y() / blueWeight, blueAngle, roboId);
+            Msg::Robot ave(blueAverage.x() / blueWeight, blueAverage.y() / blueWeight, blueAngle, roboId);
             result.addRobot(PARAM::BLUE, ave);
         }
         if (foundYellow) {
-            Robot ave(yellowAverage.x() / yellowWeight, yellowAverage.y() / yellowWeight, yellowAngle, roboId);
+            Msg::Robot ave(yellowAverage.x() / yellowWeight, yellowAverage.y() / yellowWeight, yellowAngle, roboId);
             result.addRobot(PARAM::YELLOW, ave);
         }
     }
@@ -176,7 +160,7 @@ void CDealRobot::sortRobot(int color) {
             if (GlobalData::instance()->robotPossible[color][sortTemp[color][maxj].id] <
                     GlobalData::instance()->robotPossible[color][sortTemp[color][j].id]) maxj = j;
         if (maxj != i) {
-            Robot temp;
+            Msg::Robot temp;
             temp = sortTemp[color][maxj];
             sortTemp[color][maxj] = sortTemp[color][i];
             sortTemp[color][i] = temp;
@@ -186,7 +170,7 @@ void CDealRobot::sortRobot(int color) {
 
 void CDealRobot::updateVel(int team, ReceiveVisionMessage& result) {
     for (int i = 0; i < validNum[team]; i++) {
-        Robot & robot = result.robot[team][i];
+        Msg::Robot & robot = result.robot[team][i];
         //位置滤波
         auto & playerPosVel = _kalmanFilter[team][robot.id].update(robot.pos.x(), robot.pos.y());
         CGeoPoint filtPoint (playerPosVel(0, 0), playerPosVel(1, 0));

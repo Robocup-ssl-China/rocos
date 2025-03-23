@@ -30,8 +30,9 @@ Copyright (C) 2011, Parsian Robotic Center (eew.aut.ac.ir/~parsian/grsim)
 #include "zss_cmd.pb.h"
 #include <string>
 #include <QMutex>
-#include "zsplugin.hpp"
+#include "zos/core.h"
 #include "dllexport.h"
+#include <QElapsedTimer>
 #define WALL_COUNT 10
 
 class RobotsFomation;
@@ -42,7 +43,7 @@ class SendingPacket {
     int t;
 };
 
-class SSLWorld : public QObject,public ZSPlugin
+class SSLWorld : public QObject
 {
     Q_OBJECT
 private:
@@ -56,7 +57,7 @@ private:
 public:
     SSLWorld();
     virtual ~SSLWorld();
-    virtual void run() override;
+    void run(const zos::Data& data);
     dReal customDT;
     bool isGLEnabled;
     DLL_EXPORT static SSLWorld* instance();
@@ -83,10 +84,14 @@ public:
     dReal cursor_radius;
     bool updatedCursor;
     SimRobot* robots[MAX_ROBOT_COUNT*2];
-    QTime *timer;
+    QElapsedTimer *timer;
     int sendGeomCount;
-public Q_SLOTS:
-    void recvActions();
+    zos::Subscriber<10> s_sim_signal;
+    zos::Subscriber<10> s_sim_packet;
+    zos::Publisher p_ssl_vision;
+    zos::Publisher p_blue_status;
+    zos::Publisher p_yellow_status;
+    void recvActions(const zos::Data& data);
 Q_SIGNALS:
     void fpsChanged(int newFPS);
 };

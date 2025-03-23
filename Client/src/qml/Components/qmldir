@@ -1,0 +1,10 @@
+module Component
+CGridScroll 1.0 CGridScroll.qml
+CButton 1.0 CButton.qml
+CGroupBox 1.0 CGroupBox.qml
+CColumn 1.0 CColumn.qml
+CSwitch 1.0 CSwitch.qml
+CComboBox 1.0 CComboBox.qml
+CSpinBox 1.0 CSpinBox.qml
+CText 1.0 CText.qml
+CLight 1.0 CLight.qml

@@ -12,18 +12,16 @@ if (WIN32)
     set(thirdParty ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdParty)
 endif()
 
-# Qt5
-find_package(Qt5 COMPONENTS Core Network Gui REQUIRED)
-list(APPEND PROJECT_INCLUDE_DIRS
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Network_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-)
-list(APPEND libs Qt5::Core Qt5::Network Qt5::Gui)
+# Qt
+find_package(Qt6 COMPONENTS Core Network Gui REQUIRED)
+# if (NOT Qt6_FOUND)
+#     find_package(Qt5 COMPONENTS Core Network Gui REQUIRED)
+# endif()
+list(APPEND libs Qt::Core Qt::Network Qt::Gui)
 
 # ODE
 if (WIN32)
-    list(APPEND libs Qt5::WinMain)
+    list(APPEND libs Qt::WinMain)
     set(ODE_INCLUDE_DIRS "${thirdParty}/ODE/include")
     set(ODE_LIBRARIES "${thirdParty}/ODE/lib/ode.lib")
 else()

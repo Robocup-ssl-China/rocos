@@ -2,7 +2,7 @@
 #define _REFEREE_BOX_IF_H_
 #include <QUdpSocket>
 #include <MultiThread.h>
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include <QMutex>
 #include "geometry.h"
 /*

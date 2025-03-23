@@ -1,0 +1,32 @@
+syntax = "proto3";
+package zos.pb;
+message Info{
+    enum Type{
+        UNKNOWN = 0;
+        PUB = 1;
+        SUB = 2;
+        LINK = 3;
+    }
+    Type type = 1;
+    string msg_name = 2;
+    string name = 3;
+    string pub_name = 4;
+    repeated string sub_names = 5;
+}
+message EndPoint{
+    string address = 1;
+    int32 port = 2;
+}
+message State{
+    enum ProcessState {
+        P_UNKNOWN = 0;
+        P_STARTING = 1;
+        P_RUNNING = 2;
+        P_EXITING = 3;
+    }
+    int32 pid = 1;
+    string name = 2;
+    ProcessState state = 3;
+    EndPoint ep = 4;
+    repeated Info infos = 5;
+}

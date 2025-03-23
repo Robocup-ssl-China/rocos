@@ -2,7 +2,7 @@
 #define GLOBALSETTINGS_H
 #include <QObject>
 #include "geometry.h"
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 class CGlobalSettings : public QObject{
     Q_OBJECT
 public:

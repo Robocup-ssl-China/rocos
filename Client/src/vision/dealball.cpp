@@ -35,7 +35,7 @@ double CDealBall::posDist(CGeoPoint pos1, CGeoPoint pos2) {
     return std::sqrt((pos1.x() - pos2.x()) * (pos1.x() - pos2.x()) + (pos1.y() - pos2.y()) * ((pos1.y() - pos2.y())));
 }
 
-bool CDealBall::ballNearVechile(Ball curentBall, double dist) {
+bool CDealBall::ballNearVechile(Msg::Ball curentBall, double dist) {
     bool answer = false;
     ReceiveVisionMessage result = GlobalData::instance()->maintain[-1];
     for (int i = 0; i < result.robotSize[PARAM::BLUE]; i++) {
@@ -45,23 +45,6 @@ bool CDealBall::ballNearVechile(Ball curentBall, double dist) {
         if (result.robot[PARAM::YELLOW][i].pos.dist(curentBall.pos) < dist) answer = true;
     return answer;
 }
-
-double CDealBall::calculateWeight(int camID, CGeoPoint ballPos) {
-    SingleCamera camera = GlobalData::instance()->cameraMatrix[camID];
-    if (ballPos.x() > camera.leftedge.max && ballPos.x() < camera.rightedge.max &&
-            ballPos.y() > camera.downedge.max && ballPos.y() < camera.upedge.max)
-        return 1;
-    else if (ballPos.x() < camera.leftedge.max && ballPos.x() > camera.leftedge.min)
-        return abs(ballPos.x() - camera.leftedge.min) / abs(camera.leftedge.max - camera.leftedge.min);
-    else if (ballPos.x() > camera.rightedge.max && ballPos.x() < camera.rightedge.min)
-        return abs(ballPos.x() - camera.rightedge.min) / abs(camera.rightedge.max - camera.rightedge.min);
-    else if (ballPos.y() < camera.downedge.max && ballPos.y() > camera.downedge.min)
-        return abs(ballPos.y() - camera.downedge.min) / abs(camera.downedge.max - camera.downedge.min);
-    else if (ballPos.y() > camera.upedge.max && ballPos.y() < camera.upedge.min)
-        return abs(ballPos.y() - camera.upedge.min) / abs(camera.upedge.max - camera.upedge.min);
-    else return 1e-8;//to deal with can see out of border situation
-}
-
 
 void CDealBall::mergeBall() {
     int i, j;
@@ -90,11 +73,8 @@ void CDealBall::mergeBall() {
             CGeoPoint average(0, 0);
             for(j = 0; j < PARAM::CAMERA; j++) {
                 if (ballSequence[i][j].pos.x() > -30000 && ballSequence[i][j].pos.y() > -30000) {
-                    SingleCamera camera = GlobalData::instance()->cameraMatrix[j];
                     double _weight;
-                    _weight = calculateWeight(j, ballSequence[i][j].pos);
-                    _weight = std::pow(posDist(ballSequence[i][j].pos, GlobalData::instance()->cameraMatrix[camera.id].campos) / 1000.0, -2.0);
-                    if (PARAM::DEBUG)std::cout << "camera: " << j << ballSequence[i][j].pos << GlobalData::instance()->cameraMatrix[camera.id].campos << "weight:" << posDist(ballSequence[i][j].pos, GlobalData::instance()->cameraMatrix[camera.id].campos) << std::endl;
+                    _weight = GlobalData::instance()->calculateWeight(j, ballSequence[i][j].pos);
                     weight += _weight;
                     average.setX(average.x() + ballSequence[i][j].pos.x() * _weight);
                     average.setY(average.y() + ballSequence[i][j].pos.y() * _weight);
@@ -111,7 +91,7 @@ void CDealBall::init() {
     for (int i = 0; i < PARAM::CAMERA; i++) {
         if (GlobalData::instance()->cameraUpdate[i]) {
             for(int j = 0; j < GlobalData::instance()->camera[i][0].ballSize; j++) {
-                Ball currentball = GlobalData::instance()->camera[i][0].ball[j];
+                Msg::Ball currentball = GlobalData::instance()->camera[i][0].ball[j];
                 result.addBall(GlobalData::instance()->camera[i][0].ball[j].pos.x(),
                                GlobalData::instance()->camera[i][0].ball[j].pos.y(), 0, i);
             }

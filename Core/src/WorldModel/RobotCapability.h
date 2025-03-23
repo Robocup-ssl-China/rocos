@@ -2,7 +2,7 @@
 #define _ROBOT_CAPABILITY_H_
 #include <geometry.h>
 #include "staticparams.h"
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include <vector>
 /**
 * 描述机器人的能力类.

@@ -7,26 +7,7 @@
 /************************************************************************/
 /*                 Basic Vision Classes                                 */
 /************************************************************************/
-namespace {
-/*
-    struct Pos2d{
-        double x;
-        double y;
-        Pos2d():x(-32767),y(-32767){}
-        Pos2d(double _x,double _y){x=_x;y=_y;}
-        bool fill(double x,double y){
-            this->x=x;
-            this->y=y;
-            return true;
-        }
-        double dist(Pos2d p){
-            return sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));
-        }
-    };
-    */
-
-//enum ballState {received, touched, kicked, struggle, chip_pass, flat_pass};
-
+namespace Msg{
 struct Ball {
     CGeoPoint pos;
     CGeoPoint predict_pos;
@@ -100,30 +81,26 @@ struct Robot {
     }
 };
 struct CameraEdge {
-    double min, max;
-};
-struct SingleCamera {
-    unsigned short id;
-    CGeoPoint campos;
-    double height;
-    CameraEdge leftedge, rightedge, upedge, downedge;
-    SingleCamera(): height(3500) {} //set 3500mm as an example
-    void fillCenter(double x, double y) {
-        campos.fill(x, y);
-        leftedge.min = rightedge.min = x;
-        upedge.min = downedge.min = y;
+    CGeoPoint center, leftUp, rightDown;
+    CameraEdge()
+        :center(0,0),leftUp(0,0),rightDown(0,0) {}
+    void update(const CGeoPoint& p, int type=0) {
+        double extraDist = type == 0 ? PARAM::Vehicle::V2::PLAYER_SIZE : PARAM::Field::BALL_SIZE;
+        if (p.x() < leftUp.x()) {
+            leftUp.setX(p.x()-extraDist);
+        }
+        if (p.y() > leftUp.y()) {
+            leftUp.setY(p.y()+extraDist);
+        }
+        if (p.x() > rightDown.x()) {
+            rightDown.setX(p.x()+extraDist);
+        }
+        if (p.y() < rightDown.y()) {
+            rightDown.setY(p.y()-extraDist);
+        }
     }
-    void fillCenter(CGeoPoint p) {
-        campos = p;
-        leftedge.min = rightedge.min = p.x();
-        upedge.min = downedge.min = p.y();
-    }
 };
-struct CameraFix {
-    double theta, t1, t2;
-    CameraFix(): theta(0), t1(0), t2(0) {}
-};
-}
+} // namespace Msg
 
 
 //* Robot store the data, Index and Size exist for the index search for robots;
@@ -133,8 +110,8 @@ class OriginMessage {
   public:
     unsigned short robotSize[2];
     unsigned short ballSize;
-    Robot robot[2][PARAM::ROBOTNUM];
-    Ball ball[PARAM::BALLNUM];
+    Msg::Robot robot[2][PARAM::ROBOTNUM];
+    Msg::Ball ball[PARAM::BALLNUM];
     int robotIndex[2][PARAM::ROBOTMAXID];
     OriginMessage(): ballSize(0) {
         robotSize[PARAM::BLUE] = robotSize[PARAM::YELLOW] = 0;
@@ -163,13 +140,13 @@ class OriginMessage {
         robotIndex[color][id] = robotSize[color];
         return robot[color][robotSize[color]++].fill(id, point.x(), point.y(), angel);
     }
-    bool addRobot(int color, const Robot& r) {
+    bool addRobot(int color, const Msg::Robot& r) {
         if(robotSize[color] >= PARAM::ROBOTNUM)
             return false;
         robotIndex[color][r.id] = robotSize[color];
         return robot[color][robotSize[color]++].fill(r);
     }
-    bool addBall(const Ball& b) {
+    bool addBall(const Msg::Ball& b) {
         return ballSize >= PARAM::BALLNUM ? false : ball[ballSize++].fill(b);
     }
 };

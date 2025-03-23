@@ -3,7 +3,7 @@
 
 //#include <CommControl.h>
 #include <fmt/core.h>
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include "staticparams.h"
 
 /*

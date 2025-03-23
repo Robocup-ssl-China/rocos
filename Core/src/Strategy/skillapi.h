@@ -1,5 +1,5 @@
 #pragma once
-#include <singleton.hpp>
+#include <zos/utils/singleton.h>
 #include "skill_registry.h"
 #include "staticparams.h"
 #include "VisionModule.h"

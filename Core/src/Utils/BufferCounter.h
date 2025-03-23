@@ -1,7 +1,7 @@
 #ifndef _BUFFER_COUNTER_H_
 #define _BUFFER_COUNTER_H_
 
-#include "singleton.hpp"
+#include "zos/utils/singleton.h"
 #include <vector>
 
 using namespace std;

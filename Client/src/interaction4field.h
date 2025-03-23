@@ -15,7 +15,6 @@ public:
     Q_INVOKABLE void setArea(int a,int b,int c,int d);
     Q_INVOKABLE void resetArea();
 //    Q_INVOKABLE void moveField(int,int);
-    Q_INVOKABLE void setSize(int,int);
 //    Q_INVOKABLE void setPlacementPoint(int,int);
     Q_INVOKABLE void setCtrlC();
     Q_INVOKABLE int getRealX(int);

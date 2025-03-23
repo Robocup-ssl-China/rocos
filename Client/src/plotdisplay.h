@@ -7,16 +7,16 @@
 #include <QRect>
 #include <QMutex>
 #include <QPainterPath>
-class Display : public QQuickPaintedItem{
+class PlotDisplay : public QQuickPaintedItem{
     Q_OBJECT
     Q_PROPERTY(int type READ type WRITE setType)
 public:
     Q_INVOKABLE void resetSize(int,int);
     void paint(QPainter* painter) override;
-    Display(QQuickItem *parent = 0);
+    PlotDisplay(QQuickItem *parent = 0);
     inline int type() { return this->_type; }
     inline void setType(int t) { this->_type = t; }
-    virtual ~Display() {}
+    virtual ~PlotDisplay() {}
 public slots:
     void draw();
 private slots:

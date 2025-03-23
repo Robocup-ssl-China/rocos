@@ -6,7 +6,6 @@
 #include "actionmodule.h"
 #include "simmodule.h"
 #include "parammanager.h"
-#include "remotesim.h"
 #include "globaldata.h"
 #include "globalsettings.h"
 #include <mutex>
@@ -15,7 +14,6 @@ namespace {
 int fps[2] = {0, 0};
 std::mutex m_fps;
 std::thread* receiveThread[PARAM::TEAMS];
-bool NoVelY = true;
 }
 int Communicator::getFPS(int t) {
     int res = 0;
@@ -31,10 +29,9 @@ void Communicator::setGrsimInterfaceIndex(const int index) {
 }
 
 Communicator::Communicator(QObject *parent) : QObject(parent) {
-    ZSS::ZParamManager::instance()->loadParam(NoVelY, "Lesson/NoVelY", false);
     if (grsimInterfaceIndex == 0){
         qDebug() << "connect sim";
-        QObject::connect(ZSS::ZSimModule::instance(), SIGNAL(receiveSimInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
+        QObject::connect(ZSS::SimModule::instance(), SIGNAL(receiveSimInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     }
 //    QObject::connect(ZSS::ZRemoteSimModule::instance(), SIGNAL(receiveRemoteInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
     QObject::connect(ZSS::NActionModule::instance(), SIGNAL(receiveRobotInfo(int, int)), this, SLOT(sendCommand(int, int)),Qt::DirectConnection);
@@ -43,7 +40,7 @@ Communicator::Communicator(QObject *parent) : QObject(parent) {
 //            receiveCommand(i);
 //        });
         if(connectMedusa(i)) {
-            receiveThread[i] = new std::thread([ = ] {receiveCommand(i);});
+            receiveThread[i] = new std::thread([=,this] {receiveCommand(i);});
             receiveThread[i]->detach();
         }
     }
@@ -86,19 +83,13 @@ void Communicator::receiveCommand(int t) {
             commandBuffer[t].valid = true;
             for(int i = 0; i < commands.command_size(); i++) {
                 auto& command = commands.command(i);
-				auto vy = NoVelY ? 0.0f : command.velocity_y();
+				auto vy = command.velocity_y();
                 RobotSpeed rs(command.velocity_x(), vy, command.velocity_r());
                 commandBuffer[t].robotSpeed[command.robot_id()] = rs;
             }
             if(isSimulation) {
-//                qDebug() << "simulation";
-                if (grsimInterfaceIndex==0)
-                    ZSS::ZSimModule::instance()->sendSim(t, commands);
-                else
-                    ZSS::ZRemoteSimModule::instance()->sendSim(t, commands);
+                ZSS::SimModule::instance()->sendSim(t, commands);
             } else {
-//                qDebug() << "realreal!";
-                // ZSS::ZActionModule::instance()->sendLegacy(t, commands);
                 ZSS::NActionModule::instance()->sendLegacy(commands);
             }
         }
@@ -106,7 +97,6 @@ void Communicator::receiveCommand(int t) {
 }
 
 void Communicator::sendCommand(int team, int id) {
-//    qDebug() << "send";
     GlobalData::instance()->robotInfoMutex.lock();
     bool infrared = GlobalData::instance()->robotInformation[team][id].infrared;
     bool flat = GlobalData::instance()->robotInformation[team][id].flat;
