@@ -243,7 +243,7 @@ void CSmartGotoPositionV2::plan(const CVisionModule* pVision)
     setSubTask("Goto", newTask);
 
     _lastCycle = pVision->getCycle();
-    CPlayerTask::plan(pVision);
+    Skill::plan(pVision);
     return ;
 }
 

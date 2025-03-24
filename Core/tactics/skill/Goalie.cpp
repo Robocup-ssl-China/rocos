@@ -124,5 +124,5 @@ void CGoalie::plan(const CVisionModule* pVision){
         GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(-PARAM::Field::PITCH_LENGTH/2,PARAM::Field::GOAL_WIDTH/2),debug_state.c_str());
     }
     _lastCycle = pVision->getCycle();
-    CPlayerTask::plan(pVision);
+    Skill::plan(pVision);
 }

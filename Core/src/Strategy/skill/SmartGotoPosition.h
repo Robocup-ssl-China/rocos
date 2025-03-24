@@ -10,7 +10,7 @@ struct PlayerCapabilityT;
 /************************************************************************/
 /*                      SmartGotoPosition                               */
 /************************************************************************/
-class CSmartGotoPositionV2 : public CPlayerTask{
+class CSmartGotoPositionV2 : public Skill{
 public:
 	CSmartGotoPositionV2();
 	virtual void plan(const CVisionModule* pVision);

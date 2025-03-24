@@ -131,6 +131,7 @@ subdir_list(TACTIC_PACKS ${CMAKE_CURRENT_SOURCE_DIR})
 # remove ignore directory from TACTIC_PACKS
 set(TACTIC_IGNORE_PACKS
     "src"
+    "nn_tactic"
 )
 list(REMOVE_ITEM TACTIC_PACKS 
     ${TACTIC_IGNORE_PACKS}

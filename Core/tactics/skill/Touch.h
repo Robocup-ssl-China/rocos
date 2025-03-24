@@ -1,7 +1,7 @@
 #pragma once
 #include "skill_registry.h"
 
-class CTouch : public CPlayerTask{
+class CTouch : public Skill{
 public:
     CTouch();
     virtual void plan(const CVisionModule* pVision);

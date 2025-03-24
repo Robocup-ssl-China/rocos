@@ -19,7 +19,7 @@ void MyTouch::plan(const CVisionModule* pVision){
 `setSubTask`是一个在`Skill`中的函数，它的定义如下：
 
 ```cpp
-// PlayerTask.h
+// skillbase.h
 void setSubTask(const std::string& name, const TaskT& task); // 设置子任务
 ```
 

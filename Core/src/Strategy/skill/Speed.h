@@ -1,12 +1,12 @@
 #ifndef Speed_h__
 #define Speed_h__
 #include "skill_registry.h"
-#include <PlayerTask.h>
+#include <skillbase.h>
 /************************************************************************/
 /*                     CSpeed  直接发速度指令,平动和转动          */
 /*			last edited by zc(eshock@zju.edu.cn) 2008-12-28				*/
 /************************************************************************/
-class CSpeed : public CPlayerTask{
+class CSpeed : public Skill{
 public:
 	CSpeed();
 	virtual void plan(const CVisionModule* pVision);

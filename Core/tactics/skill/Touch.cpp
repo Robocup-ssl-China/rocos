@@ -107,5 +107,5 @@ void CTouch::plan(const CVisionModule* pVision){
     }
 
     _lastCycle = pVision->getCycle();
-    CPlayerTask::plan(pVision);
+    Skill::plan(pVision);
 }

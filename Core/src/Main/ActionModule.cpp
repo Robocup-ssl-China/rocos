@@ -39,7 +39,7 @@ bool CActionModule::sendAction() {
     /************************************************************************/
     for (int vecNum = 0; vecNum < PARAM::Field::MAX_PLAYER; ++ vecNum) {
         // 获取当前小车任务
-        CPlayerTask* pTask = TaskMediator::Instance()->getPlayerTask(vecNum);
+        Skill* pTask = TaskMediator::Instance()->getPlayerTask(vecNum);
         // 没有任务，跳过
         if (nullptr == pTask) {
             continue;

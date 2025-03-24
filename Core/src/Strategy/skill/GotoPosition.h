@@ -8,7 +8,7 @@
 
 struct PlayerCapabilityT;
 
-class CGotoPositionV2 : public CPlayerTask{
+class CGotoPositionV2 : public Skill{
 public:
 	CGotoPositionV2();
 	virtual void plan(const CVisionModule* pVision);

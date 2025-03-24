@@ -4,7 +4,7 @@
 #include <singleton.hpp>
 #include <geometry.h>
 #include "staticparams.h"
-#include <PlayerTask.h>
+#include <skillbase.h>
 #include "utils.h"
 #include "Global.h"
 #include "parammanager.h"
@@ -85,7 +85,7 @@ public:
 		return _advancer.num;
 	}
 	// 任务
-	void setPlayerTask(const int num, CPlayerTask* pTask, const int priority)
+	void setPlayerTask(const int num, Skill* pTask, const int priority)
 	{
 		if (Utils::PlayerNumValid(num)){
 			_playerTaskPriority[num] = priority;
@@ -93,7 +93,7 @@ public:
 		}
 	}
 
-	CPlayerTask* getPlayerTask(const int num) const 
+	Skill* getPlayerTask(const int num) const 
 	{ 
 		if (Utils::PlayerNumValid(num)){
 			return _playerTask[num]; 
@@ -156,7 +156,7 @@ private:
 	SpecialRole _sideBack;
 	SpecialRole _advancer;
 	int _ballHandler; // 拿球队员
-	CPlayerTask* _playerTask[PARAM::Field::MAX_PLAYER]; // 队员的任务
+	Skill* _playerTask[PARAM::Field::MAX_PLAYER]; // 队员的任务
 	int _playerTaskPriority[PARAM::Field::MAX_PLAYER]; // 队员任务的优先级
 };
 typedef Singleton< CTaskMediator > TaskMediator;

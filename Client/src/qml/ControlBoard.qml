@@ -163,6 +163,9 @@ Page{
                                 onCheckStateChanged: {
                                     interaction.controlCamera(itemIndex,checked);
                                 }
+                                Component.onCompleted: {
+                                    interaction.controlCamera(itemIndex,checked);
+                                }
                             }
                         }
                     }

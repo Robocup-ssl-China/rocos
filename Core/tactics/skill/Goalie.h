@@ -1,7 +1,7 @@
 #pragma once
 #include "skill_registry.h"
 
-class CGoalie : public CPlayerTask{
+class CGoalie : public Skill{
 public:
     CGoalie();
     virtual void plan(const CVisionModule* pVision);

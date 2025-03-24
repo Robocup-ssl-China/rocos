@@ -6,7 +6,7 @@
 /************************************************************************/
 /*                     COpenSpeed  直接发开环速度                         */
 /************************************************************************/
-class COpenSpeed : public CPlayerTask {
+class COpenSpeed : public Skill {
 public:
 	COpenSpeed();
 	virtual void plan(const CVisionModule* pVision) {}

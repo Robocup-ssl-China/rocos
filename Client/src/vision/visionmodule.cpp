@@ -350,12 +350,11 @@ void  CVisionModule::udpSend() {
  * @return
  */
 bool CVisionModule::collectNewVision() {
-//    for (int i = 0; i < PARAM::CAMERA; i++) {
-//        qDebug() << "check : " << i << GlobalData::instance()->cameraControl[i];
-//        if (GlobalData::instance()->cameraControl[i] && !GlobalData::instance()->cameraUpdate[i])
-//            return false;
-//    }
-    return GlobalData::instance()->cameraUpdate[0];
+    for (int i = 0; i < PARAM::CAMERA; i++) {
+        if (GlobalData::instance()->cameraControl[i] && !GlobalData::instance()->cameraUpdate[i])
+            return false;
+    }
+    return true;
 }
 /**
  * @brief filed edgeTest

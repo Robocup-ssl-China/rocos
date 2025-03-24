@@ -1,7 +1,7 @@
 #ifndef _STOP_ROBOT_V2_H
 #define _STOP_ROBOT_V2_H
 #include "skill_registry.h"
-class CStopRobotV2 : public CPlayerTask{
+class CStopRobotV2 : public Skill{
 public:
 	CStopRobotV2();
 	virtual CPlayerCommand* execute(const CVisionModule* pVision);

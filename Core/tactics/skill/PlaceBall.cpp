@@ -108,5 +108,5 @@ void CPlaceBall::plan(const CVisionModule* pVision){
         DribbleStatus::Instance()->setDribbleCommand(vecNumber, 0);
     }
     _lastCycle = pVision->getCycle();
-    return CPlayerTask::plan(pVision);
+    return Skill::plan(pVision);
 }

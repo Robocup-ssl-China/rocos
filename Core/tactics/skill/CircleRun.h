@@ -1,7 +1,7 @@
 #pragma once
 #include "skill_registry.h"
 
-class CCircleRun : public CPlayerTask{
+class CCircleRun : public Skill{
 public:
     CCircleRun();
     virtual void plan(const CVisionModule* pVision);

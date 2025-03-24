@@ -7,14 +7,14 @@
 #include <qdebug.h>
 namespace {
 auto zpm = ZSS::ZParamManager::instance();
-int DIFF_VECHILE_MAX_DIFF = 3000;//1000
-float MAX_SPEED = 5000;
+int DIFF_VECHILE_MAX_DIFF = 5000;//1000
+float MAX_SPEED = 8000;
 // 由于图像的一次事故，帧率和系统延时改变了
-const double TOTAL_MOV_LATED_FRAME = 4.5f; //平移的延时(原来为4.2)
+const double TOTAL_MOV_LATED_FRAME = 3.5f; //平移的延时(原来为4.2)
 const int NUM_MOV_LATENCY_FRAMES = static_cast<int>(TOTAL_MOV_LATED_FRAME);
 const float MOV_LATENCY_FRACTION  = TOTAL_MOV_LATED_FRAME - static_cast<float>(NUM_MOV_LATENCY_FRAMES);
 
-const double TOTAL_DIR_LATED_FRAME = 4.0f; //转动的延时
+const double TOTAL_DIR_LATED_FRAME = TOTAL_MOV_LATED_FRAME; //转动的延时
 const int NUM_DIR_LATENCY_FRAMES = static_cast<int>(TOTAL_DIR_LATED_FRAME);
 const float DIR_LATENCY_FRACTION  = TOTAL_DIR_LATED_FRAME - static_cast<float>(NUM_DIR_LATENCY_FRAMES);
 bool VERBOSE = false;
@@ -23,7 +23,7 @@ bool VERBOSE = false;
 CDealRobot::CDealRobot() {
     zpm->loadParam(fieldWidth, "field/canvasWidth", 13200);
     zpm->loadParam(fieldHeight, "field/canvasHeight", 9900);
-    zpm->loadParam(minBelieveFrame, "AlertFusion/carMinBelieveFrame", 3);
+    zpm->loadParam(minBelieveFrame, "AlertFusion/carMinBelieveFrame", 2);
     zpm->loadParam(theirMaxLostFrame, "AlertFusion/theirCarMaxLostFrame", 15);
     zpm->loadParam(ourMaxLostFrame, "AlertFusion/ourCarMaxLostFrame", 150);
     zpm->loadParam(VERBOSE, "AlertFusion/VERBOSE", false);

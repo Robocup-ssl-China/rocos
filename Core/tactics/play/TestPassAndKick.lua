@@ -1,5 +1,5 @@
 local Y = 2000
-local X_Threshold = 2800
+local X_Threshold = 3000
 local PASS_STEP = 400
 
 local passPos = CGeoPoint:new_local(0,0)
@@ -15,7 +15,7 @@ local updatePassPos = function()
     local y = passPos:y() > 0 and -Y or Y
     passPos = CGeoPoint(x, y)
     kickMode = kick.flat() -- math.random(kick.flat(),kick.chip())
-    kickPower = kickMode == kick.flat() and 4000 or 2000
+    kickPower = kickMode == kick.flat() and 4000 or 800
     needShoot = x > X_Threshold-100 and true or false
 end
 local c_passPos = function()

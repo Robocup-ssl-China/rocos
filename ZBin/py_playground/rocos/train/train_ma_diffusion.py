@@ -43,11 +43,15 @@ noise_scheduler = DDPMScheduler(
 )
 
 # create network object
+# noise_pred_graph_net = GraphUNet(
+#     in_channels=action_dim,
+#     hidden_channels=64,
+#     out_channels=action_dim,
+# )
 noise_pred_net = ConditionalUnet1D(
     input_dim=action_dim,
     global_cond_dim=obs_dim*obs_horizon
 )
-# noise_pred_net = GraphUNet()
 # Exponential Moving Average
 # accelerates training and improves stability
 # holds a copy of the model weights
@@ -96,6 +100,7 @@ def train():
         global_cond=obs.flatten(start_dim=1)
     )
 
+    make_dot(noise, params=dict(noise_pred_net.named_parameters())).render("model", format="png")
 
     # illustration of removing noise
     # the actual noise removal is performed by NoiseScheduler
@@ -314,6 +319,24 @@ def test():
             testEnv.debug_ball(obs_np, action[0])
             print(f"action : {action}")
 
+def testModel(name="testModel"):
+    from rocos.nn.unet1d import ConditionalResidualBlock1D
+    in_channels = 4
+    out_channels = 8
+    cond_dim = 12
+
+    model = ConditionalResidualBlock1D(
+        in_channels=in_channels,
+        out_channels=out_channels,
+        cond_dim=cond_dim
+    )
+    input = torch.rand([1, in_channels, 10])
+    cond = torch.rand([1, cond_dim])
+    out = model(input,cond)
+    make_dot(out, params=dict(model.named_parameters())).render(name, format="png")
+
+
 if __name__ == '__main__':
+    testModel()
     # train()
-    test()
+    # test()
