@@ -55,7 +55,7 @@ class CBallPredictor {
   public:
     CBallPredictor();
     ~CBallPredictor();
-    void updateVision( const CServerInterface::VisualInfo& vInfo, bool invert);// 更新视觉信息
+    void updateVision( const VisualInfoT& vInfo, bool invert);// 更新视觉信息
     int ballLostTime() const {
         return _ballLostTime;
     }

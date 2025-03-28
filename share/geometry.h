@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <cmath>
 #include <algorithm>
-
+#include "geometrybase.h"
 
 /************************************************************************/
 /*                        CVector                                       */
@@ -13,19 +13,19 @@
 double CNormalize(double angle);
 class CVector {
   public:
-    CVector() :	_x(0), _y(0) {}
-    CVector(double x, double y) : _x(x), _y(y) {}
-    CVector(const CVector& v) :	_x(v.x()), _y(v.y()) {}
+    CVector() :	p_(0,0) {}
+    CVector(double x, double y) : p_(x,y) {}
+    CVector(const CVector& v) :	p_(v.p_) {}
     bool setVector(double x, double y) {
-        _x = x;
-        _y = y;
+        p_.x = x;
+        p_.y = y;
         return true;
     }
     double mod() const {
-        return std::sqrt(_x * _x + _y * _y);
+        return std::sqrt(p_.x * p_.x + p_.y * p_.y);
     }
     double mod2() const {
-        return (_x * _x + _y * _y);
+        return (p_.x * p_.x + p_.y * p_.y);
     }
     double dir() const {
         return std::atan2(y(), x());
@@ -33,14 +33,14 @@ class CVector {
     double theta(const CVector& v) {
         //计算自身到v的夹角
         double _theta;
-        _theta = std::atan2(_y, _x) - std::atan2(v.y(), v.x());
+        _theta = std::atan2(p_.y, p_.x) - std::atan2(v.y(), v.x());
         if (_theta > 3.14159265358979323846) return _theta - 2 * 3.14159265358979323846 ;
         if (_theta < -3.14159265358979323846) return _theta + 2 * 3.14159265358979323846;
         return _theta;
     }
     CVector rotate(double angle) const;
     CVector unit() const {
-        CVector vector(_x, _y);
+        CVector vector(p_.x, p_.y);
         if (vector.mod() < 1e-8) {
             std::cout << "WARNING Vector too small to have unit vector!\n";
             return CVector(1, 0);
@@ -49,38 +49,37 @@ class CVector {
                        vector.y() / vector.mod());
     }
     double x() const {
-        return _x;
+        return p_.x;
     }
     double y() const {
-        return _y;
+        return p_.y;
     }
     double value(double angle) const {
         return mod() * std::cos(dir() - angle);
     }
     CVector operator +(const CVector& v) const {
-        return CVector(_x + v.x(), _y + v.y());
+        return CVector(p_.x + v.x(), p_.y + v.y());
     }
     CVector operator -(const CVector& v) const {
-        return CVector(_x - v.x(), _y - v.y());
+        return CVector(p_.x - v.x(), p_.y - v.y());
     }
     CVector operator *(double a) const {
-        return CVector(_x * a, _y * a);
+        return CVector(p_.x * a, p_.y * a);
     }
     double operator *(CVector b) const {
-        return double(_x * b.x() + _y * b.y());    //向量点乘
+        return double(p_.x * b.x() + p_.y * b.y());    //向量点乘
     }
     CVector operator /(double a) const {
-        return CVector(_x / a, _y / a);
+        return CVector(p_.x / a, p_.y / a);
     }
     CVector operator -() const {
-        return CVector(-1 * _x, -1 * _y);
+        return CVector(-1 * p_.x, -1 * p_.y);
     }
     friend std::ostream& operator <<(std::ostream& os, const CVector& v) {
         return os << "(" << v.x() << ":" << v.y() << ")";
     }
-
   private:
-    double _x, _y;
+    Point2D p_;
 };
 
 /************************************************************************/
@@ -88,54 +87,54 @@ class CVector {
 /************************************************************************/
 class CGeoPoint {
   public:
-    CGeoPoint() : _x(0), _y(0) {}
+    CGeoPoint() : p_(0,0) {}
     ~CGeoPoint() {}
-    CGeoPoint(double x, double y) : _x(x), _y(y) {}
-    CGeoPoint(const CGeoPoint& p) : _x(p.x()), _y(p.y()) {}
+    CGeoPoint(double x, double y) : p_(x,y) {}
+    CGeoPoint(const CGeoPoint& p) : p_(p.p_) {}
     bool operator==(const CGeoPoint& rhs) {
         return ((this->x() == rhs.x()) && (this->y() == rhs.y()));
     }
     double x() const {
-        return _x;
+        return p_.x;
     }
     double y() const {
-        return _y;
+        return p_.y;
     }
     void setX(double x) {
-        _x = x;    // 2014/2/28 新增 设置x坐标 yys
+        p_.x = x;    // 2014/2/28 新增 设置x坐标 yys
     }
     void setY(double y) {
-        _y = y;    // 2014/2/28 新增 设置y坐标 yys
+        p_.y = y;    // 2014/2/28 新增 设置y坐标 yys
     }
     bool fill(double x, double y) {
-        _x = x;    //2018/4/14  新增 同时设置 wayne
-        _y = y;
+        p_.x = x;    //2018/4/14  新增 同时设置 wayne
+        p_.y = y;
         return true;
     }
     double dist(const CGeoPoint& p) const {
-        return CVector(p - CGeoPoint(_x, _y)).mod();
+        return CVector(p - CGeoPoint(p_.x, p_.y)).mod();
     }
     double dist2(const CGeoPoint& p) const {
-        return CVector(p - CGeoPoint(_x, _y)).mod2();
+        return CVector(p - CGeoPoint(p_.x, p_.y)).mod2();
     }
     CGeoPoint operator+(const CVector& v) const {
-        return CGeoPoint(_x + v.x(), _y + v.y());
+        return CGeoPoint(p_.x + v.x(), p_.y + v.y());
     }
     CGeoPoint operator*(const double& a) const {
-        return CGeoPoint(_x * a, _y * a);
+        return CGeoPoint(p_.x * a, p_.y * a);
     }
     CVector operator-(const CGeoPoint& p) const {
-        return CVector(_x - p.x(), _y - p.y());
+        return CVector(p_.x - p.x(), p_.y - p.y());
     }
     CGeoPoint midPoint(const CGeoPoint& p) const {
-        return CGeoPoint((_x + p.x()) / 2, (_y + p.y()) / 2);
+        return CGeoPoint((p_.x + p.x()) / 2, (p_.y + p.y()) / 2);
     }
     friend std::ostream& operator <<(std::ostream& os, const CGeoPoint& v) {
         return os << "(" << v.x() << ":" << v.y() << ")";
     }
 
-  private:
-    double _x, _y;
+private:
+    Point2D p_;
 };
 
 /************************************************************************/

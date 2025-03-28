@@ -37,27 +37,18 @@
 *
 * etc...
 */
-
-extern Semaphore visionEvent;
-extern std::mutex decisionMutex;
 /// <summary> For GPU. </summary>
 std::mutex* _best_visiondata_copy_mutex = nullptr;
 std::mutex* _value_getter_mutex = nullptr;
 
-using PARAM::Latency::TOTAL_LATED_FRAME;
-
-bool VERBOSE_MODE = true;
-bool IS_SIMULATION = false;
 bool record_run_pos_on = false;
 namespace {
 COptionModule *option;
 CDecisionModule *decision;
 CActionModule *action;
-CServerInterface::VisualInfo visionInfo;
 }
 
 int runLoop() {
-    ZSS::ZParamManager::instance()->loadParam(IS_SIMULATION, "Alert/IsSimulation", false);
     initializeSingleton();
     option = new COptionModule();
     CCommandInterface::instance(option);

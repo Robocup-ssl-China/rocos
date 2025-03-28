@@ -10,6 +10,4 @@ public:
 REGISTER_ALGM(PassPosCalculate, PassPosCalculate);
 
 void PassPosCalculate::process(DataMap& data){
-    fmt::print("PassPosCalculate process\n");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
 }

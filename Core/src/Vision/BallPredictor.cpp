@@ -23,16 +23,16 @@ CBallPredictor::~CBallPredictor() {
         ballSpeedLog.close();
 }
 
-void CBallPredictor::updateVision( const CServerInterface::VisualInfo& vInfo, bool invert) {
+void CBallPredictor::updateVision( const VisualInfoT& vInfo, bool invert) {
     // 每次处理一个_visionLogger里的数据，只用来保留预测输出
     // 该函数的处理结果就是更新thisCycle帧里面的球信息
     BallVisionData& thisCycle = _visionLogger.getVision(vInfo.cycle);
     const int invertFactor = invert ? -1 : 1;
 
-    thisCycle.SetVel(vInfo.BallVel * invertFactor);
-    thisCycle.SetRawPos(vInfo.rawBall.x * invertFactor, vInfo.rawBall.y * invertFactor);
-    thisCycle.SetChipPredict(vInfo.chipPredict.x, vInfo.chipPredict.y);
-    thisCycle.SetPos(vInfo.ball.x * invertFactor,  vInfo.ball.y * invertFactor);
+    thisCycle.SetVel(vInfo.ball.vel * invertFactor);
+    thisCycle.SetRawPos(vInfo.ball.rawPos.x * invertFactor, vInfo.ball.rawPos.y * invertFactor);
+    thisCycle.SetChipPredict(vInfo.ball.chipPredict.x, vInfo.ball.chipPredict.y);
+    thisCycle.SetPos(vInfo.ball.pos.x * invertFactor,  vInfo.ball.pos.y * invertFactor);
     thisCycle.SetValid(vInfo.ball.valid);
     thisCycle.cycle =  vInfo.cycle;
     return;

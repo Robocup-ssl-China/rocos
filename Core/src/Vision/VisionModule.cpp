@@ -19,7 +19,6 @@
 using namespace std;
 Semaphore vision_to_decision(0);
 Semaphore visionEvent;
-std::mutex decisionMutex;
 std::mutex visionMutex;
 
 #ifdef USE_CUDA_MODULE
@@ -80,12 +79,12 @@ void CVisionModule::startReceiveThread() {
     RefereeBoxInterface::Instance()->start();
 }
 
-void CVisionModule::initVisionMsg(CServerInterface::VisualInfo& temp) {
+void CVisionModule::initVisionMsg(VisualInfoT& temp) {
     for (int color = 0; color < PARAM::TEAMS; color++) {
         for (int i = 0; i <  PARAM::Field::MAX_PLAYER; i++) {
             temp.player[color][i].dir = 0;
             temp.player[color][i].rawdir = 0;
-            temp.player[color][i].pos.valid = false;
+            temp.player[color][i].valid = false;
             temp.player[color][i].pos.x = -999999;
             temp.player[color][i].pos.y = -999999;
             temp.player[color][i].rawPos.x = -999999;
@@ -117,20 +116,20 @@ void CVisionModule::receiveVisionMsg() {
                 auto & ball = detectionFrame.balls();
                 if (ball.x() > 88888 && ball.y() > 88888) {
                     //理论上不应该进入这个if
-                    visionTemp.ball.x = -32768;
-                    visionTemp.ball.x = -32768;
+                    visionTemp.ball.pos.x = -32768;
+                    visionTemp.ball.pos.x = -32768;
                     visionTemp.ball.valid = false;
                 } else {
-                    visionTemp.ball.x = ball.x();
-                    visionTemp.ball.y = ball.y();
-                    visionTemp.rawBall.x = ball.raw_x();
-                    visionTemp.rawBall.y = ball.raw_y();
-                    visionTemp.chipPredict.x = ball.chip_predict_x();
-                    visionTemp.chipPredict.y = ball.chip_predict_y();
+                    visionTemp.ball.pos.x = ball.x();
+                    visionTemp.ball.pos.y = ball.y();
+                    visionTemp.ball.rawPos.x = ball.raw_x();
+                    visionTemp.ball.rawPos.y = ball.raw_y();
+                    visionTemp.ball.chipPredict.x = ball.chip_predict_x();
+                    visionTemp.ball.chipPredict.y = ball.chip_predict_y();
                     visionTemp.ball.valid = ball.valid();
-                    visionTemp.BallState = (ballState)ball.ball_state();
-                    visionTemp.BallLastTouch = ball.last_touch();
-                    visionTemp.BallVel.setVector(ball.vel_x(), ball.vel_y());
+                    visionTemp.ball.state = (BallState)ball.ball_state();
+                    visionTemp.ball.lastTouch = ball.last_touch();
+                    visionTemp.ball.vel.setVector(ball.vel_x(), ball.vel_y());
                 }
             } else {
                 std::cout << "Ball not Found!!!" << std::endl;
@@ -149,7 +148,7 @@ void CVisionModule::receiveVisionMsg() {
                     visionTemp.player[ourOrTheir][index].pos.y = robot.y();
                     visionTemp.player[ourOrTheir][index].rawPos.x = robot.raw_x();
                     visionTemp.player[ourOrTheir][index].rawPos.y = robot.raw_y();
-                    visionTemp.player[ourOrTheir][index].pos.valid = robot.valid();
+                    visionTemp.player[ourOrTheir][index].valid = robot.valid();
                     visionTemp.player[ourOrTheir][index].dir = robot.orientation();
                     visionTemp.player[ourOrTheir][index].rawdir = robot.raw_orientation();
                     visionTemp.player[ourOrTheir][index].vel.setVector(robot.vel_x(), robot.vel_y());
@@ -159,14 +158,12 @@ void CVisionModule::receiveVisionMsg() {
                     visionTemp.player[ourOrTheir][index].accelerate.setVector(robot.accelerate_x(), robot.accelerate_y());
                 }
             }
-//            decisionMutex.lock();		// 决策加锁
             auto refBox = RefereeBoxInterface::Instance();
             //(VisionReceiver::_visionMessage)->message2VisionInfo(temp);	// 图像接受线程转换图像数据
             visionTemp.mode = refBox->getPlayMode();		// 裁判盒命令接受线程得到裁判盒指令,并设置相应mode
             visionTemp.next_command = refBox->getNextCommand();
-            visionTemp.ballPlacePosition.x = refBox->getBallPlacementPosX();
-            visionTemp.ballPlacePosition.y = refBox->getBallPlacementPosY();
-            visionTemp.ballPlacePosition.setValid(true);
+            visionTemp.ball.placementPos.x = refBox->getBallPlacementPosX();
+            visionTemp.ball.placementPos.y = refBox->getBallPlacementPosY();
             refMsgTemp.blueGoal = refBox->getBlueGoalNum();
             refMsgTemp.yellowGoal = refBox->getYellowGoalNum();
             refMsgTemp.timeRemain = refBox->getRemainTime();
@@ -177,7 +174,6 @@ void CVisionModule::receiveVisionMsg() {
 
             visionMutex.unlock();		// 图像解锁
             visionEvent.Signal();
-//            decisionMutex.unlock();	// 决策解锁
         }
     }
 }
@@ -216,17 +212,14 @@ void CVisionModule::setNewVision() {
 
     // 更新新图像数据中的原始球信息
     _lastRawBallPos = _rawBallPos;
-    _rawBallPos.SetValid(_info.ball.valid);
-    // add by zhyaic 2013.6.3 原始的位置应该反向
     const int invertFactor = invert ? -1 : 1;
-    _rawBallPos.SetPos(_info.ball.x * invertFactor, _info.ball.y * invertFactor);
+    _rawBallPos.SetPos(_info.ball.pos.x * invertFactor, _info.ball.pos.y * invertFactor);
 
     /////////////////////////////////////////////////////////////////////////////
     /// @brief Step 1. 进行球预测,也就是输入当前球的观测进行滤波
     /////////////////////////////////////////////////////////////////////////////
     _ballPredictor.updateVision(_info, invert);
 
-    //printf("%d\n", RobotCapFactory::Instance()->getRobotCap(0,2)->maxSpeed(0));
     /////////////////////////////////////////////////////////////////////////////
     /// @brief Step 2: 进行我方和对方机器人位置预测，关注滤波器
     /////////////////////////////////////////////////////////////////////////////
@@ -270,8 +263,9 @@ void CVisionModule::setNewVision() {
     dealSpecialBall();
 
     //for lua
-    _ballPlacementPosition.setX(_info.ballPlacePosition.x);
-    _ballPlacementPosition.setY(_info.ballPlacePosition.y);
+    if(_gameState.ballPlacement()) {
+        _ballPlacementPosition.fill(_info.ball.placementPos.x,_info.ball.placementPos.y);
+    }
 
     /////////////////////////////////////////////////////////////////////////////
     /// @brief Step 7: 向调试面板中显示一些必要的信息
@@ -284,7 +278,7 @@ void CVisionModule::setNewVision() {
 #endif
 }
 
-void CVisionModule::checkKickoffStatus(const CServerInterface::VisualInfo& info) {
+void CVisionModule::checkKickoffStatus(const VisualInfoT& info) {
     if (_gameState.canEitherKickBall()) {	// 若允许去踢球
         if (! _ballKicked ) {	// 球没有被判断为踢出
             if (gameState().ourRestart()) {

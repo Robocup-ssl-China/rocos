@@ -71,7 +71,7 @@ void CRobotPredictor::updateVision(int cycle, const VehicleInfoT& player, const 
     predictedVision.SetPos(x, y);
     predictedVision.SetDir(dir);
     predictedVision.SetRawDir(rawdir);
-    predictedVision.SetValid(player.pos.valid);
+    predictedVision.SetValid(player.valid);
     predictedVision.SetAcc(CVector(acc_x, acc_y));
     predictedVision.SetRawVel(CVector(raw_vel_x, raw_vel_y));
     predictedVision.SetRawRotVel(rawDirVel);

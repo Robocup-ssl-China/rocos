@@ -1,8 +1,6 @@
 #ifndef _SERVER_INTERFACE_H_
 #define _SERVER_INTERFACE_H_
-/************************************************************************/
-/*                      和Server的通讯接口                              */
-/************************************************************************/
+
 #include "geometry.h"
 #include "staticparams.h"
 struct RefRecvMsg{
@@ -12,54 +10,41 @@ struct RefRecvMsg{
 	int blueGoalie;
 	int yellowGoalie;
 };
-class COptionModule;
-
-struct PosT {
-    PosT(): valid(0), x(0), y(0) {}
-    int valid;
-    float x;
-    float y;
-    void setValid(int _value) {
-        valid = _value;
-    }
-};
 
 struct VehicleInfoT {
-    VehicleInfoT(): dir(0), type(0), dirvel(0) {}
-    PosT pos;
-    PosT rawPos;
+    bool valid = false;
+    Point2D pos;
+    Point2D rawPos;
     CVector vel;
     CVector raw_vel;
-    float dir;//radius
-    float rawdir;
-    float dirvel;
+    float dir = 0;
+    float rawdir = 0;
+    float dirvel = 0;
     float raw_dirVel;
     CVector accelerate;
-    int type;
+    int type = 0;
 };
-enum ballState {received, touched, kicked, struggle, chip_pass, flat_pass};
+
+enum BallState {received, touched, kicked, struggle, chip_pass, flat_pass};
+struct BallInfoT{
+    bool valid = false;
+    Point2D pos;
+    Point2D rawPos;
+    Point2D chipPredict;
+    CVector vel;
+    BallState state = BallState::received;
+    int lastTouch = 0;
+    Point2D placementPos;
+};
 
 struct VisualInfoT {
-    VisualInfoT(): cycle(0), BallState(received), BallLastTouch(0), mode(0) {}
+    VisualInfoT(): cycle(0), mode(0) {}
     unsigned int cycle;
     VehicleInfoT player[PARAM::TEAMS][PARAM::Field::MAX_PLAYER];
-    PosT ball;
-    PosT rawBall;
-    PosT chipPredict;
-    CVector BallVel;
-    ballState BallState;
-    int BallLastTouch;
+    BallInfoT ball;
     int mode;
     int next_command;
-    //unsigned char ourRobotIndexBefore[ PARAM::Field::MAX_PLAYER] = {};
     int before_cycle[ 2 * PARAM::Field::MAX_PLAYER] = {};
-    // unsigned char theirRobotIndexBefore[ PARAM::Field::MAX_PLAYER] = {};
-    //PosT imageBall;
-    PosT ballPlacePosition;
 };
 
-class CServerInterface{
-public:
-	typedef VisualInfoT VisualInfo;
-};
 #endif //_SERVER_INTERFACE_H_

@@ -175,7 +175,7 @@ protected:
         _lastTimeCycle = _timeCycle; _timeCycle = cycle;
     }
     void checkBothSidePlayerNum();
-    void checkKickoffStatus(const CServerInterface::VisualInfo& info); // 检查开球状态
+    void checkKickoffStatus(const VisualInfoT& info); // 检查开球状态
     void updateRefereeMsg();
     void updateNextRefereeMsg(const unsigned int);
 	void judgeBallVelStable();
@@ -225,12 +225,12 @@ private:
     bool _ballVelDirChanged;
     bool _sensorBall;
 
-    CServerInterface::VisualInfo _info, visionTemp;
+    VisualInfoT _info, visionTemp;
     RefRecvMsg _refMsg, refMsgTemp;
     QUdpSocket* visionSocket;
     Vision_DetectionFrame detectionFrame;
 
-    void initVisionMsg(CServerInterface::VisualInfo &visionTemp);
+    void initVisionMsg(VisualInfoT &visionTemp);
     void receiveVisionMsg();
     void dealSpecialBall();
     void debugOnField();
