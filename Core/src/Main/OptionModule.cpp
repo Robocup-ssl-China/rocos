@@ -22,6 +22,7 @@ COptionModule::COptionModule()
 
 	std::cout << "Side : " << ((_side == PARAM::Field::POS_SIDE_LEFT) ? "left" : "right")
               << ", Color : " << ((_color == PARAM::YELLOW) ? "yellow" : "blue") << " is running..." << std::endl;
+	std::cout << "------------------------------------" << std::endl;
 	WorldModel::Instance()->registerOption(this);
 }
 

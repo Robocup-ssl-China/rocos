@@ -3,6 +3,8 @@ set(libs)
 set(incs)
 option(USE_TBK "use tbk lib." OFF)
 option(USE_TORCH "use torch cpp lib." OFF)
+## taskflow signals conflict with Qt signals keyword
+add_definitions(-DQT_NO_KEYWORDS)
 # Core - Medusa
 ## Protobuf
 find_package(Protobuf REQUIRED)
@@ -118,6 +120,7 @@ file(GLOB PROJECT_SOURCE
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/defence/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/rolematch/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/skill/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/Strategy/algm/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/Vision/mediator/net/*.cpp"
 )
 list(APPEND PROJECT_SOURCE
@@ -144,6 +147,7 @@ foreach(pack ${TACTIC_PACKS})
     message(STATUS "rocos - tactics_package: '${pack}'")
     file(GLOB TACTIC_SOURCE 
         "${CMAKE_CURRENT_SOURCE_DIR}/${pack}/skill/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/${pack}/algm/*.cpp"
     )
     list(APPEND PROJECT_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/${pack}/skill

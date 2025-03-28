@@ -20,6 +20,7 @@
 // include files
 #include <OptionModule.h>					/// Options for the match
 #include <VisionModule.h>					/// Vision for the match
+#include "algmmanager.h"
 
 //////////////////////////////////////////////////////////////////////////
 // forward declaration
@@ -74,6 +75,7 @@ private:
 
 	/// <summary> 当前比赛视觉模块，The vision module </summary>
 	CVisionModule* _pVision;
+	AlgmManager algmManager_;
 };
 
 #endif // ~_DECISION_MODULE_H_

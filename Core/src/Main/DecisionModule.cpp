@@ -19,6 +19,7 @@ extern Semaphore vision_to_decision;
 Semaphore decision_to_action(0);
 
 CDecisionModule::CDecisionModule(CVisionModule* pVision): _pVision(pVision){
+	algmManager_.init();
     LuaModule::Instance()->RunScript("./lua_scripts/StartZeus.lua");
 }
 

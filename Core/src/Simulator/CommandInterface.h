@@ -46,7 +46,7 @@ public:
     void placeRobot(int num, double x, double y, double dir);
     void placeBall(double x, double y, double vx, double vy);
     void sendCommands();
-private slots:
+private Q_SLOTS:
     void receiveInformation();
 private:
     static CCommandInterface* _instance;
