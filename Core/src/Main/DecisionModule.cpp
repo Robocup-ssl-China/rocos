@@ -15,7 +15,6 @@
 #include <TaskMediator.h>
 #include "LuaModule.h"
 #include "Semaphore.h"
-extern Semaphore vision_to_decision;
 Semaphore decision_to_action(0);
 
 CDecisionModule::CDecisionModule(CVisionModule* pVision): _pVision(pVision){
@@ -28,7 +27,6 @@ CDecisionModule::~CDecisionModule(void){
 
 void CDecisionModule::DoDecision()
 {
-	vision_to_decision.Wait();
 	/************************************************************************/
 	/* 清空上一周期的历史任务                                               */
 	/************************************************************************/

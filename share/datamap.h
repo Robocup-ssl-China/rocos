@@ -71,10 +71,19 @@ public:
         return std::any(); // 返回空 any（类似 std::map 行为）
     }
 
-    // 禁用拷贝和赋值（避免潜在线程安全问题）
-    DataMap(const DataMap&) = delete;
-    DataMap& operator=(const DataMap&) = delete;
-
+    DataMap(const DataMap& other){
+        std::shared_lock<std::shared_mutex> src_lock(other.mutex_);
+        map_ = other.map_;
+    }
+    DataMap& operator=(const DataMap& other){
+        if (this != &other) {
+            std::unique_lock<std::shared_mutex> dst_lock(mutex_, std::defer_lock);
+            std::shared_lock<std::shared_mutex> src_lock(other.mutex_, std::defer_lock);
+            std::lock(dst_lock, src_lock); // 锁定两个互斥量
+            map_ = other.map_;
+        }
+        return *this;
+    }
 private:
     std::map<std::string, std::any> map_;
     mutable std::shared_mutex mutex_;

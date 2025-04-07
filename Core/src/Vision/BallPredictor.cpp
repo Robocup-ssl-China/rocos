@@ -6,22 +6,6 @@
 #include "WorldDefine.h"
 #include "GDebugEngine.h"
 #include "parammanager.h"
-namespace {
-const int MAX_BALL_LOST_TIME = 30;
-
-bool LOG_BALL_SPEED = false;
-std::ofstream ballSpeedLog;
-}
-
-
-CBallPredictor::CBallPredictor() : _cycle(0), _errorSpeed(false), _ballInvalidMovedCycle(0), _ballLostTime(2000), _hasCollision(false), _visibility(0), _activity(0), _lastRawBallPos(0, 0) {
-    ZSS::ZParamManager::instance()->loadParam(LOG_BALL_SPEED, "Debug/BallLog", false);
-}
-
-CBallPredictor::~CBallPredictor() {
-    if ( ballSpeedLog.is_open() )
-        ballSpeedLog.close();
-}
 
 void CBallPredictor::updateVision( const VisualInfoT& vInfo, bool invert) {
     // 每次处理一个_visionLogger里的数据，只用来保留预测输出
@@ -31,46 +15,9 @@ void CBallPredictor::updateVision( const VisualInfoT& vInfo, bool invert) {
 
     thisCycle.SetVel(vInfo.ball.vel * invertFactor);
     thisCycle.SetRawPos(vInfo.ball.rawPos.x * invertFactor, vInfo.ball.rawPos.y * invertFactor);
-    thisCycle.SetChipPredict(vInfo.ball.chipPredict.x, vInfo.ball.chipPredict.y);
+    thisCycle.SetChipPredict(vInfo.ball.chipPredict.x * invertFactor, vInfo.ball.chipPredict.y * invertFactor);
     thisCycle.SetPos(vInfo.ball.pos.x * invertFactor,  vInfo.ball.pos.y * invertFactor);
     thisCycle.SetValid(vInfo.ball.valid);
     thisCycle.cycle =  vInfo.cycle;
     return;
-}
-
-bool CBallPredictor::checkValid(int cycle) {
-    if (! _visionLogger.visionValid(cycle)) {
-        return false;
-    }
-
-    if (! _visionLogger.visionValid(cycle - 1) || ! _visionLogger.getVision(cycle - 1).Valid()) {
-        return true;	//如果上个周期预测不可用,那么总是信任这个周期的信息
-    }
-
-    const double BALL_OUT_BUFFER = (PARAM::Rule::Version == 2003) ? -20 : -50;
-    const double MAX_BALL_MOVE_DIST_PER_CYCLE = 30; //每一祯球的最大位移
-    BallVisionData& thisCycle = _visionLogger.getVision(cycle);
-    const BallVisionData& lastCycle = _visionLogger.getVision(cycle - 1);
-    if (!Utils::IsInField(thisCycle.RawPos(), BALL_OUT_BUFFER)) {
-        return false; // 球不可能在场外,故信息不对
-    }
-
-    if ((thisCycle.RawPos() - lastCycle.RawPos()).mod2() > MAX_BALL_MOVE_DIST_PER_CYCLE * MAX_BALL_MOVE_DIST_PER_CYCLE) {
-        if (++_ballInvalidMovedCycle < 5) {
-            thisCycle.SetRawPos(lastCycle.RawPos() + lastCycle.Vel() / PARAM::Vision::FRAME_RATE);//处理视觉杂点的过程，根据试验修正
-            return false; // 不可能这么快
-        }
-    } else {
-        _ballInvalidMovedCycle = 0;
-    }
-
-    return true;
-}
-
-void CBallPredictor::setCollisionResult(int cycle, const ObjectPoseT& ball) {
-    ObjectPoseT& oldBall = _visionLogger.getVision(cycle);
-    oldBall = ball;
-    _hasCollision = true;
-
-    return ;
 }

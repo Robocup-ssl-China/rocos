@@ -6,7 +6,7 @@
 #include "BallPredictor.h"
 #include "RobotPredictor.h"
 #include "game_state.h"
-#include "ServerInterface.h"
+#include "VisionTypeDef.h"
 #include "OptionModule.h"
 #include "utils.h"
 #include <vector>

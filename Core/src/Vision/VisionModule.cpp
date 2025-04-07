@@ -14,10 +14,9 @@
 #include "RobotsCollision.h"
 #include "Semaphore.h"
 #include "staticparams.h"
-#include "staticparams.h"
 #include "RefereeBoxIf.h"
+#include "algmmanager.h"
 using namespace std;
-Semaphore vision_to_decision(0);
 Semaphore visionEvent;
 std::mutex visionMutex;
 
@@ -272,7 +271,10 @@ void CVisionModule::setNewVision() {
     /////////////////////////////////////////////////////////////////////////////
     debugOnField();
 
-    vision_to_decision.Signal();
+    /////////////////////////////////////////////////////////////////////////////
+    /// @brief Step 8: 向算法任务流模块发送数据
+    /////////////////////////////////////////////////////////////////////////////
+    AlgmMnger::instance()->signal(_info, _refMsg);
 #ifdef USE_CUDA_MODULE
     vision_to_cuda.Signal();
 #endif

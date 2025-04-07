@@ -1,6 +1,6 @@
 #ifndef _PLAYER_COMMAND_H_
 #define _PLAYER_COMMAND_H_
-#include <ServerInterface.h>
+#include <VisionTypeDef.h>
 #include <misc_types.h>
 #include <string>
 #include <ostream>

@@ -1,4 +1,5 @@
 #include "Global.h"
+#include "algmmanager.h"
 
 CVisionModule*   vision;
 CKickStatus*    kickStatus;
@@ -18,4 +19,5 @@ void initializeSingleton()
 	skillapi	  = SkillAPI::Instance();
 	ballModel = BallSpeedModel::Instance();
 	trainEnv = TrainEnv::Instance();
+	AlgmMnger::Instance()->init();
 }

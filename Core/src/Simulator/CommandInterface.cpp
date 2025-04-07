@@ -1,5 +1,5 @@
 ﻿#include "CommandInterface.h"
-#include "ServerInterface.h"
+#include "VisionTypeDef.h"
 #include "OptionModule.h"
 #include <iostream>
 #include "staticparams.h"

@@ -28,11 +28,33 @@ void AlgmManager::init(){
         }
     }
     fmt::print("------------------------------------\n");
+    _step_thread_ = std::thread([this](){
+        while(true){
+            signal_to_step_.Wait();
+            _step();
+        }
+    });
 }
 
-void AlgmManager::step(int data){
-    fmt::print("step: {}----------------------------\n", data);
-    data_map_.insert("number", data);
+void AlgmManager::signal(const VisualInfoT& _vision, const RefRecvMsg& _refmsg){
+    {
+        std::lock_guard<std::mutex> lock(input_mutex_);
+        input_swap_["vision"] = _vision;
+        input_swap_["refmsg"] = _refmsg;
+    }
+    signal_to_step_.Signal();
+}
+
+void AlgmManager::_step(){
+    fmt::print("step: ----------------------------\n");
+    {
+        std::lock_guard<std::mutex> lock(input_mutex_);
+        data_map_ = input_swap_;
+    }
     executor_.run(taskflow_).wait();
-    fmt::print("step: {} done ----------------------\n", data);
+    {
+        std::lock_guard<std::mutex> lock(output_mutex_);
+        output_swap_ = data_map_;
+    }
+    fmt::print("step:  done ----------------------\n");
 }

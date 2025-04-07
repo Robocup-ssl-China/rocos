@@ -12,7 +12,7 @@
 #include "WorldDefine.h"
 #include <vector>
 #include "staticparams.h"
-#include <ServerInterface.h>
+#include <VisionTypeDef.h>
 namespace {
 const int VALID_NUM = 7;   //  做最小二乘需要的帧数
 const double MAX_SPEED =  1000;
@@ -53,24 +53,14 @@ class CBallVisionLogger {
 */
 class CBallPredictor {
   public:
-    CBallPredictor();
-    ~CBallPredictor();
+    CBallPredictor() = default;
+    ~CBallPredictor() = default;
     void updateVision( const VisualInfoT& vInfo, bool invert);// 更新视觉信息
-    int ballLostTime() const {
-        return _ballLostTime;
-    }
     BallVisionData& getData(int cycle) {
         return _visionLogger.getVision(cycle);
     }
     const ObjectPoseT& getResult(int cycle) const {
         return _visionLogger.getVision(cycle);
-    }
-    void setCollisionResult(int cycle, const ObjectPoseT& ball);
-    int visibility() const {
-        return _visibility;
-    }
-    int activity() const {
-        return _activity;
     }
     void setPos(const CGeoPoint & pos) {
         _visionLogger.getVision(_cycle).SetPos(pos);
@@ -81,21 +71,12 @@ class CBallPredictor {
     void setVel(int cycle, const CVector & vel) {
         _visionLogger.getVision(cycle).SetVel(vel);
     }
-    bool isSpeedError()const {
-        return _errorSpeed;
-    }
-  protected:
-    bool checkValid(int cycle); // 去掉不合理的情况
+//   protected:
+    // bool checkValid(int cycle); // 去掉不合理的情况
   private:
     CBallVisionLogger _visionLogger;
     ObjectPoseT _ballLinePredictData[60];
-    int _ballLostTime; // 看不到球的次数
-    int _ballInvalidMovedCycle; // 球的信息不合理的周期数
-    int _visibility, _activity; // 可见度和活动度
-    bool _hasCollision;
     int _cycle;
-    bool _errorSpeed;
-    CGeoPoint _lastRawBallPos; //filted
 };
 #endif // _BALL_PREDICTOR_H_
 

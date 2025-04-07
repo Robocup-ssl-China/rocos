@@ -2,7 +2,7 @@
 #include <fstream>
 
 #include <WorldModel.h>
-#include <ServerInterface.h>
+#include <VisionTypeDef.h>
 #include "DecisionModule.h"
 
 #include <GDebugEngine.h>

@@ -92,31 +92,4 @@ private:
 	static const int MAX_INFORMATIONS = 16; // 保存n个周期的信息
 	RobotVisionData _vision[MAX_INFORMATIONS];
 };
-// 记录统计信息
-struct RobotVisionErrorData{
-    RobotVisionErrorData():cycle(0),distanceTravelled(0),rotationTravelled(0),predictedRotationalError(0),predictedTranslationalError(0),normalizedTranslationalError(0),normalizedRotationalError(0),resetTranslationalVelocity(0),resetRotationalVelocity(0){}
-	int cycle; // 所在的周期
-	double distanceTravelled; // 走的距离
-	double rotationTravelled; // 转的角度
-	double predictedTranslationalError; // 平动误差
-	double predictedRotationalError; // 转动误差
-	double normalizedTranslationalError;
-	double normalizedRotationalError;
-	bool resetTranslationalVelocity;
-	bool resetRotationalVelocity;
-};
-class CRobotVisionErrorLogger{
-public:
-	bool errorValid(int cycle) const { return _error[(cycle+MAX_INFORMATIONS) % MAX_INFORMATIONS].cycle == cycle; }
-	const RobotVisionErrorData& getError(int cycle) const { return _error[(cycle+MAX_INFORMATIONS) % MAX_INFORMATIONS];}
-	RobotVisionErrorData& getError(int cycle) { return _error[(cycle+MAX_INFORMATIONS) % MAX_INFORMATIONS];}
-	void setError(int cycle, const RobotVisionErrorData& error)
-	{
-		_error[(cycle+MAX_INFORMATIONS) % MAX_INFORMATIONS] = error;
-		_error[(cycle+MAX_INFORMATIONS) % MAX_INFORMATIONS].cycle = cycle;
-	}
-private:
-	static const int MAX_INFORMATIONS = 16; // 保存n个周期的信息
-	RobotVisionErrorData _error[MAX_INFORMATIONS];
-};
 #endif // _ROBOT_PREDICT_DATA_H_
