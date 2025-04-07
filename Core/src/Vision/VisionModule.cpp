@@ -518,18 +518,6 @@ void CVisionModule::dealSpecialBall() {
 }
 
 void CVisionModule::debugOnField() {
-//    // 输出当前球的预测速度 并 输出数值直观显示
-//    GDebugEngine::Instance()->gui_debug_line(this->ball().Pos(), this->ball().Pos() + this->ball().Vel(), COLOR_ORANGE);
-//    const double outballspeed = ball().Vel().mod();
-//    QString velbuf = QString::number(outballspeed);
-//    auto&& field_width = PARAM::Field::PITCH_WIDTH;
-//    auto&& field_length = PARAM::Field::PITCH_LENGTH;
-//    if (outballspeed <= 650) {
-//        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(-field_length / 2.3, field_width / 2.3), velbuf.toLatin1(), COLOR_BLACK);
-//    } else {
-//        GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(-field_length / 2.3, field_width / 2.3), velbuf.toLatin1(), COLOR_RED);
-//    }
-
     // 输出我方小车的红外信号
     if (_sensorBall) {
         GDebugEngine::Instance()->gui_debug_arc(ball().Pos(), 4 * PARAM::Field::BALL_SIZE, 0, 360, COLOR_PURPLE);

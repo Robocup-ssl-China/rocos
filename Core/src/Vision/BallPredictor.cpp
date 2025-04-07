@@ -38,25 +38,6 @@ void CBallPredictor::updateVision( const VisualInfoT& vInfo, bool invert) {
     return;
 }
 
-void CBallPredictor::predictLost(int cycle) {
-    BallVisionData& thisCycle = _visionLogger.getVision(cycle);
-    if (_ballLostTime < MAX_BALL_LOST_TIME /*&& _visionLogger.visionValid(cycle - 1)*/
-       ) {
-        BallVisionData& thisCycle = _visionLogger.getVision(cycle);
-        const BallVisionData& lastCycle = _visionLogger.getVision(cycle - 1);
-
-        thisCycle.SetPos(lastCycle.Pos() + lastCycle.Vel() / PARAM::Vision::FRAME_RATE); // 位置
-        thisCycle.SetVel(lastCycle.Vel() * ( 1 + PARAM::Field::BALL_DECAY / PARAM::Vision::FRAME_RATE )); // 速度
-        thisCycle.SetValid(true);
-    } else {
-        // 很长时间没有看到球了,保持原来的位置?
-        thisCycle.SetValid(false); // 信息不可用
-    }
-    //_ballFilter.reset();
-
-    return ;
-}
-
 bool CBallPredictor::checkValid(int cycle) {
     if (! _visionLogger.visionValid(cycle)) {
         return false;

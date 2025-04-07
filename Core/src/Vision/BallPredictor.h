@@ -85,7 +85,6 @@ class CBallPredictor {
         return _errorSpeed;
     }
   protected:
-    void predictLost(int cycle); // 球看不到的时候预测球的位置
     bool checkValid(int cycle); // 去掉不合理的情况
   private:
     CBallVisionLogger _visionLogger;

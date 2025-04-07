@@ -13,7 +13,6 @@
 //#include "FilteredObject.h"
 #include "RobotPredictData.h"
 #include "RobotPredictError.h"
-#include "CollisionSimulator.h"
 #include <PlayerCommand.h>
 #include <qdebug.h>
 /**
@@ -47,30 +46,16 @@ class CRobotPredictor {
     int lostTime() const {
         return _robotLostTime;
     }
-    bool collideWithBall() const {
-        return _collisionSimulator.hasCollision();    // 只是单纯地考虑是否相撞与碰撞区域
-    }
-    const ObjectPoseT& ballCollidedResult() const {
-        return _collisionSimulator.ball();
-    }
     void setIsHasRotation(bool isHasRot) {
         _isHasRotation = isHasRot;
     }
-  protected:
-//    void updateRawVision(int cycle, double x, double y, double dir, bool seen);
-    // bool checkValid(int cycle, const CGeoPoint& pos);
-    // void predictLost(int cycle, const ObjectPoseT& ball); // 预测看不到的信息
   private:
-//    FilteredObject _robotFilter; // KalmanFilter
-//    FilteredObject _robotRotationFilter; // 进行robot朝向滤波
     int _robotLostTime; // 看不到的周期数
     bool _isHasRotation; // 小车是否具有角度(朝向)信息
     CRobotCommandLogger _commandLogger; // 命令纪录
     CRobotRawVisionLogger _rawVisionLogger; // 原始视觉信息记录
     CRobotRawVisionLogger _filterData;
     CRobotVisionLogger _visionLogger; // 预测过的信息记录
-    CRobotPredictError _predictError; // 预测的误差检查
-    CCollisionSimulator _collisionSimulator;
     RobotCommandEffect cmd;
 };
 #endif // _ROBOT_PREDICTOR_H_
