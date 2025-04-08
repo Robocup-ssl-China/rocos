@@ -1,6 +1,6 @@
 #include <fmt/ranges.h>
 #include "algmmanager.h"
-
+#include "GDebugEngine.h"
 /*
     * 1. init one algorithm instance for each algorithm using Register<Algm>::create()
     * 2. register algorithm dependencies using AlgmDeps::getDeps()
@@ -34,6 +34,7 @@ void AlgmManager::init(){
             _step();
         }
     });
+    _step_thread_.detach();
 }
 
 void AlgmManager::signal(const VisualInfoT& _vision, const RefRecvMsg& _refmsg){
@@ -51,10 +52,12 @@ void AlgmManager::_step(){
         std::lock_guard<std::mutex> lock(input_mutex_);
         data_map_ = input_swap_;
     }
+    tf::Executor executor_;
     executor_.run(taskflow_).wait();
     {
         std::lock_guard<std::mutex> lock(output_mutex_);
         output_swap_ = data_map_;
     }
     fmt::print("step:  done ----------------------\n");
+    GHeatmapEngine::Instance()->send();
 }

@@ -18,7 +18,6 @@ private:
     std::unordered_map<std::string, std::unique_ptr<Algm>> algms_;
     std::unordered_map<std::string, tf::Task> algm_tasks_;
     tf::Taskflow taskflow_;
-    tf::Executor executor_;
     DataMap data_map_, input_swap_, output_swap_;
     std::mutex input_mutex_, output_mutex_;
     Semaphore signal_to_step_;

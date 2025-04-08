@@ -12,7 +12,8 @@ EMAIL: qxzzju@gmail.com
 #include <singleton.hpp>
 #include <geometry.h>
 #include <QUdpSocket>
-#include <QMutex>
+#include <mutex>
+#include "zss_debug.pb.h"
 namespace{
     const int COLOR_WHITE = 0;
     const int COLOR_RED = 1;
@@ -46,13 +47,29 @@ public:
     void send(bool);
 private:
     QUdpSocket sendSocket;
-    QMutex debugMutex;
+    std::mutex debugMutex;
     bool remote_debugger;
     QString remote_address;
     int remote_port;
-
+    ZSS::Protocol::Debug_Msgs guiDebugMsgs;
     std::vector<std::string> warning_msgs;
 };
 typedef Singleton< CGDebugEngine > GDebugEngine;
+
+// 发送热力图数据
+class CHeatmapDebugEngine{
+public:
+    CHeatmapDebugEngine();
+    ~CHeatmapDebugEngine() = default;
+    void gui_debug_heat(const std::vector<float>& x, const std::vector<float>& y, const std::vector<float>& value/* 0-1 */, const float size=100);
+    void gui_debug_heat(const std::vector<float>& x, const std::vector<float>& y, const float value, const float size=100);
+    void gui_debug_heat(const float x, const float y, const float value, const float size=100/*mm*/);
+    void send();
+private:
+    QUdpSocket socket_;
+    std::mutex heatmap_mutex_;
+    ZSS::Protocol::Debug_Heatmap heatmap_;
+};
+typedef Singleton< CHeatmapDebugEngine > GHeatmapEngine;
 
 #endif

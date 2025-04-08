@@ -2,13 +2,11 @@
 #include "staticparams.h"
 #include <cstring>
 #include <fmt/core.h>
-#include "zss_debug.pb.h"
 #include "staticparams.h"
 #include "WorldModel.h"
 #include "parammanager.h"
 #include <atomic>
 namespace{
-    ZSS::Protocol::Debug_Msgs guiDebugMsgs;
     std::atomic<float> WARNING_X = -PARAM::Field::PITCH_LENGTH/2;
     std::atomic<float> WARNING_Y = 0;
 }
@@ -216,4 +214,41 @@ void CGDebugEngine::send(bool teamIsBlue){
     guiDebugMsgs.clear_msgs();
     debugMutex.unlock();
     WARNING_Y = -PARAM::Field::PITCH_WIDTH/2;
+}
+
+CHeatmapDebugEngine::CHeatmapDebugEngine(){
+    // HEATMAP_COLORS = ["gray", "rainbow", "jet", "PiYG", "cool", "coolwarm", "seismic", "default"]
+    heatmap_.set_cmap("coolwarm");
+}
+
+void CHeatmapDebugEngine::gui_debug_heat(const std::vector<float>& x, const std::vector<float>& y, const std::vector<float>& value, const float size){
+    assert(x.size() == y.size() && (x.size() == value.size() || value.size() == 1));
+    std::scoped_lock lock(heatmap_mutex_);
+    auto* heat = heatmap_.add_heat();
+    heat->mutable_x()->Add(x.begin(), x.end());
+    heat->mutable_y()->Add(y.begin(), y.end());
+    heat->mutable_value()->Add(value.begin(), value.end());
+    heat->add_size(size);
+}
+void CHeatmapDebugEngine::gui_debug_heat(const std::vector<float>& x, const std::vector<float>& y, const float value, const float size){
+    gui_debug_heat(x, y, std::vector<float>{value}, size);
+}
+
+void CHeatmapDebugEngine::gui_debug_heat(const float x, const float y, const float value, const float size){
+    std::scoped_lock lock(heatmap_mutex_);
+    auto* heat = heatmap_.add_heat();
+    heat->add_x(x);
+    heat->add_y(y);
+    heat->add_value(value);
+    heat->add_size(size);
+}
+void CHeatmapDebugEngine::send(){
+    static QByteArray data;
+    std::scoped_lock lock(heatmap_mutex_);
+    int size = heatmap_.ByteSizeLong();
+    data.resize(size);
+    heatmap_.SerializeToArray(data.data(),size);
+    int port = ZSS::Medusa::DEBUG_SCORE_SEND[WorldModel::Instance()->option()->MyColor()==PARAM::BLUE?0:1];
+    socket_.writeDatagram(data,data.size(),QHostAddress(ZSS::LOCAL_ADDRESS),port);
+    heatmap_.clear_heat();
 }

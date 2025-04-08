@@ -14,9 +14,6 @@
 #include "staticparams.h"
 #include <VisionTypeDef.h>
 namespace {
-const int VALID_NUM = 7;   //  做最小二乘需要的帧数
-const double MAX_SPEED =  1000;
-const double MAX_DIST = 1000.0 / PARAM::Vision::FRAME_RATE * 4;
 const int MAX_LOGS = 16;
 }
 
@@ -71,11 +68,8 @@ class CBallPredictor {
     void setVel(int cycle, const CVector & vel) {
         _visionLogger.getVision(cycle).SetVel(vel);
     }
-//   protected:
-    // bool checkValid(int cycle); // 去掉不合理的情况
   private:
     CBallVisionLogger _visionLogger;
-    ObjectPoseT _ballLinePredictData[60];
     int _cycle;
 };
 #endif // _BALL_PREDICTOR_H_

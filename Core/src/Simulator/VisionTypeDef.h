@@ -38,6 +38,8 @@ struct BallInfoT{
 };
 
 struct VisualInfoT {
+    static const int ME = 0;
+    static const int OPPONENT = 1;
     VisualInfoT(): cycle(0), mode(0) {}
     unsigned int cycle;
     VehicleInfoT player[PARAM::TEAMS][PARAM::Field::MAX_PLAYER];

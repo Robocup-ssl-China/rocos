@@ -125,6 +125,7 @@ ZBin/Crazy2018
 ZBin/ballSpeedLog.txt
 ZBin/Core
 ZBin/Controller
+ZBin/callgrind.out*
 # python
 ZBin/__data
 ZBin/*/model

@@ -90,6 +90,7 @@ class CGeoPoint {
     CGeoPoint() : p_(0,0) {}
     ~CGeoPoint() {}
     CGeoPoint(double x, double y) : p_(x,y) {}
+    CGeoPoint(const Point2D& pt): p_(pt) {}
     CGeoPoint(const CGeoPoint& p) : p_(p.p_) {}
     bool operator==(const CGeoPoint& rhs) {
         return ((this->x() == rhs.x()) && (this->y() == rhs.y()));
