@@ -1,22 +1,49 @@
 import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import ZSS 1.0 as ZSS
 
-Item{
-    property alias type: field.type;
-    property alias draw: field.draw;
-    anchors.fill: parent;
-    ZSS.Field{
-        id: field;
-        type:0;
-        draw:true;
-        anchors.fill: parent;
+Item {
+    id: root
+    anchors.fill: parent
+
+    Rectangle {
+        anchors.fill: parent
+        color: "#303030"
     }
-    onWidthChanged: {
-        console.log("Field.qml width changed", width, height);
-        // field.resize(width, height);
-    }
-    onHeightChanged: {
-        console.log("Field.qml height changed", width, height);
-        // field.resize(width, height);
+
+    Column {
+        anchors.fill: parent
+        spacing: 0
+
+        TabBar {
+            id: fieldBar
+            width: parent.width
+            height: 48
+
+            TabButton { text: "Origin" }
+            TabButton { text: "Filtered B" }
+            TabButton { text: "Filtered Y" }
+        }
+
+        Item {
+            width: parent.width
+            height: parent.height - fieldBar.height
+
+            Rectangle {
+                anchors.fill: parent
+                border.color: "#555"
+                border.width: 1
+                color: "transparent"
+
+                // Keep only one Field instance and switch its type by tab.
+                ZSS.Field {
+                    id: field
+                    anchors.fill: parent
+                    type: fieldBar.currentIndex + 1
+                    draw: true
+                }
+            }
+        }
     }
 }

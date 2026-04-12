@@ -1,13 +1,7 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import com.kdab.dockwidgets 2.0 as KDDW
-import ZSS 1.0 as ZSS
-
-// ZSS.Field{
-//     type:0;
-//     draw:true;
-//     anchors.fill: parent;
-// }
 
 ApplicationWindow {
     visible: true
