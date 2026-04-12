@@ -169,14 +169,45 @@ Page{
                             text: "grSim IP"
                         }
                         ZComboBox{
+                            id: grSimIPCombo
                             leftPadding:10
                             height:parent.height;
-                            width:parent.width - 10 - grSimIP_Text.width
+                            width:parent.width - 20 - grSimIP_Text.width - grSimIPRefresh.width
                             model: interaction.getAvailableIPs();
                             onActivated: interaction.setIPIndex("grSim", currentIndex);
-                            Component.onCompleted:{
-                                interaction.setIPIndex("grSim", 0);
+                            function updateModel(){
+                                model = interaction.getAvailableIPs();
+                                if (currentIndex >= count)
+                                    currentIndex = 0;
+                                if (currentIndex < 0 && count > 0)
+                                    currentIndex = 0;
+                                if (currentIndex >= 0)
+                                    interaction.setIPIndex("grSim", currentIndex);
                             }
+                            Component.onCompleted:{
+                                updateModel();
+                            }
+                        }
+                        Button{
+                            id: grSimIPRefresh
+                            height:parent.height;
+                            enabled: !visionControls.ifConnected
+                            icon.source: "/source/refresh.png";
+                            function trigger(){
+                                interaction.updateGrsimInterfaces();
+                            }
+                            onClicked: {
+                                trigger();
+                            }
+                            Component.onCompleted: {
+                                trigger();
+                            }
+                        }
+                    }
+                    Connections {
+                        target: interaction
+                        function onGrsimRefreshComplete() {
+                            grSimIPCombo.updateModel();
                         }
                     }
                 }
