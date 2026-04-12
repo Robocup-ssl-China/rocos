@@ -421,6 +421,14 @@ void Interaction::updateGrsimInterfaces(){
     }).detach();
 }
 
+int Interaction::addGrsimHost(QString ip) {
+    int index = ZNetworkInterfaces::instance()->addGrsimIP(ip, "grSim");
+    if (index >= 0) {
+        emit grsimRefreshComplete();
+    }
+    return index;
+}
+
 void Interaction::setIPIndex(QString key, int index){
     ZNetworkInterfaces::instance()->setIP(key.toStdString(), index);
 }

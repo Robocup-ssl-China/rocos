@@ -54,6 +54,7 @@ class Interaction : public QObject {
     Q_INVOKABLE QStringList getSerialPortsList();
     Q_INVOKABLE QStringList getAvailableIPs();
     Q_INVOKABLE void updateGrsimInterfaces();
+    Q_INVOKABLE int addGrsimHost(QString ip);
     Q_INVOKABLE void setIPIndex(QString, int);
     Q_INVOKABLE int getFrequency();
     Q_INVOKABLE QStringList getAllAddress();

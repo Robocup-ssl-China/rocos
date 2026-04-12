@@ -210,6 +210,39 @@ Page{
                             grSimIPCombo.updateModel();
                         }
                     }
+                    Row {
+                        spacing: 10
+                        width: parent.itemWidth
+                        TextField {
+                            id: grSimManualHostInput
+                            width: parent.width - grSimManualAdd.width - parent.spacing
+                            height: 50
+                            enabled: !visionControls.ifConnected
+                            placeholderText: "Remote grSim IP (e.g. 192.168.1.200)"
+                            onAccepted: {
+                                grSimManualAdd.trigger()
+                            }
+                        }
+                        Button {
+                            id: grSimManualAdd
+                            width: 80
+                            height: grSimManualHostInput.height
+                            enabled: !visionControls.ifConnected
+                            text: "Add"
+                            function trigger() {
+                                var index = interaction.addGrsimHost(grSimManualHostInput.text)
+                                if (index >= 0) {
+                                    grSimIPCombo.updateModel()
+                                    grSimIPCombo.currentIndex = index
+                                    interaction.setIPIndex("grSim", index)
+                                    grSimManualHostInput.text = ""
+                                }
+                            }
+                            onClicked: {
+                                trigger()
+                            }
+                        }
+                    }
                 }
             }
             ZGroupBox{

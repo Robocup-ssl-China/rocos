@@ -68,6 +68,23 @@ void NetworkInterfaces::updateInterfaces(){
     }
 }
 
+int NetworkInterfaces::addGrsimIP(const QString& ip, const std::string& key) {
+    QHostAddress addr;
+    if (!addr.setAddress(ip.trimmed()) || addr.protocol() != QAbstractSocket::IPv4Protocol) {
+        return -1;
+    }
+
+    QString normalized = addr.toString();
+    QMutexLocker locker(&mutex);
+    int index = grsimInterfaces.indexOf(normalized);
+    if (index < 0) {
+        grsimInterfaces.append(normalized);
+        index = grsimInterfaces.size() - 1;
+    }
+    ipMap[key] = index;
+    return index;
+}
+
 void NetworkInterfaces::refreshGrsimInterfaces(QList<quint16> ports, int perIfaceTimeoutMs) {
     updateInterfaces();
 
@@ -88,18 +105,9 @@ void NetworkInterfaces::refreshGrsimInterfaces(QList<quint16> ports, int perIfac
     newList.append(QStringLiteral("127.0.0.1"));
 
     const QHostAddress multicastGroup(ZSS::SSL_ADDRESS);
-    for (const QNetworkInterface &iface : activeNonLoInterfaces()) {
-        QString ifaceIp;
-        for (const QNetworkAddressEntry &entry : iface.addressEntries()) {
-            if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol) {
-                ifaceIp = entry.ip().toString();
-                break;
-            }
-        }
-        if (ifaceIp.isEmpty())
-            continue;
-
-        bool detected = false;
+    QSet<QString> detectedSenders;
+    const QList<QNetworkInterface> candidateIfaces = activeNonLoInterfaces();
+    for (const QNetworkInterface &iface : candidateIfaces) {
         for (quint16 port : candidatePorts) {
             QUdpSocket sock;
             sock.setSocketOption(QAbstractSocket::MulticastLoopbackOption, 0);
@@ -113,16 +121,31 @@ void NetworkInterfaces::refreshGrsimInterfaces(QList<quint16> ports, int perIfac
                 continue;
             }
 
-            bool hasData = sock.waitForReadyRead(perIfaceTimeoutMs);
-            sock.close();
+            const bool hasData = sock.waitForReadyRead(perIfaceTimeoutMs);
             if (hasData) {
-                detected = true;
-                break;
-            }
-        }
+                while (sock.hasPendingDatagrams()) {
+                    QByteArray datagram;
+                    datagram.resize(static_cast<int>(sock.pendingDatagramSize()));
 
-        if (detected && !newList.contains(ifaceIp)) {
-            newList.append(ifaceIp);
+                    QHostAddress senderAddress;
+                    quint16 senderPort = 0;
+                    sock.readDatagram(datagram.data(), datagram.size(), &senderAddress, &senderPort);
+
+                    if (senderAddress.protocol() == QAbstractSocket::IPv4Protocol) {
+                        const QString senderIp = senderAddress.toString();
+                        if (!senderIp.isEmpty() && senderIp != QStringLiteral("0.0.0.0")) {
+                            detectedSenders.insert(senderIp);
+                        }
+                    }
+                }
+            }
+            sock.close();
+        }
+    }
+
+    for (const QString &senderIp : detectedSenders) {
+        if (!newList.contains(senderIp)) {
+            newList.append(senderIp);
         }
     }
 

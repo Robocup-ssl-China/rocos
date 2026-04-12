@@ -11,6 +11,7 @@ public:
     NetworkInterfaces();
     void updateInterfaces();
     void refreshGrsimInterfaces(QList<quint16> ports = {10020, 10006}, int perIfaceTimeoutMs = 300);
+    int addGrsimIP(const QString& ip, const std::string& key = "grSim");
     QStringList getInterfaces(){
         QMutexLocker locker(&mutex);
         return interfaces;
