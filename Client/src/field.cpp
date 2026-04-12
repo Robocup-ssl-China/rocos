@@ -215,7 +215,7 @@ int Field::_global_height = 0;
 Field::Field(QQuickItem* parent)
     : QQuickPaintedItem(parent)
     , _root("FieldRoot")
-    , s_need_draw("field_draw_trigger", [this](const zos::Data&) { draw(); }) {
+    , s_need_draw("field_draw_trigger", [this](const zos::Data&) { sendSignal(); }) {
     int defaultHeight = 960;
     int defaultWidth = 1280;
     ZSS::ZParamManager::_()->loadParam(defaultHeight, "canvas/height", 960);
@@ -236,6 +236,7 @@ Field::Field(QQuickItem* parent)
     VisionModule::instance()->p_draw_signal.link(&_layer_vision->s_draw_data);
     VisionModule::instance()->p_draw_signal.link(&s_need_draw);
 
+    connect(this, &Field::needDraw, this, &Field::draw, Qt::QueuedConnection);
     connect(GlobalSettings::instance(), &CGlobalSettings::needRepaint, this, &Field::draw);
 
     // setImplicitWidth/Height may trigger geometryChange -> resize.

@@ -7,6 +7,7 @@
 #include <QRect>
 #include <QMutex>
 #include <QPainterPath>
+#include "zos/core.h"
 class PlotDisplay : public QQuickPaintedItem{
     Q_OBJECT
     Q_PROPERTY(int type READ type WRITE setType)
@@ -31,6 +32,7 @@ private:
     float x();
     float y();
 private:
+    zos::Subscriber<1> s_need_draw;
     int _type;
     QPixmap *pixmap;
     QPainter pixmapPainter;

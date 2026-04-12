@@ -32,17 +32,23 @@ ApplicationWindow {
         }
 
         KDDW.DockWidget {
-            id: dock5
-            uniqueName: "dock5"
-            Rectangle {
-                id: guest
-                color: "#2E8BC0"
+            id: controlBoardDock
+            uniqueName: "controlBoardDock"
+            title: "ControlBoard"
+            ControlBoard {
                 anchors.fill: parent
             }
         }
+
         Component.onCompleted: {
-            addDockWidget(centralDock, KDDW.KDDockWidgets.Location_OnTop)
-            addDockWidget(dock5, KDDW.KDDockWidgets.Location_OnBottom);
+            addDockWidget(centralDock,
+                          KDDW.KDDockWidgets.Location_OnLeft,
+                          null,
+                          Qt.size(root.width * 0.8, root.height))
+            addDockWidget(controlBoardDock,
+                          KDDW.KDDockWidgets.Location_OnRight,
+                          centralDock,
+                          Qt.size(root.width * 0.2, root.height))
         }
     }
 

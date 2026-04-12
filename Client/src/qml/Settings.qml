@@ -1,157 +1,264 @@
-import QtQuick 2.7
+import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import ZSS 1.0 as ZSS
-Item{
-    ZSS.ParamModel{
-        id:paramModel;
+
+Item {
+    id: root
+
+    readonly property int roleSettingName: 257
+    readonly property int roleSettingType: 258
+    readonly property int roleSettingValue: 259
+
+    ZSS.ParamModel {
+        id: paramModel
     }
-    Shortcut{
+
+    function groupIndexAt(row) {
+        return paramModel.index(row, 0)
+    }
+
+    function childIndexAt(row) {
+        if (groupList.currentIndex < 0)
+            return null
+        return paramModel.index(row, 0, groupIndexAt(groupList.currentIndex))
+    }
+
+    function childDataAt(row, role) {
+        const idx = childIndexAt(row)
+        if (!idx)
+            return ""
+        return paramModel.data(idx, role)
+    }
+
+    function childCount() {
+        if (groupList.currentIndex < 0)
+            return 0
+        return paramModel.rowCount(groupIndexAt(groupList.currentIndex))
+    }
+
+    Shortcut {
         sequence: "r"
         onActivated: {
-            paramModel.reload();
+            paramModel.reload()
+            if (groupList.currentIndex < 0 && paramModel.rowCount() > 0)
+                groupList.currentIndex = 0
         }
     }
-    TreeView{
-        id:paramTree
+
+    Component.onCompleted: {
+        if (paramModel.rowCount() > 0)
+            groupList.currentIndex = 0
+    }
+
+    RowLayout {
         anchors.fill: parent
-        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-        verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-        TableViewColumn {
-            title: "Name"
-            role: "settingName"
-            width:parent.width*0.4;
-            delegate:normalTextDelegate;
-        }
-        TableViewColumn {
-            title: "Type"
-            role: "settingType"
-            width:parent.width*0.2;
-            delegate:normalTextDelegate;
-        }
-        TableViewColumn {
-            title: "Value"
-            role: "settingValue"
-            width:parent.width*0.4;
-            delegate:stringDelegate;
+        spacing: 0
+
+        Rectangle {
+            Layout.fillHeight: true
+            Layout.preferredWidth: parent.width * 0.28
+            color: "#404040"
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 40
+                    color: "#333333"
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        text: "Group"
+                        color: "#ffffff"
+                        font.pixelSize: 15
+                    }
+                }
+
+                ListView {
+                    id: groupList
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    model: paramModel
+
+                    delegate: Rectangle {
+                        width: groupList.width
+                        height: 34
+                        color: ListView.isCurrentItem ? "#2d6a9f" : "#404040"
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            text: settingName
+                            color: "#e8e8e8"
+                            font.pixelSize: 14
+                            elide: Text.ElideRight
+                            width: parent.width - 20
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: groupList.currentIndex = index
+                        }
+                    }
+                }
+            }
         }
 
-        style: TreeViewStyle {
-            backgroundColor: "#484848";
-            alternateBackgroundColor:"#404040";
-            textColor:"#ccc";
-//            branchDelegate: Rectangle {
-//                width: 12; height: 12
-//                color: styleData.isExpanded ? "#ccc" : "#aaa"
-//                radius: width/2
-//            }
-//            frame: Rectangle {border {color: "blue"}}
-            headerDelegate: Rectangle {
-                height: headerItem.implicitHeight*1.4
-                width: headerItem.implicitWidth
-                color: "#333"
-                Text {
-                    id: headerItem
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: styleData.textAlignment
-                    anchors.leftMargin: 12
-                    text: styleData.value
-                    elide: Text.ElideRight
-                    color: "#fff";
-                    renderType: Text.NativeRendering
-                    font.pixelSize: 16;
-                    font.family: "Arial";
-                }
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            color: "#484848"
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
                 Rectangle {
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 1
-                    anchors.topMargin: 1
-                    width: 1
-                    color: "#777"
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 40
+                    color: "#333333"
+
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: 0
+
+                        Text {
+                            Layout.preferredWidth: parent.width * 0.4
+                            Layout.fillHeight: true
+                            leftPadding: 12
+                            verticalAlignment: Text.AlignVCenter
+                            text: "Name"
+                            color: "#ffffff"
+                            font.pixelSize: 15
+                        }
+                        Text {
+                            Layout.preferredWidth: parent.width * 0.2
+                            Layout.fillHeight: true
+                            leftPadding: 12
+                            verticalAlignment: Text.AlignVCenter
+                            text: "Type"
+                            color: "#ffffff"
+                            font.pixelSize: 15
+                        }
+                        Text {
+                            Layout.preferredWidth: parent.width * 0.4
+                            Layout.fillHeight: true
+                            leftPadding: 12
+                            verticalAlignment: Text.AlignVCenter
+                            text: "Value"
+                            color: "#ffffff"
+                            font.pixelSize: 15
+                        }
+                    }
                 }
-                Rectangle {
-                    anchors.right: parent.right
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.leftMargin: 1
-                    anchors.rightMargin: 1
-                    height:1
-                    color: "#777"
+
+                ListView {
+                    id: valueList
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    model: childCount()
+
+                    delegate: Rectangle {
+                        required property int index
+
+                        width: valueList.width
+                        height: 34
+                        color: index % 2 === 0 ? "#484848" : "#404040"
+
+                        RowLayout {
+                            anchors.fill: parent
+                            spacing: 0
+
+                            Text {
+                                Layout.preferredWidth: parent.width * 0.4
+                                Layout.fillHeight: true
+                                leftPadding: 12
+                                verticalAlignment: Text.AlignVCenter
+                                text: root.childDataAt(index, root.roleSettingName)
+                                color: "#d6d6d6"
+                                elide: Text.ElideRight
+                                font.pixelSize: 14
+                            }
+
+                            Text {
+                                Layout.preferredWidth: parent.width * 0.2
+                                Layout.fillHeight: true
+                                leftPadding: 12
+                                verticalAlignment: Text.AlignVCenter
+                                text: root.childDataAt(index, root.roleSettingType)
+                                color: "#d6d6d6"
+                                elide: Text.ElideRight
+                                font.pixelSize: 14
+                            }
+
+                            Loader {
+                                id: editorLoader
+                                property int rowIndex: index
+                                Layout.preferredWidth: parent.width * 0.4
+                                Layout.fillHeight: true
+                                sourceComponent: root.childDataAt(index, root.roleSettingType) === "Bool" ? boolEditor : textEditor
+                                onLoaded: {
+                                    if (item)
+                                        item.rowIndex = rowIndex
+                                }
+                                onRowIndexChanged: {
+                                    if (item)
+                                        item.rowIndex = rowIndex
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-            rowDelegate:Rectangle{
-                height: 30;
-                width:parent.width;
-                property color selectedColor: control.activeFocus ? "#07c" : "#999"
-                color: !styleData.alternate ? alternateBackgroundColor : backgroundColor
             }
         }
-        model:paramModel;
     }
+
     Component {
-        id: stringDelegate
-        Loader{
-            property var styleData : parent.styleData;
-            property string type : paramModel.getType(styleData.index);
-            sourceComponent: styleData.hasChildren ? normalTextDelegate : (type == "Bool" ? boolDelegate : notBoolDelegate)
-        }
-    }
-    Component{
-        id:notBoolDelegate
-        Rectangle{
-            property var styleData : parent.styleData;
-            color: input.activeFocus  ? "#ccc" : "transparent";
-            height:30;
-            TextInput {
-                id:input;
-                anchors.fill: parent;
-                text: styleData.value
-                color:activeFocus?"#222":styleData.textColor;
-                horizontalAlignment: styleData.textAlignment
-                font.pixelSize: 16;
-                font.family:"Arial";
-                leftPadding: 12;
-                verticalAlignment: Text.AlignVCenter
-                //validator:RegExpValidator { regExp: /^(-?)(0|([1-9][0-9]*))(\.[0-9]+)?$/ }
-                onAccepted:{
-                    if(paramModel.setData(styleData.index,text))
-                        focus = false;
-                }
+        id: textEditor
+        TextField {
+            property int rowIndex: -1
+
+            text: root.childDataAt(rowIndex, root.roleSettingValue)
+            color: "#e8e8e8"
+            leftPadding: 12
+            background: Rectangle {
+                color: parent.activeFocus ? "#5a5a5a" : "transparent"
+                border.color: parent.activeFocus ? "#8aaed1" : "transparent"
+                border.width: 1
+            }
+            onAccepted: {
+                const idx = root.childIndexAt(rowIndex)
+                if (idx)
+                    paramModel.setData(idx, text)
+            }
+            onEditingFinished: {
+                const idx = root.childIndexAt(rowIndex)
+                if (idx)
+                    paramModel.setData(idx, text)
             }
         }
     }
-    Component{
-        id:boolDelegate;
-        Rectangle{
-            property var styleData : parent.styleData;
-            color: "transparent";
-            height:30;
-            width:parent.width;
-            CheckBox{
-                id:input;
-                height:30;
-                x:12;
-                checked: styleData.value === "true"
-                onClicked: paramModel.setData(styleData.index,checked ? "true" : "false")
+
+    Component {
+        id: boolEditor
+        CheckBox {
+            property int rowIndex: -1
+
+            leftPadding: 12
+            checked: root.childDataAt(rowIndex, root.roleSettingValue) === "true"
+            onClicked: {
+                const idx = root.childIndexAt(rowIndex)
+                if (idx)
+                    paramModel.setData(idx, checked ? "true" : "false")
             }
         }
-    }
-    Component{
-        id: normalTextDelegate
-//        Rectangle{
-//            height:30;
-//            color: "transparent"
-            Text {
-                lineHeight:30;
-                leftPadding:12;
-                anchors.verticalCenter: parent.verticalCenter
-                color: styleData.textColor
-                elide: styleData.elideMode
-                text: styleData.value
-                font.pixelSize: 15
-            }
-//        }
     }
 }

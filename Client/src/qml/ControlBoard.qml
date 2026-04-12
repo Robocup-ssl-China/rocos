@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import ZSS 1.0 as ZSS
 Page{
     id:control;
+    property var interaction: ZSS.Interaction
     property bool socketConnect : false;
     property bool radioConnect : false;
     property bool medusaConnect : false;
@@ -38,9 +39,6 @@ Page{
         id: eventlabel
     }
 
-    ZSS.Interaction{
-        id:interaction;
-    }
     ZSS.Interaction4Field{
         id:interaction4field
     }
@@ -534,16 +532,14 @@ Page{
                            FileDialog {
                                id:fdrs
                                title: "Please select"
-                               selectExisting: true
-                               selectFolder: false
-                               selectMultiple: false
+                               fileMode: FileDialog.OpenFile
                                nameFilters: ["Rec files (*.log)"]
                                onAccepted: {
                                    if (control.isReplaying) ZSS.RecSlider.toggleStopped();
                                    control.isReplaying = false;
                                    rectimer.running = false;
-                                   console.log("You chose: " + fdrs.fileUrl);
-                                   ZSS.RecSlider.loadFile(fdrs.fileUrl);
+                                   console.log("You chose: " + fdrs.selectedFile);
+                                   ZSS.RecSlider.loadFile(fdrs.selectedFile);
                                    recslider.to = ZSS.RecSlider.maximumValue;
                                    recslider.stepSize = ZSS.RecSlider.stepSize;
                                    recslider.value = 0;

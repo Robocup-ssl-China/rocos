@@ -4,6 +4,7 @@
 #include "field.h"
 #include <QDateTime>
 #include <QDataStream>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include "parammanager.h"
@@ -20,22 +21,34 @@ QString filename;
 //QTime timer;
 }
 RecRecorder::RecRecorder() {
+    isRun = false;
+    recIO = nullptr;
 }
 void RecRecorder::init() {
     isRun = true;
 //        qDebug() << "I AM RUNNING";
     QDateTime datetime;
 //        qDebug() << datetime.currentDateTime().toString("yyyy-MM-dd-HH-mm-ss");
+    QDir().mkpath("LOG");
     filename = QString("LOG/Rec").append(datetime.currentDateTime().toString("yyyy-MM-dd-HH-mm-ss")).append(".log");
 //    recordFile = new QFile(filename);
     recordFile.setFileName(filename);
-    recordFile.open(QIODevice::WriteOnly | QIODevice::Append);
+    if (!recordFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        isRun = false;
+        recIO = nullptr;
+    }
 //    recordFile->open(QIODevice::WriteOnly | QIODevice::Append);
 }
 
 void RecRecorder::store() {
     if (isRun) {
-        recordFile.open(QIODevice::WriteOnly | QIODevice::Append);
+        if (filename.isEmpty()) {
+            return;
+        }
+        if (!recordFile.isOpen() && !recordFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+            recIO = nullptr;
+            return;
+        }
         recIO = &recordFile;
         //    Field::repaintLock();
         //    qDebug() << "I AM FUCKING RUNNING";
@@ -120,6 +133,12 @@ void RecRecorder::store() {
 void RecRecorder::stop() {
     isRun = false;
     recIO = nullptr;
+    if (recordFile.isOpen()) {
+        recordFile.close();
+    }
+    if (filename.isEmpty()) {
+        return;
+    }
     QFileInfo afterFile(filename);
     if (afterFile.size() < 1) {
 //        QFile emptyFile(filename);
