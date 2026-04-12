@@ -1,7 +1,7 @@
 ﻿import QtQuick 2.10
-import QtQuick.Controls
-import QtQuick.Dialogs
-import QtQuick.Layouts
+import QtQuick.Controls 2.15
+import QtQuick.Dialogs 6.2
+import QtQuick.Layouts 1.15
 import ZSS 1.0 as ZSS
 Page{
     id:control;
