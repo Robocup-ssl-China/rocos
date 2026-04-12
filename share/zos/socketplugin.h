@@ -11,13 +11,19 @@ class Plugin{
 public:
     Plugin(){};
     Plugin(const char* multicast_address){
-        _socket.join_multicast(zos::udp::address::from_string(multicast_address));
+        if(multicast_address){
+            _socket.join_multicast(zos::udp::address::from_string(multicast_address));
+        }
     }
     Plugin(int port,const zos::udp::__callback_type& f={}):Plugin(zos::udp::endpoint(zos::udp::address::from_string("0.0.0.0"),port),nullptr,f){}
     Plugin(const zos::udp::endpoint& ep,const zos::udp::__callback_type& f = {}):Plugin(ep,nullptr,f){}
     Plugin(const zos::udp::endpoint& ep,const char* multicast_address,const zos::udp::__callback_type& f = {}){
-        _socket.bind(ep,f);
-        _socket.join_multicast(zos::udp::address::from_string(multicast_address));
+        if(!_socket.bind(ep,f)){
+            return;
+        }
+        if(multicast_address){
+            _socket.join_multicast(zos::udp::address::from_string(multicast_address));
+        }
     }
     void sendData(const T& t,const zos::udp::endpoint& ep){
         static zos::Data data;

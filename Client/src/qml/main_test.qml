@@ -19,10 +19,17 @@ ApplicationWindow {
         id: root
         anchors.fill: parent
 
-        persistentCentralItemFileName: ":/src/qml/Field.qml"
-        options: KDDW.KDDockWidgets.MainWindowOption_HasCentralWidget
-
+        options: KDDW.KDDockWidgets.MainWindowOption_HasCentralFrame
         uniqueName: "MainLayout-1"
+
+        KDDW.DockWidget {
+            id: centralDock
+            uniqueName: "centralField"
+            title: "Field"
+            Field {
+                anchors.fill: parent
+            }
+        }
 
         KDDW.DockWidget {
             id: dock5
@@ -34,6 +41,7 @@ ApplicationWindow {
             }
         }
         Component.onCompleted: {
+            addDockWidget(centralDock, KDDW.KDDockWidgets.Location_OnTop)
             addDockWidget(dock5, KDDW.KDDockWidgets.Location_OnBottom);
         }
     }

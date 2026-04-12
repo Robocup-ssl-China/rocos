@@ -21,12 +21,10 @@ void Interaction4Field::setCtrlC(){
     GlobalData::instance()->ctrlCMutex.unlock();
 }
 int Interaction4Field::getRealX(int x){// mm
-    // return (int)Field::fieldXFromCoordinate(x);
-    return 0; // MARKTODO
+    return int(Field::fieldXFromCoordinate(x));
 }
 int Interaction4Field::getRealY(int y){// mm
-    // return (int)Field::fieldYFromCoordinate(y);
-    return 0; // MARKTODO
+    return int(Field::fieldYFromCoordinate(y));
 }
 void Interaction4Field::setRecorder(bool isRecording) {
     if (isRecording) {
@@ -35,6 +33,3 @@ void Interaction4Field::setRecorder(bool isRecording) {
         ZRecRecorder::instance()->stop();
     }
 }
-
-void keyPress(QKeyEvent event);
-void keyRelease(QKeyEvent event);
