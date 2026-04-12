@@ -20,6 +20,7 @@ Item {
             id: fieldBar
             width: parent.width
             height: 48
+            currentIndex: 1
 
             TabButton { text: "Origin" }
             TabButton { text: "Filtered B" }

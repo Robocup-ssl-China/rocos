@@ -35,10 +35,7 @@ ApplicationWindow {
         }
 
         Component.onCompleted: {
-            addDockWidget(centralDock,
-                          KDDW.KDDockWidgets.Location_OnLeft,
-                          null,
-                          Qt.size(root.width * 0.8, root.height))
+            addDockWidgetAsTab(centralDock)
             addDockWidget(controlBoardDock,
                           KDDW.KDDockWidgets.Location_OnRight,
                           centralDock,
