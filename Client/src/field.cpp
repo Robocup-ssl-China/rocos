@@ -111,7 +111,9 @@ void paintRobotShape(QPainter& painter,
 
     if (drawId) {
         QFont font;
-        font.setPixelSize(std::max(10, int(scale * 0.9)));
+        const int idPixelSize = std::max(20, int(scale * carDiameter * 0.9));
+        font.setPixelSize(idPixelSize);
+        // font.setBold(true);
         painter.setFont(font);
         painter.setBrush(Qt::NoBrush);
         painter.setPen(QPen(textColor, std::max(1.0, scale * 0.4)));
@@ -379,15 +381,11 @@ void Field::draw() {
     }
 
     _layer_field_line->draw();
-    if (_type != 1) {
+    const bool originView = (_type == 1);
+    if (!originView) {
         _layer_vision->draw();
-    } else {
-        std::scoped_lock<std::shared_mutex> lock(_layer_vision->_mutex);
-        if (_layer_vision->_image != nullptr) {
-            _layer_vision->_image->fill(Qt::transparent);
-        }
+        _root.draw();
     }
-    _root.draw();
 
     const QTransform tf = currentTransform(_tf);
 
@@ -395,7 +393,13 @@ void Field::draw() {
         std::scoped_lock<std::shared_mutex> lock(_mutex);
         _pm->fill(Color::_()->BACKGROUND);
 
-        {
+        if (originView) {
+            // Origin view paints robots/balls directly; skip VisionLayer compositing to avoid text-size flicker.
+            std::shared_lock<std::shared_mutex> fieldLineLock(_layer_field_line->_mutex);
+            if (_layer_field_line->_image != nullptr) {
+                _painter.drawImage(0, 0, *_layer_field_line->_image);
+            }
+        } else {
             std::shared_lock<std::shared_mutex> rootLock(_root._mutex);
             if (_root._image != nullptr) {
                 _painter.drawImage(0, 0, *_root._image);
