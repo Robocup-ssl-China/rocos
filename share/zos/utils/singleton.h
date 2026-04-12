@@ -9,6 +9,9 @@ class Singleton{
 public:
     template<typename... Ts>
     static T* instance(Ts... args);
+    // Backward compatibility for legacy code paths that still call Instance().
+    template<typename... Ts>
+    static T* Instance(Ts... args){ return instance(args...); }
     template<typename... Ts>
     static T* GetInstance(Ts... args){ return instance(args...); }
     template<typename... Ts>
