@@ -168,9 +168,10 @@ Item {
 
                     delegate: Rectangle {
                         required property int index
+                        readonly property bool isBoolType: root.childDataAt(index, root.roleSettingType) === "Bool"
 
                         width: valueList.width
-                        height: 34
+                        height: isBoolType ? 34 : 42
                         color: index % 2 === 0 ? "#484848" : "#404040"
 
                         RowLayout {
@@ -204,7 +205,7 @@ Item {
                                 property int rowIndex: index
                                 Layout.preferredWidth: parent.width * 0.4
                                 Layout.fillHeight: true
-                                sourceComponent: root.childDataAt(index, root.roleSettingType) === "Bool" ? boolEditor : textEditor
+                                sourceComponent: isBoolType ? boolEditor : textEditor
                                 onLoaded: {
                                     if (item)
                                         item.rowIndex = rowIndex
@@ -226,6 +227,10 @@ Item {
         TextField {
             property int rowIndex: -1
 
+            verticalAlignment: TextInput.AlignVCenter
+            font.pixelSize: 14
+            topPadding: 0
+            bottomPadding: 0
             text: root.childDataAt(rowIndex, root.roleSettingValue)
             color: "#e8e8e8"
             leftPadding: 12
