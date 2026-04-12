@@ -52,6 +52,16 @@ T clampValue(T value, T minValue, T maxValue) {
     return std::max(minValue, std::min(value, maxValue));
 }
 
+QFont::Weight debugTextWeight(int rawWeight) {
+    if (rawWeight <= 0) {
+        return QFont::Normal;
+    }
+    // Qt5 code used 0-99 legacy weight values. Qt6 expects 100-900.
+    int mappedWeight = rawWeight <= 99 ? rawWeight * 10 : rawWeight;
+    mappedWeight = clampValue(mappedWeight, int(QFont::Thin), int(QFont::Black));
+    return static_cast<QFont::Weight>(mappedWeight);
+}
+
 const Msg::Robot* findRobotById(const OriginMessage& vision, int team, int id) {
     if (team < PARAM::BLUE || team > PARAM::YELLOW || id < 0 || id >= PARAM::ROBOTMAXID) {
         return nullptr;
@@ -194,8 +204,8 @@ void paintDebugMessages(QPainter& painter, const QTransform& tf, int team) {
             break;
         }
         case ZSS::Protocol::Debug_Msg_Debug_Type_TEXT:
-            font.setPointSizeF(std::max(8.0, std::abs(tf.m11()) * msg.text().size() * 0.01));
-            font.setWeight(static_cast<QFont::Weight>(msg.text().weight()));
+            font.setPointSizeF(std::max(10.0, std::abs(tf.m11()) * msg.text().size()));
+            font.setWeight(debugTextWeight(msg.text().weight()));
             painter.setFont(font);
             painter.drawText(tf.map(QPointF(msg.text().pos().x(), msg.text().pos().y())),
                              QString::fromStdString(msg.text().text()));
