@@ -1,12 +1,13 @@
 import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import com.kdab.dockwidgets 2.0 as KDDW
 
 ApplicationWindow {
     visible: true
-    width: 1000
-    height: 800
+    width: screen.width;
+    height: screen.height - 100;
     title: qsTr("@rocosCli")
 
     KDDW.DockingArea {
