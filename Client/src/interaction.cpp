@@ -9,6 +9,7 @@
 #include "simmodule.h"
 #include "rec_recorder.h"
 #include "networkinterfaces.h"
+#include <QCoreApplication>
 #include <QProcess>
 namespace {
 QProcess *medusaProcess = nullptr;
@@ -320,17 +321,29 @@ void Interaction::robotControl(int id, int team) {
 
 void Interaction::kill() {
     ZRecRecorder::instance()->stop();
-    QProcess killTask;
+
+    // Stop managed helper processes first.
+    controlMonitor(false);
+    controlMedusa(false);
+    controlMedusa2(false);
+    controlSim(false, false);
+    controlCrazy(false);
+
 #ifdef WIN32
 //    RefereeThread::instance()->disconnectTCP();
-    QString athena = "taskkill -im Client.exe -f";
-    QString medusa = "taskkill -im Core.exe -f";
-    //QString grSim = "taskkill -im grSim.exe -f";
+    QProcess::execute("taskkill", {"-im", "Core.exe", "-f"});
+    QProcess::execute("taskkill", {"-im", "Client.exe", "-f"});
 #else
-    QString athena = "pkill Client";
-    QString medusa = "pkill Core";
-    //QString grSim = "pkill grsim";
+    QProcess::execute("pkill", {"-x", "Core"});
+    QProcess::execute("pkill", {"-x", "grsim"});
+    QProcess::execute("pkill", {"-x", "Client"});
 #endif
+
+    // Always close current UI as a fallback in case external kill command fails.
+    if (QCoreApplication::instance()) {
+        QCoreApplication::quit();
+    }
+
     if (monitorProcess != nullptr) {
         if (monitorProcess->isOpen()) {
             monitorProcess->close();
@@ -338,10 +351,6 @@ void Interaction::kill() {
         delete monitorProcess;
         monitorProcess = nullptr;
     }
-    killTask.execute(medusa);
-    //killTask.execute(grSim);
-    killTask.execute(athena);
-    killTask.close();
 }
 bool Interaction::connectSerialPort(bool sw){
     if(sw){
