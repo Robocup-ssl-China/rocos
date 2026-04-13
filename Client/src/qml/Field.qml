@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import ZSS 1.0 as ZSS
+import "Components" as Components
 
 Item {
     id: root
@@ -32,21 +33,23 @@ Item {
         anchors.fill: parent
         spacing: 0
 
-        TabBar {
-            id: fieldBar
-            width: parent.width
-            height: 48
+        Components.NavView {
+            id: fieldNav
+            width: Math.min(parent.width - 12, cellWidth)
+            height: implicitHeight
+            x: 6
             currentIndex: 1
-
-            TabButton { text: "Origin" }
-            TabButton { text: "Filtered B" }
-            TabButton { text: "Filtered Y" }
+            items: ["Origin", "Filtered Blue", "Filtered Yellow"]
+            panelColor: "#2f2f2f"
+            activeColor: "#1d1d1d"
+            hoverColor: "#3a3a3a"
+            accentColor: "#00a2ff"
         }
 
         Item {
             id: fieldArea
             width: parent.width
-            height: parent.height - fieldBar.height
+            height: parent.height - fieldNav.height
 
             Rectangle {
                 anchors.fill: parent
@@ -58,7 +61,7 @@ Item {
                 ZSS.Field {
                     id: field
                     anchors.fill: parent
-                    type: fieldBar.currentIndex + 1
+                    type: fieldNav.currentIndex + 1
                     draw: true
                     onWidthChanged: interaction.setSize(width, height)
                     onHeightChanged: interaction.setSize(width, height)

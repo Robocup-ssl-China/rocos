@@ -105,5 +105,6 @@
         <file>src/qml/Components/qmldir</file>
         <file>src/qml/Theme/qmldir</file>
         <file>src/qml/Theme/Theme.qml</file>
+        <file>src/qml/Components/NavView.qml</file>
     </qresource>
 </RCC>

@@ -8,3 +8,4 @@ CComboBox 1.0 CComboBox.qml
 CSpinBox 1.0 CSpinBox.qml
 CText 1.0 CText.qml
 CLight 1.0 CLight.qml
+NavView 1.0 NavView.qml
