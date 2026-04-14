@@ -88,6 +88,7 @@
         <file>source/scissors2.png</file>
         <file>source/refresh.png</file>
         <file>src/qml/ZComboBox.qml</file>
+        <file>src/qml/ZSuggestComboBox.qml</file>
         <file>src/qml/CustomDW/DockWidget.qml</file>
         <file>src/qml/CustomDW/FloatingWindow.qml</file>
         <file>src/qml/CustomDW/Frame.qml</file>

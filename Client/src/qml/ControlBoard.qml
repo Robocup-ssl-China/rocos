@@ -322,20 +322,22 @@ Page{
                             height:parent.height;
                             text: "TEST"
                         }
-                        ZComboBox{
+                        ZSuggestComboBox{
                             id:test_script_blue;
                             width:parent.width/2 - test_script_mode_blue.width;
                             height:parent.height;
+                            placeholderText: qsTr("Search TestPlay")
                         }
                         CheckBox{
                             id:test_script_mode_yellow;
                             height:parent.height;
                             text: "TEST"
                         }
-                        ZComboBox{
+                        ZSuggestComboBox{
                             id:test_script_yellow;
                             width:parent.width/2 - test_script_mode_yellow.width - test_script_refresh.width;
                             height:parent.height;
+                            placeholderText: qsTr("Search TestPlay")
                         }
                         Button{
                             id:test_script_refresh;
