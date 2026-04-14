@@ -1,10 +1,11 @@
 ﻿import QtQuick 2.10
-import QtQuick.Controls
-import QtQuick.Dialogs
-import QtQuick.Layouts
+import QtQuick.Controls 2.15
+import QtQuick.Dialogs 6.2
+import QtQuick.Layouts 1.15
 import ZSS 1.0 as ZSS
 Page{
     id:control;
+    property var interaction: ZSS.Interaction
     property bool socketConnect : false;
     property bool radioConnect : false;
     property bool medusaConnect : false;
@@ -38,9 +39,6 @@ Page{
         id: eventlabel
     }
 
-    ZSS.Interaction{
-        id:interaction;
-    }
     ZSS.Interaction4Field{
         id:interaction4field
     }
@@ -324,20 +322,22 @@ Page{
                             height:parent.height;
                             text: "TEST"
                         }
-                        ZComboBox{
+                        ZSuggestComboBox{
                             id:test_script_blue;
                             width:parent.width/2 - test_script_mode_blue.width;
                             height:parent.height;
+                            placeholderText: qsTr("Search TestPlay")
                         }
                         CheckBox{
                             id:test_script_mode_yellow;
                             height:parent.height;
                             text: "TEST"
                         }
-                        ZComboBox{
+                        ZSuggestComboBox{
                             id:test_script_yellow;
                             width:parent.width/2 - test_script_mode_yellow.width - test_script_refresh.width;
                             height:parent.height;
+                            placeholderText: qsTr("Search TestPlay")
                         }
                         Button{
                             id:test_script_refresh;
@@ -534,16 +534,14 @@ Page{
                            FileDialog {
                                id:fdrs
                                title: "Please select"
-                               selectExisting: true
-                               selectFolder: false
-                               selectMultiple: false
+                               fileMode: FileDialog.OpenFile
                                nameFilters: ["Rec files (*.log)"]
                                onAccepted: {
                                    if (control.isReplaying) ZSS.RecSlider.toggleStopped();
                                    control.isReplaying = false;
                                    rectimer.running = false;
-                                   console.log("You chose: " + fdrs.fileUrl);
-                                   ZSS.RecSlider.loadFile(fdrs.fileUrl);
+                                   console.log("You chose: " + fdrs.selectedFile);
+                                   ZSS.RecSlider.loadFile(fdrs.selectedFile);
                                    recslider.to = ZSS.RecSlider.maximumValue;
                                    recslider.stepSize = ZSS.RecSlider.stepSize;
                                    recslider.value = 0;

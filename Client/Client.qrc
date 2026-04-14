@@ -88,10 +88,13 @@
         <file>source/scissors2.png</file>
         <file>source/refresh.png</file>
         <file>src/qml/ZComboBox.qml</file>
+        <file>src/qml/ZSuggestComboBox.qml</file>
         <file>src/qml/CustomDW/DockWidget.qml</file>
         <file>src/qml/CustomDW/FloatingWindow.qml</file>
         <file>src/qml/CustomDW/Frame.qml</file>
         <file>src/qml/CustomDW/TitleBar.qml</file>
+        <file>src/qml/CustomDW/DockStyle.qml</file>
+        <file>src/qml/CustomDW/qmldir</file>
         <file>src/qml/Components/CButton.qml</file>
         <file>src/qml/Components/CColumn.qml</file>
         <file>src/qml/Components/CComboBox.qml</file>
@@ -105,5 +108,6 @@
         <file>src/qml/Components/qmldir</file>
         <file>src/qml/Theme/qmldir</file>
         <file>src/qml/Theme/Theme.qml</file>
+        <file>src/qml/Components/NavView.qml</file>
     </qresource>
 </RCC>

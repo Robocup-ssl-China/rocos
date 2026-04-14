@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Window 2.3
-import QtQuick.Controls
-import QtQuick.Layouts
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 import QtQml 2.2
 import ZSS 1.0 as ZSS
 Window {

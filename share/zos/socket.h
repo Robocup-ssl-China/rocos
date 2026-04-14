@@ -24,6 +24,11 @@ public:
             _callback = std::bind(f,std::placeholders::_1,std::placeholders::_2);
         }
         boost::system::error_code ec;
+        _socket.set_option(boost::asio::ip::udp::socket::reuse_address(true), ec);
+        if(ec.value() != 0){
+            std::cerr << fmt::format("get error11 {}:{}",ec.value(),ec.message()) << std::endl;
+            return false;
+        }
         _socket.bind(_listen_ep,ec);
         if(ec.value() != 0){
             std::cerr << fmt::format("get error11 {}:{}",ec.value(),ec.message()) << std::endl;
@@ -54,6 +59,11 @@ public:
     }
     bool try_bind(){
         boost::system::error_code ec;
+        _socket.set_option(boost::asio::ip::udp::socket::reuse_address(true), ec);
+        if(ec.value() != 0){
+            std::cerr << fmt::format("get error {}:{}",ec.value(),ec.message()) << std::endl;
+            return false;
+        }
         _socket.bind(_listen_ep,ec);
         if(ec.value() != 0){
             std::cerr << fmt::format("get error {}:{}",ec.value(),ec.message()) << std::endl;

@@ -22,19 +22,27 @@ float h(float a){return -a/MAX_SPEED*MAP_HEIGHT;};
 }
 PlotDisplay::PlotDisplay(QQuickItem *parent)
     : QQuickPaintedItem (parent)
+    , s_need_draw("plot_draw_trigger", [this](const zos::Data&) {
+        QMetaObject::invokeMethod(this, [this]() { draw(); }, Qt::QueuedConnection);
+    })
     , pixmap(nullptr){
-    connect(VisionModule::instance(), SIGNAL(needDraw()), this, SLOT(draw()));
+    VisionModule::instance()->p_draw_signal.link(&s_need_draw);
     setImplicitWidth(200);
     setImplicitHeight(300);
     pixmap = new QPixmap(QSize(200, 300));
-    pixmapPainter.begin(pixmap);
-    pixmapPainter.setPen(Qt::NoPen);
-    pixmapPainter.setRenderHint(QPainter::Antialiasing, true);
-    pixmapPainter.setRenderHint(QPainter::TextAntialiasing, true);
+    area = QRect(0, 0, 200, 300);
+    if (pixmapPainter.begin(pixmap)) {
+        pixmapPainter.setPen(Qt::NoPen);
+        pixmapPainter.setRenderHint(QPainter::Antialiasing, true);
+        pixmapPainter.setRenderHint(QPainter::TextAntialiasing, true);
+    }
     init();
 }
 void PlotDisplay::paint(QPainter* painter) {
-    painter->drawPixmap(area, *pixmap);
+    if (pixmap == nullptr || pixmap->isNull()) {
+        return;
+    }
+    painter->drawPixmap(area.isValid() ? area : QRect(0, 0, pixmap->width(), pixmap->height()), *pixmap);
 }
 void PlotDisplay::draw() {
     repaint();
@@ -61,10 +69,18 @@ void PlotDisplay::initAxes(){
 }
 void PlotDisplay::repaint(){
     if(repaint_mutex.try_lock()){
+        if (pixmap == nullptr || pixmap->isNull() || !pixmapPainter.isActive()) {
+            repaint_mutex.unlock();
+            return;
+        }
         pixmap->fill(COLOR_BACKGROUND);
         paintAxes();
         paintData();
-        this->update(area);
+        if (area.isValid()) {
+            this->update(area);
+        } else {
+            this->update();
+        }
         repaint_mutex.unlock();
     }
 }
@@ -102,10 +118,22 @@ void PlotDisplay::paintData(){
     }
 }
 void PlotDisplay::resetSize(int width,int height){
-    pixmapPainter.end();
+    if (width <= 0 || height <= 0) {
+        return;
+    }
+    if (pixmapPainter.isActive()) {
+        pixmapPainter.end();
+    }
     delete pixmap;
-    pixmap = new QPixmap(QSize(this->property("width").toReal(), this->property("height").toReal()));
-    pixmapPainter.begin(pixmap);
-    area = QRect(0, 0, this->property("width").toReal(), this->property("height").toReal());
+    pixmap = new QPixmap(QSize(width, height));
+    if (pixmap == nullptr || pixmap->isNull()) {
+        area = QRect();
+        return;
+    }
+    if (!pixmapPainter.begin(pixmap)) {
+        area = QRect();
+        return;
+    }
+    area = QRect(0, 0, width, height);
     init();
 }

@@ -34,6 +34,17 @@ find_package(fmt REQUIRED)
 list(APPEND incs ${fmt_INCLUDE_DIRS})
 list(APPEND libs fmt::fmt)
 
+## yaml-cpp
+find_package(yaml-cpp REQUIRED)
+if (TARGET yaml-cpp::yaml-cpp)
+    list(APPEND libs yaml-cpp::yaml-cpp)
+elseif (TARGET yaml-cpp)
+    list(APPEND libs yaml-cpp)
+else()
+    list(APPEND incs ${YAML_CPP_INCLUDE_DIRS})
+    list(APPEND libs ${YAML_CPP_LIBRARIES})
+endif()
+
 set(PROTO_LIST
     grSim_Commands
     grSimMessage

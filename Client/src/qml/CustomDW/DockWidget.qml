@@ -10,10 +10,11 @@
 */
 
 import QtQuick 2.9
+import CustomDW 1.0
 
 Rectangle {
     id: root
-    color:"transparent"
+  color: DockStyle.dockWidgetBackground
     readonly property QtObject dockWidgetCpp: parent
     anchors.fill: parent
 }

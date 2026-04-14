@@ -19,13 +19,11 @@ public:
     Q_INVOKABLE void setCtrlC();
     Q_INVOKABLE int getRealX(int);
     Q_INVOKABLE int getRealY(int);
+    Q_INVOKABLE void setSize(int width, int height) { Field::setSize(width, height); }
     Q_INVOKABLE void setRecorder(bool isRecording);
-//    Q_INVOKABLE void keyPress(QKeyEvent* event);
-//    Q_INVOKABLE void keyRelease(QKeyEvent* event);
     ~Interaction4Field();
-Q_SIGNALS:
-    void moveFieldSignal(int,int);
 signals:
+    void moveFieldSignal(int,int);
 public slots:
 };
 

@@ -4,16 +4,16 @@
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QQmlEngine>
+#include <QJSEngine>
 
 class MessageInfo : public QObject{
     Q_OBJECT
     Q_PROPERTY (char info READ info WRITE setInfo NOTIFY infoChanged)
 public:
     static QObject* instance(QQmlEngine* engine = nullptr, QJSEngine* scriptEngine = nullptr){
-        Q_UNUSED(engine)
-        Q_UNUSED(scriptEngine)
-        static MessageInfo* instance = new MessageInfo();
-        return instance;
+        QObject *parent = engine ? static_cast<QObject *>(engine)
+                                 : static_cast<QObject *>(scriptEngine);
+        return new MessageInfo(parent);
     }
     explicit MessageInfo(QObject *parent = Q_NULLPTR) : m_info(0x00){}
     ~MessageInfo(){}

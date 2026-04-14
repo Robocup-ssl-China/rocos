@@ -69,5 +69,5 @@ if(BUILD_DOC)
 endif()
 
 add_subdirectory(Client)
-# add_subdirectory(Core)
-# add_subdirectory(Controller)
+add_subdirectory(Core)
+add_subdirectory(Controller)
