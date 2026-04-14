@@ -1,4 +1,6 @@
 #include <kddockwidgets/qtquick/Platform.h>
+#include <kddockwidgets/Config.h>
+#include <kddockwidgets/qtquick/ViewFactory.h>
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -43,14 +45,13 @@ void qmlRegister() {
     ZSS::LParamManager::instance()->clear();
 }
 
-// class CustomFrameworkWidgetFactory : public KDDockWidgets::QtQuick::ViewFactory{
-// public:
-//     ~CustomFrameworkWidgetFactory() override = default;
-//     QUrl titleBarFilename() const override{ return QUrl("qrc:/src/qml/CustomDW/TitleBar.qml"); }
-//     QUrl dockwidgetFilename() const override{ return QUrl("qrc:/src/qml/CustomDW/DockWidget.qml"); }
-//     QUrl frameFilename() const override{ return QUrl("qrc:/src/qml/CustomDW/Frame.qml"); }
-//     QUrl floatingWindowFilename() const override{ return QUrl("qrc:/src/qml/CustomDW/FloatingWindow.qml"); }
-// };
+class CustomFrameworkWidgetFactory : public KDDockWidgets::QtQuick::ViewFactory {
+public:
+    ~CustomFrameworkWidgetFactory() override = default;
+    QUrl titleBarFilename() const override { return QUrl("qrc:/src/qml/CustomDW/TitleBar.qml"); }
+    QUrl dockwidgetFilename() const override { return QUrl("qrc:/src/qml/CustomDW/DockWidget.qml"); }
+    QUrl floatingWindowFilename() const override { return QUrl("qrc:/src/qml/CustomDW/FloatingWindow.qml"); }
+};
 
 int main(int argc, char *argv[]) {
 #ifdef Q_OS_WIN
@@ -62,11 +63,14 @@ int main(int argc, char *argv[]) {
 #endif
     QGuiApplication app(argc, argv);
     KDDockWidgets::initFrontend(KDDockWidgets::FrontendType::QtQuick);
+    KDDockWidgets::Config::self().setViewFactory(new CustomFrameworkWidgetFactory());
     app.setOrganizationName("Turing-zero");
     app.setOrganizationDomain("turing-zero.com");
     qmlRegister();
     app.setFont(QFont("Microsoft YaHei", 9));
     QQmlApplicationEngine engine;
+    engine.addImportPath(QStringLiteral("qrc:/src/qml"));
+    engine.addImportPath(QStringLiteral(":/src/qml"));
     KDDockWidgets::QtQuick::Platform::instance()->setQmlEngine(&engine);
     engine.load(QUrl(QLatin1String("qrc:/src/qml/main_test.qml")));
     return app.exec();

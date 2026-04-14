@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QJSEngine>
 #include "zos/utils/singleton.h"
 #include "rec_player.h"
 
@@ -17,10 +18,9 @@ class rec_slider: public QObject
     Q_PROPERTY(double stepSize READ rstepSize WRITE setstepSize NOTIFY stepSizechanged)
 public:
     static QObject* instance(QQmlEngine* engine = nullptr, QJSEngine* scriptEngine = nullptr){
-        Q_UNUSED(engine)
-        Q_UNUSED(scriptEngine)
-        static rec_slider* instance = new rec_slider();
-        return instance;
+        QObject *parent = engine ? static_cast<QObject *>(engine)
+                                 : static_cast<QObject *>(scriptEngine);
+        return new rec_slider(parent);
     }
     explicit rec_slider(QObject* parent = nullptr);
     Q_INVOKABLE QString maxTime = "00:00.000";

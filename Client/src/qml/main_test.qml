@@ -3,12 +3,23 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import com.kdab.dockwidgets 2.0 as KDDW
+import CustomDW 1.0
 
 ApplicationWindow {
     visible: true
     width: screen.width;
     height: screen.height - 100;
     title: qsTr("@rocosCli")
+
+    // qss-like style string for KDDockWidgets custom skin.
+    Component.onCompleted: {
+        DockStyle.styleSheet = "title-bg:#18202b; title-border:#2f3e52; title-fg:#eaf1ff;"
+                              + "frame-bg:#0f151f; frame-border:#2f3e52; frame-radius:10;"
+                              + "tab-bg:#141e2b; tab-border:#2c3a4f; tab-fg:#8ea3c0;"
+                              + "tab-active-bg:#2c8cff; tab-active-fg:#ffffff;"
+                              + "btn-hover-bg:#2f3f56; btn-pressed-bg:#213249; btn-fg:#eaf1ff;"
+                              + "title-height:38; tab-height:34; btn-size:22"
+    }
 
     KDDW.DockingArea {
         id: root

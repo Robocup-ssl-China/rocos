@@ -10,22 +10,26 @@
 */
 
 import QtQuick 2.9
-import "qrc:/kddockwidgets/private/quick/qml/" as KDDW
+import "qrc:/kddockwidgets/qtquick/views/qml/" as KDDW
+import CustomDW 1.0
 
 Rectangle {
     id: root
     readonly property QtObject floatingWindowCpp: parent
     readonly property QtObject titleBarCpp: floatingWindowCpp ? floatingWindowCpp.titleBar : null
     readonly property QtObject dropAreaCpp: floatingWindowCpp ? floatingWindowCpp.dropArea : null
-    readonly property int titleBarHeight: titleBar.heightWhenVisible
-    property int margins: 4
+    readonly property int titleBarHeight: (titleBar.item ? titleBar.item.heightWhenVisible : 0)
+    property int margins: DockStyle.floatingMargins
 
     anchors.fill: parent
 
-    color: "transparent"
+    radius: DockStyle.frameRadius
+    antialiasing: true
+    clip: true
+    color: DockStyle.frameBackground
     border {
-        color: "#666666"
-        width: 1
+        color: DockStyle.floatingBorderColor
+        width: DockStyle.floatingBorderWidth
     }
 
     onTitleBarHeightChanged: {
@@ -36,8 +40,8 @@ Rectangle {
     Loader {
         id: titleBar
         readonly property QtObject titleBarCpp: root.titleBarCpp
-        readonly property int heightWhenVisible: item.heightWhenVisible
-        source: _kddw_widgetFactory.titleBarFilename()
+        readonly property int heightWhenVisible: item ? item.heightWhenVisible : 0
+        source: "qrc:/src/qml/CustomDW/TitleBar.qml"
 
         anchors {
             top:  parent ? parent.top : undefined

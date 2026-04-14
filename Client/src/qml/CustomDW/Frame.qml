@@ -12,167 +12,52 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.9
 import QtQuick.Layouts 1.9
-import "qrc:/kddockwidgets/private/quick/qml/" as KDDW
-import com.kdab.dockwidgets 1.0
+import com.kdab.dockwidgets 2.0
+import CustomDW 1.0
 
 Rectangle {
     id: root
 
-    property QtObject frameCpp
-    readonly property QtObject titleBarCpp: frameCpp ? frameCpp.titleBar : null
+    property QtObject groupCpp
+    readonly property QtObject titleBarCpp: groupCpp ? groupCpp.titleBar : null
     readonly property int nonContentsHeight: (titleBar.item ? titleBar.item.heightWhenVisible : 0) + tabbar.implicitHeight + (2 * contentsMargin) + titleBarContentsMargin
     property int contentsMargin: isMDI ? 2 : 2
-    property int titleBarContentsMargin: 1
-    property bool hasCustomMouseEventRedirector: false
+    property int titleBarContentsMargin: 0
     property int mouseResizeMargin: 8
-    readonly property bool isMDI: frameCpp && frameCpp.isMDI
-    readonly property bool resizeAllowed: root.isMDI && !_kddwDragController.isDragging && _kddwDockRegistry && (!_kddwDockRegistry.frameInMDIResize || _kddwDockRegistry.frameInMDIResize === frameCpp)
+    readonly property bool isMDI: groupCpp && groupCpp.isMDI
+    readonly property bool hasCustomMouseEventRedirector: false
+    readonly property bool isFixedHeight: groupCpp && groupCpp.isFixedHeight
+    readonly property bool isFixedWidth: groupCpp && groupCpp.isFixedWidth
+    readonly property bool resizeAllowed: root.isMDI && !Singletons.helpers.isDragging && Singletons.dockRegistry && (!Singletons.helpers.groupViewInMDIResize || Singletons.helpers.groupViewInMDIResize === groupCpp)
     property alias tabBarHeight: tabbar.height
 
     anchors.fill: parent
 
-    radius: 2
-    color: "transparent"
+    radius: DockStyle.frameRadius
+    color: DockStyle.frameBackground
     border {
-        color: "#b8b8b8"
-        width: 0
+        color: DockStyle.frameBorderColor
+        width: DockStyle.frameBorderWidth
     }
 
-    onFrameCppChanged: {
-        if (frameCpp) {
-            frameCpp.setStackLayout(stackLayout);
+    onGroupCppChanged: {
+        if (groupCpp) {
+            groupCpp.setStackLayout(stackLayout);
         }
     }
 
     onNonContentsHeightChanged: {
-        if (frameCpp)
-            frameCpp.geometryUpdated();
+        if (groupCpp)
+            groupCpp.geometryUpdated();
     }
 
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            left: parent ? parent.left : undefined
-            top: parent ? parent.top : undefined
-            bottom: parent ? parent.bottom : undefined
-        }
-
-        width: resizeMargin
-        z: 100
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Left
-    }
-
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            right: parent ? parent.right : undefined
-            top: parent ? parent.top : undefined
-            bottom: parent ? parent.bottom : undefined
-        }
-
-        width: resizeMargin
-        z: 100
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Right
-    }
-
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            right: parent ? parent.right : undefined
-            top: parent ? parent.top : undefined
-            left: parent ? parent.left : undefined
-        }
-
-        height: resizeMargin
-        z: 100
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Top
-    }
-
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            right: parent ? parent.right : undefined
-            left: parent ? parent.left : undefined
-            bottom: parent ?  parent.bottom : undefined
-        }
-
-        height: resizeMargin
-        z: 100
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Bottom
-    }
-
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            right: parent ? parent.right : undefined
-            bottom: parent ? parent.bottom : undefined
-        }
-
-        height: width
-        width: resizeMargin
-        z: 101
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Bottom | KDDockWidgets.CursorPosition_Right
-    }
-
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            left:  parent ? parent.left : undefined
-            top:  parent ? parent.top : undefined
-        }
-
-        height: width
-        width: resizeMargin
-        z: 101
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Top | KDDockWidgets.CursorPosition_Left
-    }
-
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            right: parent ? parent.right : undefined
-            top: parent ? parent.top : undefined
-        }
-
-        height: width
-        width: resizeMargin
-        z: 101
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Top | KDDockWidgets.CursorPosition_Right
-    }
-
-    KDDW.ResizeHandlerHelper {
-        anchors {
-            left: parent ? parent.left : undefined
-            bottom: parent ? parent.bottom : undefined
-        }
-
-        height: width
-        width: resizeMargin
-        z: 101
-        frameCpp: root.frameCpp
-        resizeAllowed: root.resizeAllowed
-        resizeMargin: root.mouseResizeMargin
-        cursorPosition: KDDockWidgets.CursorPosition_Left | KDDockWidgets.CursorPosition_Bottom
-    }
+    // This KDDockWidgets build does not ship MDIResizeHandlerHelper.qml;
+    // keep frame creation compatible by skipping those helper items.
 
     Loader {
         id: titleBar
         readonly property QtObject titleBarCpp: root.titleBarCpp
-        source: frameCpp ? _kddw_widgetFactory.titleBarFilename()
+        source: groupCpp ? Singletons.widgetFactory.titleBarFilename()
                          : ""
 
         anchors {
@@ -186,9 +71,9 @@ Rectangle {
     }
 
     Connections {
-        target: frameCpp
+        target: groupCpp
         function onCurrentIndexChanged() {
-            tabbar.currentIndex = frameCpp.currentIndex;
+            tabbar.currentIndex = groupCpp.currentIndex;
         }
     }
 
@@ -203,17 +88,23 @@ Rectangle {
 
     TabBar {
         id: tabbar
-        readonly property QtObject tabBarCpp: root.frameCpp ? root.frameCpp.tabWidget.tabBar
+        readonly property QtObject tabBarCpp: root.groupCpp ? root.groupCpp.tabWidget.tabBar
                                                             : null
         visible: count > 1
-        height: visible ? 40 : 0
+        height: visible ? DockStyle.tabBarHeight : 0
+
+        background: Rectangle {
+            color: DockStyle.tabBackground
+            border.color: DockStyle.tabBorderColor
+            border.width: 1
+        }
 
         anchors {
             left: parent ? parent.left : undefined
             right: parent ? parent.right : undefined
             top: (titleBar && titleBar.visible) ? titleBar.bottom
                                                 : (parent ? parent.top : undefined)
-            topMargin: 1
+            topMargin: 0
             leftMargin: 1
             rightMargin: 1
         }
@@ -221,8 +112,8 @@ Rectangle {
         width: parent ? parent.width : 0
 
         onCurrentIndexChanged: {
-            if (root && root.frameCpp)
-                root.frameCpp.tabWidget.setCurrentDockWidget(currentIndex);
+            if (root && root.groupCpp)
+                root.groupCpp.tabWidget.setCurrentDockWidget(currentIndex);
         }
 
         onTabBarCppChanged: {
@@ -236,13 +127,19 @@ Rectangle {
         }
 
         Repeater {
-            model: root.frameCpp ? root.frameCpp.tabWidget.dockWidgetModel : 0
+            model: root.groupCpp ? root.groupCpp.tabWidget.dockWidgetModel : 0
             TabButton {
                 property bool selected: tabbar.currentIndex == index
+                background: Rectangle {
+                    color: parent.selected ? DockStyle.tabActiveBackground : "transparent"
+                    radius: 4
+                    border.color: DockStyle.tabBorderColor
+                    border.width: parent.selected ? 1 : 0
+                }
                 contentItem: Text {
                     text: title
                     font.weight: Font.Medium
-                    color: selected ? "#000" : "#777"
+                    color: selected ? DockStyle.tabActiveTextColor : DockStyle.tabTextColor
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight

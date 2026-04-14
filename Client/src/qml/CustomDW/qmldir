@@ -1,0 +1,2 @@
+module CustomDW
+singleton DockStyle 1.0 DockStyle.qml

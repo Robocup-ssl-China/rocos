@@ -92,6 +92,8 @@
         <file>src/qml/CustomDW/FloatingWindow.qml</file>
         <file>src/qml/CustomDW/Frame.qml</file>
         <file>src/qml/CustomDW/TitleBar.qml</file>
+        <file>src/qml/CustomDW/DockStyle.qml</file>
+        <file>src/qml/CustomDW/qmldir</file>
         <file>src/qml/Components/CButton.qml</file>
         <file>src/qml/Components/CColumn.qml</file>
         <file>src/qml/Components/CComboBox.qml</file>
