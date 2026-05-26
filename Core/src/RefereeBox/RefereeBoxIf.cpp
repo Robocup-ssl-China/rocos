@@ -134,9 +134,11 @@ void CRefereeBoxInterface::receivingLoop() {
 
             GDebugEngine::Instance()->gui_debug_msg(CGeoPoint(0,PARAM::Field::PITCH_WIDTH/2),fmt::format("ref_cmd : {}-{}",command,Referee_Command_Name(command)),COLOR_RED,0,130);
             static unsigned char former_cmd_index = 0;
+            static char former_cmd = 0;
             cmd_index = pCmd_temp.cmd_counter;
-            if (cmd_index != former_cmd_index) {
+            if (cmd_index != former_cmd_index || cmd != former_cmd) {
                 former_cmd_index = cmd_index;    // 更新上一次指令得标志值
+                former_cmd = cmd;
                 PlayMode pmode = PMNone;
                 for( int pm = PMStop; pm <= PMNone; ++pm ) {
                     if( playModePair[pm].ch == cmd ) {
