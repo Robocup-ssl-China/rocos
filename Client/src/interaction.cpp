@@ -10,6 +10,10 @@
 #include "rec_recorder.h"
 #include "networkinterfaces.h"
 #include <QProcess>
+#include <QPointer>
+#include <QSet>
+#include <atomic>
+#include <thread>
 namespace {
 QProcess *medusaProcess = nullptr;
 QProcess *medusaProcess2 = nullptr;
@@ -375,6 +379,56 @@ QStringList Interaction::getSerialPortsList(){
 QStringList Interaction::getAvailableIPs(){
     return ZNetworkInterfaces::instance()->getAvailableIPs();
 }
+
+void Interaction::updateGrsimInterfaces(){
+    static std::atomic_bool refreshing{false};
+    bool expected = false;
+    if (!refreshing.compare_exchange_strong(expected, true)) {
+        return;
+    }
+
+    int simPort = 10020;
+    int remotePort = 10006;
+    ZSS::ZParamManager::instance()->loadParam(simPort, "AlertPorts/Vision4Sim", 10020);
+    ZSS::ZParamManager::instance()->loadParam(remotePort, "AlertPorts/Vision4Remote", 10006);
+
+    QList<quint16> ports;
+    QSet<quint16> seen;
+    for (int p : {simPort, remotePort}) {
+        if (p <= 0 || p > 65535) {
+            continue;
+        }
+        quint16 port = static_cast<quint16>(p);
+        if (!seen.contains(port)) {
+            seen.insert(port);
+            ports.append(port);
+        }
+    }
+
+    if (ports.isEmpty()) {
+        ports.append(10020);
+        ports.append(10006);
+    }
+
+    QPointer<Interaction> self(this);
+    std::thread([ports, self]() {
+        ZNetworkInterfaces::instance()->refreshGrsimInterfaces(ports);
+        refreshing = false;
+
+        if (self) {
+            QMetaObject::invokeMethod(self.data(), "grsimRefreshComplete", Qt::QueuedConnection);
+        }
+    }).detach();
+}
+
+int Interaction::addGrsimHost(QString ip) {
+    int index = ZNetworkInterfaces::instance()->addGrsimIP(ip, "grSim");
+    if (index >= 0) {
+        emit grsimRefreshComplete();
+    }
+    return index;
+}
+
 void Interaction::setIPIndex(QString key, int index){
     ZNetworkInterfaces::instance()->setIP(key.toStdString(), index);
 }

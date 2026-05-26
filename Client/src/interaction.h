@@ -53,6 +53,8 @@ class Interaction : public QObject {
     Q_INVOKABLE bool changeSerialPort(int);
     Q_INVOKABLE QStringList getSerialPortsList();
     Q_INVOKABLE QStringList getAvailableIPs();
+    Q_INVOKABLE void updateGrsimInterfaces();
+    Q_INVOKABLE int addGrsimHost(QString ip);
     Q_INVOKABLE void setIPIndex(QString, int);
     Q_INVOKABLE int getFrequency();
     Q_INVOKABLE QStringList getAllAddress();
@@ -67,6 +69,8 @@ class Interaction : public QObject {
         return _ref_config_show_name_list;
     }
     ~Interaction();
+signals:
+    void grsimRefreshComplete();
 public slots:
     void medusaPrint();
 private:

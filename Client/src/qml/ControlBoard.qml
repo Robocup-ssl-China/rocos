@@ -169,13 +169,77 @@ Page{
                             text: "grSim IP"
                         }
                         ZComboBox{
+                            id: grSimIPCombo
                             leftPadding:10
                             height:parent.height;
-                            width:parent.width - 10 - grSimIP_Text.width
+                            width:parent.width - 20 - grSimIP_Text.width - grSimIPRefresh.width
                             model: interaction.getAvailableIPs();
                             onActivated: interaction.setIPIndex("grSim", currentIndex);
+                            function updateModel(){
+                                model = interaction.getAvailableIPs();
+                                if (currentIndex >= count)
+                                    currentIndex = 0;
+                                if (currentIndex < 0 && count > 0)
+                                    currentIndex = 0;
+                                if (currentIndex >= 0)
+                                    interaction.setIPIndex("grSim", currentIndex);
+                            }
                             Component.onCompleted:{
-                                interaction.setIPIndex("grSim", 0);
+                                updateModel();
+                            }
+                        }
+                        Button{
+                            id: grSimIPRefresh
+                            height:parent.height;
+                            enabled: !visionControls.ifConnected
+                            icon.source: "/source/refresh.png";
+                            function trigger(){
+                                interaction.updateGrsimInterfaces();
+                            }
+                            onClicked: {
+                                trigger();
+                            }
+                            Component.onCompleted: {
+                                trigger();
+                            }
+                        }
+                    }
+                    Connections {
+                        target: interaction
+                        function onGrsimRefreshComplete() {
+                            grSimIPCombo.updateModel();
+                        }
+                    }
+                    Row {
+                        spacing: 10
+                        width: parent.itemWidth
+                        TextField {
+                            id: grSimManualHostInput
+                            width: parent.width - grSimManualAdd.width - parent.spacing
+                            height: 50
+                            enabled: !visionControls.ifConnected
+                            placeholderText: "Remote grSim IP (e.g. 192.168.1.200)"
+                            onAccepted: {
+                                grSimManualAdd.trigger()
+                            }
+                        }
+                        Button {
+                            id: grSimManualAdd
+                            width: 80
+                            height: grSimManualHostInput.height
+                            enabled: !visionControls.ifConnected
+                            text: "Add"
+                            function trigger() {
+                                var index = interaction.addGrsimHost(grSimManualHostInput.text)
+                                if (index >= 0) {
+                                    grSimIPCombo.updateModel()
+                                    grSimIPCombo.currentIndex = index
+                                    interaction.setIPIndex("grSim", index)
+                                    grSimManualHostInput.text = ""
+                                }
+                            }
+                            onClicked: {
+                                trigger()
                             }
                         }
                     }
